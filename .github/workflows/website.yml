@@ -10,6 +10,7 @@ on:
       - 'scripts/package-desktop.py'
       - 'scripts/package-standalone.py'
       - 'scripts/test-package-desktop.py'
+      - 'scripts/test-build-cpa.py'
       - 'scripts/test-standalone-install.py'
       - 'scripts/test-third-party-licenses.py'
       - '.github/workflows/website.yml'
@@ -25,6 +26,7 @@ on:
       - 'scripts/package-desktop.py'
       - 'scripts/package-standalone.py'
       - 'scripts/test-package-desktop.py'
+      - 'scripts/test-build-cpa.py'
       - 'scripts/test-standalone-install.py'
       - 'scripts/test-third-party-licenses.py'
       - '.github/workflows/website.yml'
@@ -61,6 +63,7 @@ jobs:
       - name: Test distribution packaging contracts
         run: |
           python3 scripts/test-third-party-licenses.py
+          python3 scripts/test-build-cpa.py
           python3 scripts/test-package-desktop.py
           python3 scripts/test-standalone-install.py
       - uses: actions/upload-artifact@v4

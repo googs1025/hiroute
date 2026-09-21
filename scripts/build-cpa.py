@@ -45,12 +45,16 @@ def build(source_repo, target, output):
                          (("Version", "version"), ("Commit", "commit"), ("BuildDate", "built_at")))
         subprocess.run(["go", "build", "-trimpath", "-buildvcs=false", "-ldflags", flags,
                         "-o", str(output), "./cmd/server"], cwd=source, env=env, check=True)
-        shutil.copyfile(source / "LICENSE", output.with_suffix(".LICENSE"))
+        license_output = output.with_suffix(".LICENSE")
+        shutil.copyfile(source / "LICENSE", license_output)
+        license_output.chmod(0o644)
     output.chmod(0o755)
     evidence = {**pin, "target": target, "sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
                 "size": output.stat().st_size,
                 "go_version": subprocess.check_output(["go", "version", str(output)], text=True).strip().split(": ", 1)[-1]}
-    output.with_suffix(".provenance.json").write_text(json.dumps(evidence, indent=2) + "\n")
+    provenance_output = output.with_suffix(".provenance.json")
+    provenance_output.write_text(json.dumps(evidence, indent=2) + "\n")
+    provenance_output.chmod(0o644)
     return evidence
 
 
