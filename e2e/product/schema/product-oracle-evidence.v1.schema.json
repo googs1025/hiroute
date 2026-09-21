@@ -1,0 +1,117 @@
+{
+  "$id": "hiroute://e2e/product/schema/product-oracle-evidence.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "assertions": {
+      "items": {
+        "enum": [
+          "formal_daemon_started",
+          "real_cli_used",
+          "local_control_boundary_used",
+          "descriptor_digest_exact",
+          "version_mismatch_fails_closed",
+          "preview_has_zero_side_effects",
+          "apply_rejection_has_zero_side_effects",
+          "reserved_operation_fails_closed",
+          "native_payload_exact",
+          "golden_exact"
+        ]
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "boundary": {
+      "enum": [
+        "local_control_v1",
+        "internal_application_seam",
+        "direct_storage",
+        null
+      ]
+    },
+    "cli_invocations": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "control_probes": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "daemon": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "descriptor_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "goldens": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "mode": {
+      "enum": [
+        "product_evaluation",
+        "adversarial_self_test"
+      ]
+    },
+    "native_payloads": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "scenario_id": {
+      "pattern": "^[A-Za-z0-9._-]+$",
+      "type": "string"
+    },
+    "schema_version": {
+      "additionalProperties": false,
+      "properties": {
+        "major": {
+          "const": 1
+        },
+        "minor": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "major",
+        "minor"
+      ],
+      "type": "object"
+    },
+    "side_effects": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "mode",
+    "scenario_id",
+    "descriptor_digest",
+    "assertions",
+    "daemon",
+    "boundary",
+    "control_probes",
+    "cli_invocations",
+    "side_effects",
+    "goldens",
+    "native_payloads"
+  ],
+  "title": "HiRoute Product Oracle evidence v1",
+  "type": "object"
+}

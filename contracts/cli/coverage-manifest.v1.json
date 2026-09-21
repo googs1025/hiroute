@@ -1,0 +1,1171 @@
+{
+  "commands": [
+    {
+      "command_id": "schema.list",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.schema.list.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.schema.list.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "schema.show",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.schema.show.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.schema.show.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "system.client-status",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.system.client-status.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.system.client-status.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "operations.find",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.operations.find.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.operations.find.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "system.status",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.system.status.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.system.status.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "system.doctor",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.system.doctor.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.system.doctor.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "settings.show",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.settings.show.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.settings.show.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "settings.preview",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.settings.preview.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.settings.preview.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "settings.apply",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.settings.apply.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.settings.apply.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "setup.preview",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.setup.preview.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.setup.preview.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "setup.apply",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.setup.apply.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.setup.apply.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "setup.status",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.setup.status.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.setup.status.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "agents.scan",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.agents.scan.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.agents.scan.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "agents.list",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.agents.list.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.agents.list.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "agents.show",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.agents.show.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.agents.show.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "agents.connect.preview",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.agents.connect.preview.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.agents.connect.preview.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "agents.connect.apply",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.agents.connect.apply.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.agents.connect.apply.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "agents.connect.status",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.agents.connect.status.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.agents.connect.status.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "agents.restore.preview",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.agents.restore.preview.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.agents.restore.preview.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "agents.restore.apply",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.agents.restore.apply.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.agents.restore.apply.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "agents.check",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.agents.check.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.agents.check.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "agent.launch",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.agent.launch.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.agent.launch.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "compute.scan",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.scan.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.scan.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "compute.list",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.list.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.list.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "compute.show",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.show.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.show.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "compute.refresh",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.refresh.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.refresh.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "compute.connection.options",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.connection.options.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.connection.options.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "compute.connection.preview",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.connection.preview.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.connection.preview.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "compute.connection.apply",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.connection.apply.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.connection.apply.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "compute.connection.authorize",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.connection.authorize.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.connection.authorize.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "compute.connection.test",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.connection.test.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.connection.test.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "compute.credential.list",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.credential.list.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.credential.list.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "compute.credential.add",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.credential.add.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.credential.add.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "compute.credential.replace",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.credential.replace.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.credential.replace.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "compute.credential.rotate",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.credential.rotate.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.credential.rotate.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "compute.credential.remove",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.credential.remove.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.credential.remove.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "compute.key-pool.preview",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.key-pool.preview.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.key-pool.preview.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "compute.key-pool.apply",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.compute.key-pool.apply.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.compute.key-pool.apply.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "routing.options",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.routing.options.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.routing.options.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "worker.executors",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.worker.executors.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.worker.executors.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "worker.dependencies.discover",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.worker.dependencies.discover.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.worker.dependencies.discover.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "worker.dependencies.select",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.worker.dependencies.select.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.worker.dependencies.select.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "worker.plans",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.worker.plans.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.worker.plans.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "worker.list",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.worker.list.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.worker.list.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "worker.exec",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.worker.exec.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.worker.exec.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "worker.status",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.worker.status.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.worker.status.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "worker.wait",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.worker.wait.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.worker.wait.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "worker.result",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.worker.result.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.worker.result.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "worker.read",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.worker.read.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.worker.read.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "worker.continue",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.worker.continue.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.worker.continue.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "worker.cancel",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.worker.cancel.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.worker.cancel.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "tasks.list",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.tasks.list.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.tasks.list.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "tasks.show",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.tasks.show.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.tasks.show.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "tasks.start",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.tasks.start.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.tasks.start.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "tasks.wait",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.tasks.wait.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.tasks.wait.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "tasks.result",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.tasks.result.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.tasks.result.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "tasks.cancel",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.tasks.cancel.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.tasks.cancel.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "tasks.continue",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.tasks.continue.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.tasks.continue.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "work-plans.list",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.work-plans.list.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.work-plans.list.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "routing.list",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.routing.list.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.routing.list.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "routing.show",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.routing.show.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.routing.show.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "routing.preview",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.routing.preview.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.routing.preview.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "routing.apply",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.routing.apply.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.routing.apply.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "routing.classifier.test",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.routing.classifier.test.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.routing.classifier.test.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "routing.classifier.secret.apply",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.routing.classifier.secret.apply.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.routing.classifier.secret.apply.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "models.list",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.models.list.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.models.list.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "models.show",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.models.show.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.models.show.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "models.free",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.models.free.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.models.free.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "prices.effective",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.prices.effective.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.prices.effective.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "prices.override.preview",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.prices.override.preview.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.prices.override.preview.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "prices.override.apply",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.prices.override.apply.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.prices.override.apply.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "operations.get",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.operations.get.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.operations.get.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "operations.watch",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.operations.watch.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.operations.watch.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "operations.cancel",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.operations.cancel.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.operations.cancel.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "sessions.list",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.sessions.list.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.sessions.list.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "sessions.show",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.sessions.show.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.sessions.show.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "sessions.receipt",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.sessions.receipt.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.sessions.receipt.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "sessions.export",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.sessions.export.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.sessions.export.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "sessions.status",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.sessions.status.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.sessions.status.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "sessions.delete.preview",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.sessions.delete.preview.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.sessions.delete.preview.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "sessions.delete.apply",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.sessions.delete.apply.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.sessions.delete.apply.positive",
+        "state": "planned"
+      }
+    },
+    {
+      "command_id": "value.show",
+      "lifecycle": "released",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.value.show.negative",
+        "state": "executable"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.value.show.positive",
+        "state": "executable"
+      }
+    },
+    {
+      "command_id": "observation.plan-quality.samples",
+      "lifecycle": "planned",
+      "negative": {
+        "polarity": "negative",
+        "scenario_id": "p0.observation.plan-quality.samples.negative",
+        "state": "planned"
+      },
+      "positive": {
+        "polarity": "positive",
+        "scenario_id": "p0.observation.plan-quality.samples.positive",
+        "state": "planned"
+      }
+    }
+  ],
+  "descriptor_digest": "sha256:977c6c3de2ed68f4437db403b16db9b0684616acd41124abfe2ff06caf364022",
+  "schema_version": {
+    "major": 1,
+    "minor": 0
+  }
+}

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-worker-task-cancel"
+description = "Enables the worker_task_cancel command without any pre-configured scope."
+commands.allow = ["worker_task_cancel"]
+
+[[permission]]
+identifier = "deny-worker-task-cancel"
+description = "Denies the worker_task_cancel command without any pre-configured scope."
+commands.deny = ["worker_task_cancel"]

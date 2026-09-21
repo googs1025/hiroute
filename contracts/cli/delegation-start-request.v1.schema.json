@@ -1,0 +1,180 @@
+{
+  "$id": "hiroute://contracts/cli/delegation-start-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "agent_plan_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "caller": {
+      "additionalProperties": false,
+      "properties": {
+        "context_id": {
+          "maxLength": 256,
+          "minLength": 1,
+          "type": "string"
+        },
+        "grant_generation": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "grant_id": {
+          "maxLength": 256,
+          "pattern": "^collaboration-grant/",
+          "type": "string"
+        },
+        "workspace_id": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "workspace_id",
+        "context_id",
+        "grant_id",
+        "grant_generation"
+      ],
+      "type": "object"
+    },
+    "execution": {
+      "additionalProperties": false,
+      "properties": {
+        "access": {
+          "enum": [
+            "read_only",
+            "workspace_write",
+            "trusted_native"
+          ]
+        },
+        "delegation_depth": {
+          "const": 1
+        },
+        "duration_ms": {
+          "maximum": 86400000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "network": {
+          "enum": [
+            "gateway_only",
+            "allowed"
+          ]
+        },
+        "root_identity": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "tools": {
+          "items": {
+            "enum": [
+              "read",
+              "edit",
+              "shell"
+            ]
+          },
+          "maxItems": 3,
+          "type": "array"
+        }
+      },
+      "required": [
+        "root_identity",
+        "access",
+        "tools",
+        "network",
+        "duration_ms",
+        "delegation_depth"
+      ],
+      "type": "object"
+    },
+    "expected_plan": {
+      "additionalProperties": false,
+      "properties": {
+        "content_digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "content_revision": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "plan_id": {
+          "type": "string"
+        },
+        "workspace_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "workspace_id",
+        "plan_id",
+        "content_revision",
+        "content_digest"
+      ],
+      "type": "object"
+    },
+    "idempotency_key": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+    },
+    "input": {
+      "additionalProperties": false,
+      "description": "Combined text is limited to 256 KiB.",
+      "properties": {
+        "acceptance_criteria": {
+          "type": "string"
+        },
+        "constraints": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        },
+        "goal": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "goal"
+      ],
+      "type": "object"
+    },
+    "parent_task_ref": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+    },
+    "permit_generation": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "permit_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema": {
+      "const": "hiroute.delegation-start-request/v1"
+    },
+    "workspace_path": {
+      "description": "Absolute local directory; the daemon verifies canonical filesystem identity.",
+      "maxLength": 4096,
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "caller",
+    "agent_plan_id",
+    "permit_id",
+    "permit_generation",
+    "workspace_path",
+    "execution",
+    "input",
+    "idempotency_key"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,145 @@
+{
+  "$id": "hiroute://contracts/cli/delegation-continue-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "caller": {
+      "additionalProperties": false,
+      "properties": {
+        "context_id": {
+          "maxLength": 256,
+          "minLength": 1,
+          "type": "string"
+        },
+        "grant_generation": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "grant_id": {
+          "maxLength": 256,
+          "pattern": "^collaboration-grant/",
+          "type": "string"
+        },
+        "workspace_id": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "workspace_id",
+        "context_id",
+        "grant_id",
+        "grant_generation"
+      ],
+      "type": "object"
+    },
+    "execution": {
+      "additionalProperties": false,
+      "properties": {
+        "access": {
+          "enum": [
+            "read_only",
+            "workspace_write",
+            "trusted_native"
+          ]
+        },
+        "delegation_depth": {
+          "const": 1
+        },
+        "duration_ms": {
+          "maximum": 86400000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "network": {
+          "enum": [
+            "gateway_only",
+            "allowed"
+          ]
+        },
+        "root_identity": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "tools": {
+          "items": {
+            "enum": [
+              "read",
+              "edit",
+              "shell"
+            ]
+          },
+          "maxItems": 3,
+          "type": "array"
+        }
+      },
+      "required": [
+        "root_identity",
+        "access",
+        "tools",
+        "network",
+        "duration_ms",
+        "delegation_depth"
+      ],
+      "type": "object"
+    },
+    "expected_latest_run_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+    },
+    "idempotency_key": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+    },
+    "input": {
+      "additionalProperties": false,
+      "description": "Combined text is limited to 256 KiB.",
+      "properties": {
+        "acceptance_criteria": {
+          "type": "string"
+        },
+        "constraints": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        },
+        "goal": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "goal"
+      ],
+      "type": "object"
+    },
+    "permit_generation": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "permit_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+    },
+    "task_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "caller",
+    "task_id",
+    "expected_latest_run_id",
+    "permit_id",
+    "permit_generation",
+    "execution",
+    "input",
+    "idempotency_key"
+  ],
+  "type": "object"
+}

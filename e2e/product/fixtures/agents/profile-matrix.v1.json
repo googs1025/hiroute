@@ -1,0 +1,30 @@
+{
+  "schema": "hiroute.agent-profile-matrix-fixture/v1",
+  "config_precedence": ["process", "launch", "project", "user", "managed"],
+  "profiles": [
+    {
+      "kind": "codex",
+      "profile_id": "codex-responses-v1",
+      "exact_version": "0.116.0",
+      "protocol": "responses",
+      "dynamic_catalog": true,
+      "static_catalog_fallback": true,
+      "native_subagent_routing": true
+    },
+    {
+      "kind": "claude_code",
+      "profile_id": "claude-messages-v1",
+      "exact_version": "2.1.0",
+      "protocol": "messages",
+      "dynamic_catalog": false,
+      "static_catalog_fallback": false,
+      "native_subagent_routing": false
+    }
+  ],
+  "spawn_guidance_marker": "Available model overrides (optional; inherited parent model is preferred):",
+  "catalog_limits": {
+    "entries": 32,
+    "overlay_bytes": 16384,
+    "purpose_chars": 256
+  }
+}

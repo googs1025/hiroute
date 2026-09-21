@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/p0-semantic-ledger.schema.json",
+  "title": "HiRoute canonical semantic ledger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "oracle_version", "events"],
+  "properties": {
+    "schema_version": {"const": "hiroute.e2e.semantic-ledger/v1"},
+    "oracle_version": {"const": "p0-gateway-oracle-v1"},
+    "events": {"type": "array", "minItems": 1, "items": {"type": "object", "minProperties": 3}}
+  }
+}

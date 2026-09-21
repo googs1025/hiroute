@@ -1,0 +1,12 @@
+{
+  "scenario_id": "transaction.recovery.contract",
+  "formal_composition": "expected_red",
+  "reason": "formal composition not yet available",
+  "composition_owner": "PROCESS-25009",
+  "product_dependencies": [
+    "hiroute-application-api",
+    "hiroute-cpa-bridge",
+    "hiroute-domain",
+    "hiroute-gateway"
+  ]
+}

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-preview-restore-name"
+description = "Enables the preview_restore_name command without any pre-configured scope."
+commands.allow = ["preview_restore_name"]
+
+[[permission]]
+identifier = "deny-preview-restore-name"
+description = "Denies the preview_restore_name command without any pre-configured scope."
+commands.deny = ["preview_restore_name"]

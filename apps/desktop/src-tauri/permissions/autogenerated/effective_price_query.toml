@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-effective-price-query"
+description = "Enables the effective_price_query command without any pre-configured scope."
+commands.allow = ["effective_price_query"]
+
+[[permission]]
+identifier = "deny-effective-price-query"
+description = "Denies the effective_price_query command without any pre-configured scope."
+commands.deny = ["effective_price_query"]

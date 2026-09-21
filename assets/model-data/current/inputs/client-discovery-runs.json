@@ -1,0 +1,107 @@
+{
+  "artifact_kind": "hiroute.model-metadata-client-discovery-runs",
+  "as_of": "2026-09-13",
+  "catalog_digest_compared": "sha256:d87aadd54b9ca20a6cc7510a07ad35a1de817bbfe906a9f84374eb92e9515824",
+  "policy": {
+    "candidate_outputs_materialized": true,
+    "metadata_records_materialized": true,
+    "provenance_controls_scenario_eligibility": false,
+    "regeneration_required_for_candidate_review": true,
+    "scenario_eligibility_basis": "field-completeness",
+    "determinate_outcome_closure_script": ".agents/skills/model-metadata-maintainer/scripts/close_model_metadata.py"
+  },
+  "materialization": {
+    "model_metadata_record_count": 761,
+    "provider_metadata_record_count": 103,
+    "scenario_eligible_record_counts": {
+      "adapter-planning": 4,
+      "context-limit-prefill": 757,
+      "cost-hint-display": 229,
+      "credential-setup-hint": 103,
+      "custom-api-endpoint-prefill": 84,
+      "custom-api-model-prefill": 761,
+      "lifecycle-warning": 761,
+      "model-directory": 761,
+      "model-discovery-setup": 102,
+      "output-limit-prefill": 730,
+      "provider-directory": 103,
+      "reasoning-capability-prefill": 757,
+      "reasoning-rendering-hint": 361,
+      "request-limit-prefill": 733,
+      "vision-capability-prefill": 759
+    },
+    "unique_upstream_model_id_count": 396
+  },
+  "runs": [
+    {
+      "profile_key": "hermes-agent",
+      "profile_digest": "sha256:e106f23c7eeedc28bd4e99c2f42ab793ca5ab2a013c872f9d1b9b744eb8ebcc8",
+      "repository_url": "https://github.com/NousResearch/hermes-agent",
+      "commit": "205645ee424163c7b6cfc032c331c3557797497b",
+      "tree": "647b37309b9df46d51e1f05c87c608770e500180",
+      "result_digest": "sha256:bcfd1eb755962e55b589f44966da4cfd00444e5de89c692118ba8395b369f398",
+      "determinism_check": "byte-identical-two-runs",
+      "scanned_blob_count": 43,
+      "counts": {
+        "excluded_input": 1,
+        "lifecycle_candidate": 0,
+        "locator_candidate": 79,
+        "metadata_shape_signal": 8,
+        "model_candidate": 475,
+        "provider_candidate": 46
+      },
+      "comparison": {
+        "lexically_matched_model_candidate_count": 95,
+        "unmatched_model_candidate_count": 380
+      }
+    },
+    {
+      "profile_key": "openclaw",
+      "profile_digest": "sha256:bfa95ca075570177eadd5e1d000dcd3212911338520a3e46d4ee2a9040f803ba",
+      "repository_url": "https://github.com/openclaw/openclaw",
+      "commit": "f0817f23e939447755c614e29866b0467ee0d7c3",
+      "tree": "16bca19048ac6f7457cb7324b6cfe39a47a00a1c",
+      "result_digest": "sha256:412a94a5e7a12fecae63751b583e91bdeca71d157b2f32647db16e2a72fede92",
+      "determinism_check": "byte-identical-two-runs",
+      "scanned_blob_count": 156,
+      "counts": {
+        "excluded_input": 29,
+        "lifecycle_candidate": 131,
+        "locator_candidate": 60,
+        "metadata_shape_signal": 17,
+        "model_candidate": 277,
+        "provider_candidate": 44
+      },
+      "comparison": {
+        "lexically_matched_model_candidate_count": 78,
+        "unmatched_model_candidate_count": 199
+      }
+    }
+  ],
+  "resolved_catalog_changes": [
+    {
+      "change_key": "client-metadata-field-completeness",
+      "client_signal": "Hermes Agent and OpenClaw expose broad provider/model fields with uneven completeness across usage scenarios.",
+      "provider_resolution": "Source provenance is retained for audit and conflicts but does not assign a confidence tier or gate otherwise sufficient metadata.",
+      "catalog_result": "Materialized unified provider and model records with generic provenance_refs, field-derived completeness, and usable_for scenarios; operational execution remains separately qualified."
+    },
+    {
+      "change_key": "deepseek-v4-identity-split",
+      "client_signal": "Both clients distinguished current and legacy DeepSeek V4 identifiers; OpenClaw also exposed divergent vision and price assertions.",
+      "provider_resolution": "Provider documentation identifies DeepSeek V4.1 Flash and V4 Pro 0813 separately and marks legacy Flash identifiers as accepted retired aliases.",
+      "catalog_result": "Two model identities, binding-level alias lifecycle/replacement, and two product-scoped time-window pricing facts."
+    },
+    {
+      "change_key": "determinate-metadata-closure",
+      "client_signal": "Provider-scoped records kept unknown or partial capability, limit, lifecycle, modality, rendering, and endpoint fields even where official family documentation and the user decision allow a determinate conservative outcome.",
+      "provider_resolution": "Every indeterminate field is closed through a reviewed rule table: searched facts stay observed, conservative family/product inferences are recorded per field as basis=inferred with their rule_key and evidence, and explicit unsupported or not-applicable outcomes are used where the field does not apply.",
+      "catalog_result": "761 model records and 103 provider records are fully determinate; inference rules, field provenance, execution_fit outcomes, and the extended vocabulary are embedded in the catalog and re-verified by closure fixed-point and field validators."
+    },
+    {
+      "change_key": "tencent-hy-callable-ids",
+      "client_signal": "Both clients listed hy3, hy3-preview, and hy4-preview; Hermes also listed the same TokenHub and Token Plan product split.",
+      "provider_resolution": "Tencent product pages establish hy3, hy3-202608, hy3-preview, hy4-preview, 1024k Hy4 context, and Hy3 preview routing to Hy3 in the plan.",
+      "catalog_result": "Documented upstream IDs and six conditional product bindings; account availability and protocol qualification remain runtime-required."
+    }
+  ]
+}

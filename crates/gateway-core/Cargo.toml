@@ -1,0 +1,46 @@
+[package]
+name = "hiroute-gateway-core"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "HiRoute provider-neutral gateway execution core"
+
+[features]
+default = ["pingora-transport"]
+e2e-test-control = []
+pingora-transport = ["dep:pingora-core", "dep:pingora-http", "dep:rustls-pemfile"]
+
+[dependencies]
+arc-swap.workspace = true
+async-trait.workspace = true
+bytes.workspace = true
+futures.workspace = true
+h2.workspace = true
+http.workspace = true
+parking_lot.workspace = true
+serde.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tokio-util.workspace = true
+
+# Keep this exact revision aligned with Design #18. Pingora owns codecs, TLS,
+# connection pooling, and flow control; it does not own HiRoute's lifecycle.
+pingora-core = { git = "https://github.com/cloudflare/pingora.git", rev = "0046038bd402bc82912da862dadf9a479f31e9f1", features = ["rustls"], optional = true }
+pingora-http = { git = "https://github.com/cloudflare/pingora.git", rev = "0046038bd402bc82912da862dadf9a479f31e9f1", optional = true }
+rustls-pemfile = { version = "2.2.0", optional = true }
+
+[dev-dependencies]
+proptest = "1.7.0"
+rcgen = "0.13.2"
+static_assertions = "1.1.0"
+tokio-rustls = "0.26.2"
+
+[[bench]]
+name = "gateway_core_baseline"
+harness = false
+
+[[bench]]
+name = "resource_paths"
+harness = false

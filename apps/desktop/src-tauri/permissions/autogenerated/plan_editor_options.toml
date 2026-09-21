@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-plan-editor-options"
+description = "Enables the plan_editor_options command without any pre-configured scope."
+commands.allow = ["plan_editor_options"]
+
+[[permission]]
+identifier = "deny-plan-editor-options"
+description = "Denies the plan_editor_options command without any pre-configured scope."
+commands.deny = ["plan_editor_options"]

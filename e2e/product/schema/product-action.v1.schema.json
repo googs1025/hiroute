@@ -1,0 +1,375 @@
+{
+  "$id": "hiroute://e2e/product/schema/product-action.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "const": "start_formal_daemon"
+        },
+        "proof": {
+          "additionalProperties": false,
+          "properties": {
+            "expected_evidence_digest": {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "proves": {
+              "items": {
+                "enum": [
+                  "formal_daemon_started",
+                  "real_cli_used",
+                  "local_control_boundary_used",
+                  "descriptor_digest_exact",
+                  "version_mismatch_fails_closed",
+                  "preview_has_zero_side_effects",
+                  "apply_rejection_has_zero_side_effects",
+                  "reserved_operation_fails_closed",
+                  "native_payload_exact",
+                  "golden_exact"
+                ]
+              },
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "proves",
+            "expected_evidence_digest"
+          ],
+          "type": "object"
+        },
+        "role": {
+          "const": "all"
+        }
+      },
+      "required": [
+        "action",
+        "proof",
+        "role"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "const": "run_cli"
+        },
+        "command_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "fixture_ref": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "type": "string"
+        },
+        "polarity": {
+          "enum": [
+            "positive",
+            "negative"
+          ]
+        },
+        "proof": {
+          "additionalProperties": false,
+          "properties": {
+            "expected_evidence_digest": {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "proves": {
+              "items": {
+                "enum": [
+                  "formal_daemon_started",
+                  "real_cli_used",
+                  "local_control_boundary_used",
+                  "descriptor_digest_exact",
+                  "version_mismatch_fails_closed",
+                  "preview_has_zero_side_effects",
+                  "apply_rejection_has_zero_side_effects",
+                  "reserved_operation_fails_closed",
+                  "native_payload_exact",
+                  "golden_exact"
+                ]
+              },
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "proves",
+            "expected_evidence_digest"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "action",
+        "command_id",
+        "fixture_ref",
+        "polarity",
+        "proof"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "const": "control_api_probe"
+        },
+        "capability": {
+          "enum": [
+            "missing",
+            "wrong",
+            "revoked",
+            "valid"
+          ]
+        },
+        "operation": {
+          "enum": [
+            "query",
+            "command"
+          ]
+        },
+        "principal": {
+          "enum": [
+            "current",
+            "other"
+          ]
+        },
+        "proof": {
+          "additionalProperties": false,
+          "properties": {
+            "expected_evidence_digest": {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "proves": {
+              "items": {
+                "enum": [
+                  "formal_daemon_started",
+                  "real_cli_used",
+                  "local_control_boundary_used",
+                  "descriptor_digest_exact",
+                  "version_mismatch_fails_closed",
+                  "preview_has_zero_side_effects",
+                  "apply_rejection_has_zero_side_effects",
+                  "reserved_operation_fails_closed",
+                  "native_payload_exact",
+                  "golden_exact"
+                ]
+              },
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "proves",
+            "expected_evidence_digest"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "action",
+        "capability",
+        "operation",
+        "principal",
+        "proof"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "const": "snapshot_side_effects"
+        },
+        "label": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "type": "string"
+        },
+        "supports": {
+          "items": {
+            "enum": [
+              "formal_daemon_started",
+              "real_cli_used",
+              "local_control_boundary_used",
+              "descriptor_digest_exact",
+              "version_mismatch_fails_closed",
+              "preview_has_zero_side_effects",
+              "apply_rejection_has_zero_side_effects",
+              "reserved_operation_fails_closed",
+              "native_payload_exact",
+              "golden_exact"
+            ]
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "action",
+        "label",
+        "supports"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "const": "assert_no_side_effects"
+        },
+        "after_label": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "type": "string"
+        },
+        "before_label": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "type": "string"
+        },
+        "proof": {
+          "additionalProperties": false,
+          "properties": {
+            "expected_evidence_digest": {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "proves": {
+              "items": {
+                "enum": [
+                  "formal_daemon_started",
+                  "real_cli_used",
+                  "local_control_boundary_used",
+                  "descriptor_digest_exact",
+                  "version_mismatch_fails_closed",
+                  "preview_has_zero_side_effects",
+                  "apply_rejection_has_zero_side_effects",
+                  "reserved_operation_fails_closed",
+                  "native_payload_exact",
+                  "golden_exact"
+                ]
+              },
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "proves",
+            "expected_evidence_digest"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "action",
+        "after_label",
+        "before_label",
+        "proof"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "const": "inject_daemon_fault"
+        },
+        "fault": {
+          "enum": [
+            "journal",
+            "bridge",
+            "publication",
+            "agent_write",
+            "rollback",
+            "probe_lease"
+          ]
+        },
+        "supports": {
+          "items": {
+            "enum": [
+              "formal_daemon_started",
+              "real_cli_used",
+              "local_control_boundary_used",
+              "descriptor_digest_exact",
+              "version_mismatch_fails_closed",
+              "preview_has_zero_side_effects",
+              "apply_rejection_has_zero_side_effects",
+              "reserved_operation_fails_closed",
+              "native_payload_exact",
+              "golden_exact"
+            ]
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "action",
+        "fault",
+        "supports"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "const": "restart_formal_daemon"
+        },
+        "proof": {
+          "additionalProperties": false,
+          "properties": {
+            "expected_evidence_digest": {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "proves": {
+              "items": {
+                "enum": [
+                  "formal_daemon_started",
+                  "real_cli_used",
+                  "local_control_boundary_used",
+                  "descriptor_digest_exact",
+                  "version_mismatch_fails_closed",
+                  "preview_has_zero_side_effects",
+                  "apply_rejection_has_zero_side_effects",
+                  "reserved_operation_fails_closed",
+                  "native_payload_exact",
+                  "golden_exact"
+                ]
+              },
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "proves",
+            "expected_evidence_digest"
+          ],
+          "type": "object"
+        },
+        "role": {
+          "const": "all"
+        }
+      },
+      "required": [
+        "action",
+        "proof",
+        "role"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "HiRoute typed Product action v1"
+}

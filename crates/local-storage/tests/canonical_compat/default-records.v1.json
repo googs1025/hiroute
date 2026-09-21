@@ -1,0 +1,174 @@
+{
+  "collaboration_grant": {
+    "allowed_plan_ids": [
+      "legacy-plan"
+    ],
+    "context_id": "legacy-owner",
+    "credential_verifier": "sha256:3923ea21dc4eba49dbaa901f63469d01ad80f2c56f8133b5566eb068eaaf438c",
+    "enabled": true,
+    "generation": 1,
+    "grant_id": "collaboration-grant/legacy",
+    "schema": "hiroute.agent-collaboration-grant/v1",
+    "workspace_id": "personal/default"
+  },
+  "expected_revisions_digest": "sha256:aedb93d81210f0b511a57e2832d40458f1de6b9bd3e3e9c5049b51bf95b7c457",
+  "model_grant_scope": {
+    "allowed_aliases": [
+      "hiroute/0123456789abcdef"
+    ],
+    "connection_id": "agent-connection/legacy",
+    "plan_grant_digest": "sha256:c86334497743a422a9cc0e637836d63b22704ec7f0b8bb25d990e13ac6f2336b",
+    "protocol": "responses"
+  },
+  "model_grant_scope_digest": "sha256:d873d684bdde68e4bc4c6c81bff8d662d6418dbf787327f1ecfc77c8771c4109",
+  "operation": {
+    "accepted_digest": "sha256:cee3a70a582015af18626f90ae23844fc20167daf7e040df53ce7ffdf0f4e420",
+    "expected_revisions": {
+      "target": 0
+    },
+    "generation": 0,
+    "idempotency": {
+      "key": "canonical-legacy",
+      "operation_kind": "ApplyAgentConnectionChange",
+      "principal": "interactive-user"
+    },
+    "operation_id": "op_19fbb7165722f803770cc4910a835e37",
+    "plan": {
+      "control": {
+        "change_spec_digest": "sha256:c847505b754d441a846f50647d8250ea8ddc1696fa4e78eb7bcb3ab3d11aa776",
+        "payload": {
+          "connection_revision": 4,
+          "desired_digest": "connection.digest.v4"
+        },
+        "payload_digest": "sha256:8cbc1119946b924208fd2b2688ffdb3a35dbf94b71fce9af54464a8a26f9e310",
+        "schema": "hiroute.agent-connection-control/v1",
+        "subject": {
+          "agent_id": "agent.codex",
+          "integration_profile_ref": "codex.profile.v1",
+          "profile_id": "default"
+        },
+        "transaction": "apply"
+      },
+      "external": [
+        {
+          "desired": {
+            "change_spec_digest": "sha256:c847505b754d441a846f50647d8250ea8ddc1696fa4e78eb7bcb3ab3d11aa776",
+            "payload": {
+              "content_digest": "sha256:fixture",
+              "role": "GrantScopedPublication"
+            },
+            "payload_digest": "sha256:51bf002b88e3bdd955b789ca20926d458b6bf959dcb6226fc5ceea112dbf5bde",
+            "role": "grant_scoped_publication",
+            "schema": "hiroute.agent-connection-effect/v1",
+            "subject": {
+              "agent_id": "agent.codex",
+              "integration_profile_ref": "codex.profile.v1",
+              "profile_id": "default"
+            },
+            "transaction": "apply"
+          },
+          "desired_mode": 420,
+          "effect_id": "agent-connection-grant-publication",
+          "kind": "publication",
+          "sensitive": false,
+          "target": "publication/current"
+        },
+        {
+          "desired": {
+            "change_spec_digest": "sha256:c847505b754d441a846f50647d8250ea8ddc1696fa4e78eb7bcb3ab3d11aa776",
+            "payload": {
+              "content_digest": "sha256:fixture",
+              "role": "ManagedConfiguration"
+            },
+            "payload_digest": "sha256:46b854e99eaeaf0030e82445d472c66cee58ca3282810225de922ef15e78a5f1",
+            "role": "managed_configuration",
+            "schema": "hiroute.agent-connection-effect/v1",
+            "subject": {
+              "agent_id": "agent.codex",
+              "integration_profile_ref": "codex.profile.v1",
+              "profile_id": "default"
+            },
+            "transaction": "apply"
+          },
+          "desired_mode": 416,
+          "effect_id": "agent-connection-managed-configuration",
+          "kind": "agent_artifact",
+          "sensitive": false,
+          "target": "agent-connections/961c8374098d378dcb7f6a4a685e099924069e47514b832cda54ef8455cd8d59/managed-configuration"
+        }
+      ],
+      "runtime": [],
+      "secrets": [],
+      "spec": {
+        "command_id": "agents.connect.apply",
+        "desired_state": {
+          "agent_id": "agent.codex",
+          "default_agent_plan_id": "plan.primary",
+          "profile_id": "default"
+        },
+        "resource_id": "agent-connection/codex-default",
+        "schema_version": {
+          "major": 1,
+          "minor": 0
+        }
+      }
+    },
+    "request_digest": "sha256:cee3a70a582015af18626f90ae23844fc20167daf7e040df53ce7ffdf0f4e420",
+    "schema_version": 1,
+    "state": "accepted",
+    "steps": [
+      {
+        "attempts": 0,
+        "deterministic_input_digest": "sha256:9384d659c0613e893093c5fb8dbcfdfaa79ff7b0559e3102ef677ce680c59d97",
+        "effects": [],
+        "kind": "prepare",
+        "sequence": 0,
+        "status": "pending"
+      },
+      {
+        "attempts": 0,
+        "deterministic_input_digest": "sha256:643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+        "effects": [],
+        "kind": "apply_secrets",
+        "sequence": 1,
+        "status": "pending"
+      },
+      {
+        "attempts": 0,
+        "deterministic_input_digest": "sha256:90571309ca12261462481f81bcd4b04a3528cfa776b9e8965e1be8f71b03cb67",
+        "effects": [],
+        "kind": "materialize_sources",
+        "sequence": 2,
+        "status": "pending"
+      },
+      {
+        "attempts": 0,
+        "deterministic_input_digest": "sha256:9b3f8cea622812b3eeb08910fe33592604f605f515c45577d584ab0ba35eaed8",
+        "effects": [],
+        "kind": "compile_publication",
+        "sequence": 3,
+        "status": "pending"
+      },
+      {
+        "attempts": 0,
+        "deterministic_input_digest": "sha256:d6a5a8c5f0f830195944de632720d9969ef49439728fc1d8fb3b8feb780cab5f",
+        "effects": [],
+        "kind": "apply_agent_artifacts",
+        "sequence": 4,
+        "status": "pending"
+      },
+      {
+        "attempts": 0,
+        "deterministic_input_digest": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "effects": [],
+        "kind": "activate",
+        "sequence": 5,
+        "status": "pending"
+      }
+    ],
+    "workspace_id": "personal/default"
+  },
+  "operation_json": "{\"schema_version\":1,\"operation_id\":\"op_19fbb7165722f803770cc4910a835e37\",\"workspace_id\":\"personal/default\",\"idempotency\":{\"principal\":\"interactive-user\",\"operation_kind\":\"ApplyAgentConnectionChange\",\"key\":\"canonical-legacy\"},\"request_digest\":\"sha256:cee3a70a582015af18626f90ae23844fc20167daf7e040df53ce7ffdf0f4e420\",\"accepted_digest\":\"sha256:cee3a70a582015af18626f90ae23844fc20167daf7e040df53ce7ffdf0f4e420\",\"expected_revisions\":{\"target\":0},\"plan\":{\"spec\":{\"schema_version\":{\"major\":1,\"minor\":0},\"command_id\":\"agents.connect.apply\",\"resource_id\":\"agent-connection/codex-default\",\"desired_state\":{\"agent_id\":\"agent.codex\",\"default_agent_plan_id\":\"plan.primary\",\"profile_id\":\"default\"}},\"control\":{\"change_spec_digest\":\"sha256:c847505b754d441a846f50647d8250ea8ddc1696fa4e78eb7bcb3ab3d11aa776\",\"payload\":{\"connection_revision\":4,\"desired_digest\":\"connection.digest.v4\"},\"payload_digest\":\"sha256:8cbc1119946b924208fd2b2688ffdb3a35dbf94b71fce9af54464a8a26f9e310\",\"schema\":\"hiroute.agent-connection-control/v1\",\"subject\":{\"agent_id\":\"agent.codex\",\"integration_profile_ref\":\"codex.profile.v1\",\"profile_id\":\"default\"},\"transaction\":\"apply\"},\"secrets\":[],\"runtime\":[],\"external\":[{\"effect_id\":\"agent-connection-grant-publication\",\"kind\":\"publication\",\"target\":\"publication/current\",\"desired\":{\"change_spec_digest\":\"sha256:c847505b754d441a846f50647d8250ea8ddc1696fa4e78eb7bcb3ab3d11aa776\",\"payload\":{\"content_digest\":\"sha256:fixture\",\"role\":\"GrantScopedPublication\"},\"payload_digest\":\"sha256:51bf002b88e3bdd955b789ca20926d458b6bf959dcb6226fc5ceea112dbf5bde\",\"role\":\"grant_scoped_publication\",\"schema\":\"hiroute.agent-connection-effect/v1\",\"subject\":{\"agent_id\":\"agent.codex\",\"integration_profile_ref\":\"codex.profile.v1\",\"profile_id\":\"default\"},\"transaction\":\"apply\"},\"desired_mode\":420,\"sensitive\":false},{\"effect_id\":\"agent-connection-managed-configuration\",\"kind\":\"agent_artifact\",\"target\":\"agent-connections/961c8374098d378dcb7f6a4a685e099924069e47514b832cda54ef8455cd8d59/managed-configuration\",\"desired\":{\"change_spec_digest\":\"sha256:c847505b754d441a846f50647d8250ea8ddc1696fa4e78eb7bcb3ab3d11aa776\",\"payload\":{\"content_digest\":\"sha256:fixture\",\"role\":\"ManagedConfiguration\"},\"payload_digest\":\"sha256:46b854e99eaeaf0030e82445d472c66cee58ca3282810225de922ef15e78a5f1\",\"role\":\"managed_configuration\",\"schema\":\"hiroute.agent-connection-effect/v1\",\"subject\":{\"agent_id\":\"agent.codex\",\"integration_profile_ref\":\"codex.profile.v1\",\"profile_id\":\"default\"},\"transaction\":\"apply\"},\"desired_mode\":416,\"sensitive\":false}]},\"state\":\"accepted\",\"generation\":0,\"steps\":[{\"sequence\":0,\"kind\":\"prepare\",\"deterministic_input_digest\":\"sha256:9384d659c0613e893093c5fb8dbcfdfaa79ff7b0559e3102ef677ce680c59d97\",\"status\":\"pending\",\"attempts\":0,\"effects\":[]},{\"sequence\":1,\"kind\":\"apply_secrets\",\"deterministic_input_digest\":\"sha256:643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726\",\"status\":\"pending\",\"attempts\":0,\"effects\":[]},{\"sequence\":2,\"kind\":\"materialize_sources\",\"deterministic_input_digest\":\"sha256:90571309ca12261462481f81bcd4b04a3528cfa776b9e8965e1be8f71b03cb67\",\"status\":\"pending\",\"attempts\":0,\"effects\":[]},{\"sequence\":3,\"kind\":\"compile_publication\",\"deterministic_input_digest\":\"sha256:9b3f8cea622812b3eeb08910fe33592604f605f515c45577d584ab0ba35eaed8\",\"status\":\"pending\",\"attempts\":0,\"effects\":[]},{\"sequence\":4,\"kind\":\"apply_agent_artifacts\",\"deterministic_input_digest\":\"sha256:d6a5a8c5f0f830195944de632720d9969ef49439728fc1d8fb3b8feb780cab5f\",\"status\":\"pending\",\"attempts\":0,\"effects\":[]},{\"sequence\":5,\"kind\":\"activate\",\"deterministic_input_digest\":\"sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\",\"status\":\"pending\",\"attempts\":0,\"effects\":[]}]}",
+  "schema": "hiroute.pre-fix-default-canonical-records/v1",
+  "transaction_plan_digest": "sha256:2938278a7bf1e7deef46db80766d31f58622ead2c77492d36019da85fd791d87"
+}

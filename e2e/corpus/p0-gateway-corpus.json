@@ -1,0 +1,188 @@
+{
+  "schema_version": "hiroute.e2e.corpus/v1",
+  "oracle_version": "p0-gateway-oracle-v1",
+  "privacy_markers": [
+    "Keep tool identifiers exact.",
+    "Call lookup for alpha.",
+    "{\"key\":\"alpha\"}",
+    "Preserve tool call IDs.",
+    "Resolve beta.",
+    "beta-value",
+    "Answer with one token.",
+    "gamma",
+    "must-not-resolve-or-connect"
+  ],
+  "cases": [
+    {
+      "id": "responses_to_messages_stream",
+      "grant_access": "allowed",
+      "ingress": {
+        "protocol": "responses",
+        "path": "/v1/responses",
+        "authorization": "valid",
+        "body": {
+          "model": "p0-responses-messages",
+          "stream": true,
+          "instructions": "Keep tool identifiers exact.",
+          "input": [{"type": "message", "role": "user", "content": [{"type": "input_text", "text": "Call lookup for alpha."}]}],
+          "tools": [{"type": "function", "name": "lookup", "description": "Lookup a value", "parameters": {"type": "object", "properties": {"key": {"type": "string"}}, "required": ["key"], "additionalProperties": false}}],
+          "tool_choice": "required",
+          "reasoning": {"effort": "medium"}
+        }
+      },
+      "providers": [{
+        "id": "native-messages-primary",
+        "protocol": "messages",
+        "expected_calls": 1,
+        "expected_request": {
+          "path": "/v1/messages",
+          "body": {
+            "model": "native-messages-1",
+            "max_tokens": 256,
+            "stream": true,
+            "system": "Keep tool identifiers exact.",
+            "messages": [{"role": "user", "content": [{"type": "text", "text": "Call lookup for alpha."}]}],
+            "tools": [{"name": "lookup", "description": "Lookup a value", "input_schema": {"type": "object", "properties": {"key": {"type": "string"}}, "required": ["key"], "additionalProperties": false}}],
+            "tool_choice": {"type": "any"},
+            "thinking": {"type": "enabled", "budget_tokens": 64}
+          }
+        },
+        "response": {
+          "status": 200,
+          "content_type": "text/event-stream",
+          "body": {
+            "kind": "sse",
+            "events": [
+              {"event": "message_start", "data": {"type": "message_start", "message": {"id": "msg_native_1", "type": "message", "role": "assistant", "model": "native-messages-1", "content": [], "stop_reason": null, "usage": {"input_tokens": 19, "output_tokens": 0}}}},
+              {"event": "content_block_start", "data": {"type": "content_block_start", "index": 0, "content_block": {"type": "tool_use", "id": "tool_native_1", "name": "lookup", "input": {}}}},
+              {"event": "content_block_delta", "data": {"type": "content_block_delta", "index": 0, "delta": {"type": "input_json_delta", "partial_json": "${RUN_CHALLENGE_JSON}"}}},
+              {"event": "content_block_stop", "data": {"type": "content_block_stop", "index": 0}},
+              {"event": "message_delta", "data": {"type": "message_delta", "delta": {"stop_reason": "tool_use", "stop_sequence": null}, "usage": {"output_tokens": 11}}},
+              {"event": "message_stop", "data": {"type": "message_stop"}}
+            ]
+          }
+        }
+      }]
+    },
+    {
+      "id": "chat_to_responses_nonstream",
+      "grant_access": "allowed",
+      "ingress": {
+        "protocol": "chat_completions",
+        "path": "/v1/chat/completions",
+        "authorization": "valid",
+        "body": {
+          "model": "p0-chat-responses",
+          "stream": false,
+          "messages": [
+            {"role": "system", "content": "Preserve tool call IDs."},
+            {"role": "user", "content": "Resolve beta."},
+            {"role": "assistant", "tool_calls": [{"id": "call_17", "type": "function", "function": {"name": "lookup", "arguments": "{\"key\":\"beta\"}"}}]},
+            {"role": "tool", "tool_call_id": "call_17", "content": "beta-value"}
+          ],
+          "reasoning_effort": "high"
+        }
+      },
+      "providers": [{
+        "id": "native-responses-primary",
+        "protocol": "responses",
+        "expected_calls": 1,
+        "expected_request": {
+          "path": "/v1/responses",
+          "body": {
+            "model": "native-responses-1",
+            "stream": false,
+            "instructions": "Preserve tool call IDs.",
+            "input": [
+              {"type": "message", "role": "user", "content": [{"type": "input_text", "text": "Resolve beta."}]},
+              {"type": "function_call", "call_id": "call_17", "name": "lookup", "arguments": "{\"key\":\"beta\"}"},
+              {"type": "function_call_output", "call_id": "call_17", "output": "beta-value"}
+            ],
+            "reasoning": {"effort": "high"}
+          }
+        },
+        "response": {
+          "status": 200,
+          "content_type": "application/json",
+          "body": {"kind": "json", "value": {"id": "resp_native_1", "object": "response", "created_at": 1700000000, "status": "completed", "model": "native-responses-1", "output": [{"id": "msg_native_2", "type": "message", "role": "assistant", "status": "completed", "content": [{"type": "output_text", "text": "${RUN_CHALLENGE}", "annotations": []}]}], "usage": {"input_tokens": 23, "output_tokens": 4, "total_tokens": 27}}}
+        }
+      }]
+    },
+    {
+      "id": "messages_to_chat_stream",
+      "grant_access": "allowed",
+      "ingress": {
+        "protocol": "messages",
+        "path": "/v1/messages",
+        "authorization": "valid",
+        "body": {
+          "model": "p0-messages-chat",
+          "max_tokens": 128,
+          "stream": true,
+          "system": "Answer with one token.",
+          "messages": [{"role": "user", "content": [{"type": "text", "text": "gamma"}]}],
+          "tools": [{"name": "lookup", "description": "Lookup", "input_schema": {"type": "object", "properties": {"key": {"type": "string"}}, "required": ["key"]}}],
+          "tool_choice": {"type": "auto"},
+          "thinking": {"type": "enabled", "budget_tokens": 32}
+        }
+      },
+      "providers": [{
+        "id": "native-chat-primary",
+        "protocol": "chat_completions",
+        "expected_calls": 1,
+        "expected_request": {
+          "path": "/v1/chat/completions",
+          "body": {
+            "model": "native-chat-1",
+            "stream": true,
+            "messages": [{"role": "system", "content": "Answer with one token."}, {"role": "user", "content": "gamma"}],
+            "tools": [{"type": "function", "function": {"name": "lookup", "description": "Lookup", "parameters": {"type": "object", "properties": {"key": {"type": "string"}}, "required": ["key"]}}}],
+            "tool_choice": "auto",
+            "reasoning_effort": "medium"
+          }
+        },
+        "response": {
+          "status": 200,
+          "content_type": "text/event-stream",
+          "body": {
+            "kind": "sse",
+            "events": [
+              {"event": null, "data": {"id": "chatcmpl_native_1", "object": "chat.completion.chunk", "model": "native-chat-1", "choices": [{"index": 0, "delta": {"role": "assistant", "content": "${RUN_CHALLENGE}"}, "finish_reason": null}]}},
+              {"event": null, "data": {"id": "chatcmpl_native_1", "object": "chat.completion.chunk", "model": "native-chat-1", "choices": [{"index": 0, "delta": {}, "finish_reason": "stop"}], "usage": {"prompt_tokens": 12, "completion_tokens": 1, "total_tokens": 13}}},
+              {"event": null, "data": "[DONE]"}
+            ]
+          }
+        }
+      }]
+    },
+    {
+      "id": "grant_first_denied_alias",
+      "grant_access": "denied",
+      "ingress": {
+        "protocol": "responses",
+        "path": "/v1/responses",
+        "authorization": "valid",
+        "body": {"model": "p0-denied", "stream": false, "input": "must-not-resolve-or-connect"}
+      },
+      "providers": [{
+        "id": "native-denied-trap",
+        "protocol": "messages",
+        "expected_calls": 0,
+        "expected_request": {
+          "path": "/v1/messages",
+          "body": {
+            "model": "native-denied-1",
+            "max_tokens": 16,
+            "stream": false,
+            "messages": [{"role": "user", "content": [{"type": "text", "text": "must-not-resolve-or-connect"}]}]
+          }
+        },
+        "response": {
+          "status": 200,
+          "content_type": "application/json",
+          "body": {"kind": "json", "value": {"id": "denied-trap", "type": "message", "role": "assistant", "model": "native-denied-1", "content": [{"type": "text", "text": "${RUN_CHALLENGE}"}], "stop_reason": "end_turn"}}
+        }
+      }]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+[package]
+name = "hiroute-local-storage"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+hiroute-diagnostics = { path = "../diagnostics" }
+aes-gcm.workspace = true
+getrandom.workspace = true
+hmac.workspace = true
+hiroute-domain = { path = "../domain" }
+rusqlite.workspace = true
+rustix.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+zeroize.workspace = true
+
+[dev-dependencies]
+hiroute-application = { path = "../application" }
+hiroute-application-api = { path = "../application-api" }
+hiroute-integrations = { path = "../integrations" }
+tempfile.workspace = true

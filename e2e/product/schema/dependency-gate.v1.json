@@ -1,0 +1,54 @@
+{
+  "edges": {
+    "hiroute-application": [
+      "hiroute-application-api",
+      "hiroute-domain"
+    ],
+    "hiroute-application-api": [
+      "hiroute-domain"
+    ],
+    "hiroute-cli": [
+      "hiroute-application-api",
+      "hiroute-integrations"
+    ],
+    "hiroute-daemon": [
+      "hiroute-application",
+      "hiroute-application-api",
+      "hiroute-domain",
+      "hiroute-integrations",
+      "hiroute-local-storage",
+      "hiroute-observation"
+    ],
+    "hiroute-domain": [],
+    "hiroute-gateway": [
+      "hiroute-domain"
+    ],
+    "hiroute-integrations": [
+      "hiroute-application",
+      "hiroute-application-api",
+      "hiroute-domain"
+    ],
+    "hiroute-local-storage": [
+      "hiroute-domain"
+    ],
+    "hiroute-observation": [
+      "hiroute-domain"
+    ],
+    "hiroute-product-e2e": [
+      "hiroute-application-api",
+      "hiroute-domain"
+    ]
+  },
+  "forbidden": [
+    "cli_to_application_implementation",
+    "cli_to_storage",
+    "product_to_gateway_internals",
+    "gateway_to_application",
+    "gateway_to_storage",
+    "domain_to_adapter"
+  ],
+  "schema_version": {
+    "major": 1,
+    "minor": 0
+  }
+}

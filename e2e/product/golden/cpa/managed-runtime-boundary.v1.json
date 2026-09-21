@@ -1,0 +1,12 @@
+{
+  "scenario_id": "process-25017-cpa-connector",
+  "managed_connector_component": "green",
+  "stock_binary_contract": "environment_gated",
+  "gateway_exact_request_adapter": "expected_red",
+  "gateway_adapter_owner": "PROCESS-25008",
+  "production_hiroute_hirouted_composition": "expected_red",
+  "composition_owner": "PROCESS-25009",
+  "three_platform_artifact_packaging": "expected_red",
+  "packaging_owner": "PROCESS-25010",
+  "process_exit_reporting": "separate_from_scenario_state"
+}

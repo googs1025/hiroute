@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-stop-observing"
+description = "Enables the stop_observing command without any pre-configured scope."
+commands.allow = ["stop_observing"]
+
+[[permission]]
+identifier = "deny-stop-observing"
+description = "Denies the stop_observing command without any pre-configured scope."
+commands.deny = ["stop_observing"]

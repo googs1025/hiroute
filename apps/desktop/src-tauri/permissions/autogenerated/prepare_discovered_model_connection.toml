@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-prepare-discovered-model-connection"
+description = "Enables the prepare_discovered_model_connection command without any pre-configured scope."
+commands.allow = ["prepare_discovered_model_connection"]
+
+[[permission]]
+identifier = "deny-prepare-discovered-model-connection"
+description = "Denies the prepare_discovered_model_connection command without any pre-configured scope."
+commands.deny = ["prepare_discovered_model_connection"]

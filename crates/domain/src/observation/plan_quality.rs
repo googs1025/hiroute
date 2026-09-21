@@ -1,0 +1,90 @@
+use serde::{Deserialize, Serialize};
+
+use super::AgentTurnAttributionV1;
+
+/// One bounded query over the latest persisted quality value for each execution segment.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PlanQualitySamplesQuery {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub plan_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub session_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub segment_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub plan_revision: Option<u64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub model_configuration_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub from_ms: Option<i64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub to_ms: Option<i64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub score_gt: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub score_lt: Option<f64>,
+    pub limit: u16,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cursor: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PlanQualityAssessment {
+    pub event_id: String,
+    pub trigger_request_id: String,
+    pub assessed_at_ms: i64,
+    pub target_from_turn_id: String,
+    pub target_through_turn_id: String,
+    pub target_from_ordinal: u64,
+    pub target_through_ordinal: u64,
+    pub score: f64,
+    pub partial: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reason: Option<String>,
+    pub evidence_available: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PlanQualitySample {
+    pub segment_id: String,
+    pub session_id: String,
+    pub plan_id: String,
+    pub plan_revision: u64,
+    pub selected_branch_id: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub executed_branch_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub model_configuration_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub profile_digest: Option<String>,
+    pub attribution: AgentTurnAttributionV1,
+    pub first_turn_id: String,
+    pub first_turn_ordinal: u64,
+    pub last_observed_turn_id: String,
+    pub last_observed_turn_ordinal: u64,
+    pub first_at_ms: i64,
+    pub last_at_ms: i64,
+    pub history_partial: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub first_request_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_request_id: Option<String>,
+    pub execution_evidence_available: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub task_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub run_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub assessment: Option<PlanQualityAssessment>,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PlanQualitySamplesPage {
+    pub samples: Vec<PlanQualitySample>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub next_cursor: Option<String>,
+}

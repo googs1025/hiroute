@@ -1,0 +1,67 @@
+[package]
+name = "hiroute-gateway"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "Standalone HiRoute gateway process boundary"
+
+[features]
+default = []
+e2e-test-control = [
+    "dep:rcgen",
+    "dep:rustls",
+    "hiroute-gateway-core/e2e-test-control",
+]
+
+[[bin]]
+name = "hirouted"
+path = "src/main.rs"
+
+[dependencies]
+async-trait.workspace = true
+bytes.workspace = true
+clap.workspace = true
+getrandom.workspace = true
+hmac.workspace = true
+hiroute-diagnostics = { path = "../diagnostics" }
+hiroute-gateway-core = { path = "../gateway-core" }
+hiroute-domain = { path = "../domain" }
+hiroute-host-runtime = { path = "../host-runtime" }
+http.workspace = true
+parking_lot.workspace = true
+pingora-core = { git = "https://github.com/cloudflare/pingora.git", rev = "0046038bd402bc82912da862dadf9a479f31e9f1", features = ["rustls"] }
+rcgen = { version = "0.13.2", optional = true }
+serde.workspace = true
+serde_json = { workspace = true, features = ["raw_value"] }
+sha2.workspace = true
+thiserror.workspace = true
+tokio = { workspace = true, features = ["fs"] }
+tokio-util.workspace = true
+unicase.workspace = true
+unicode-normalization.workspace = true
+unicode-segmentation.workspace = true
+rustls = { version = "0.23.43", optional = true }
+zeroize.workspace = true
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2.175"
+rustix = { version = "1.1.4", features = ["fs", "process"] }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61.2", features = [
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_Security_Authorization",
+    "Win32_Storage_FileSystem",
+    "Win32_System_Threading",
+] }
+
+[[bench]]
+name = "gateway_replay_paths"
+harness = false
+
+[[bench]]
+name = "gateway_product_paths"
+harness = false
+required-features = ["e2e-test-control"]

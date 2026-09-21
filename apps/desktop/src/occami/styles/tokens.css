@@ -1,0 +1,142 @@
+:root {
+  color-scheme: dark;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --bg: #0b0d12;
+  --bg-raised: #11141b;
+  --bg-soft: #151923;
+  --bg-hover: #1a1f2b;
+  --bg-active: #202637;
+  --panel: rgba(19, 23, 32, 0.92);
+  --panel-solid: #131720;
+  --panel-high: #181d28;
+  --glass: rgba(17, 20, 27, 0.78);
+  --border: rgba(255, 255, 255, 0.085);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --divider: rgba(255, 255, 255, 0.065);
+  --text: #f3f5fa;
+  --text-soft: #c1c7d2;
+  --text-muted: #858d9d;
+  --text-faint: #626a79;
+  --accent: #7b8cff;
+  --accent-bright: #9aa7ff;
+  --accent-soft: rgba(123, 140, 255, 0.15);
+  --cyan: #58d8e8;
+  --cyan-soft: rgba(88, 216, 232, 0.14);
+  --green: #56d39b;
+  --green-soft: rgba(86, 211, 155, 0.14);
+  --yellow: #f2bd62;
+  --yellow-soft: rgba(242, 189, 98, 0.14);
+  --red: #ff6f7d;
+  --red-soft: rgba(255, 111, 125, 0.14);
+  --purple: #b793ff;
+  --shadow-lg: 0 28px 90px rgba(0, 0, 0, 0.42), 0 2px 10px rgba(0, 0, 0, 0.22);
+  --shadow-md: 0 16px 50px rgba(0, 0, 0, 0.26);
+  --radius-xs: 6px;
+  --radius-sm: 9px;
+  --radius-md: 13px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --sidebar-width: 224px;
+  --titlebar-height: 52px;
+  --toolbar-height: 68px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #eef0f4;
+  --bg-raised: #f7f8fa;
+  --bg-soft: #f1f3f7;
+  --bg-hover: #e8ebf1;
+  --bg-active: #e1e5ee;
+  --panel: rgba(252, 252, 253, 0.92);
+  --panel-solid: #fcfcfd;
+  --panel-high: #ffffff;
+  --glass: rgba(247, 248, 250, 0.82);
+  --border: rgba(26, 32, 45, 0.1);
+  --border-strong: rgba(26, 32, 45, 0.17);
+  --divider: rgba(26, 32, 45, 0.075);
+  --text: #171a21;
+  --text-soft: #424957;
+  --text-muted: #737b8a;
+  --text-faint: #9aa0aa;
+  --accent: #5a6fe8;
+  --accent-bright: #475dd8;
+  --accent-soft: rgba(90, 111, 232, 0.12);
+  --cyan: #14899b;
+  --cyan-soft: rgba(20, 137, 155, 0.1);
+  --green: #16875a;
+  --green-soft: rgba(22, 135, 90, 0.1);
+  --yellow: #a56600;
+  --yellow-soft: rgba(165, 102, 0, 0.1);
+  --red: #c94150;
+  --red-soft: rgba(201, 65, 80, 0.1);
+  --purple: #7552cc;
+  --shadow-lg: 0 26px 80px rgba(37, 45, 65, 0.18), 0 2px 10px rgba(37, 45, 65, 0.08);
+  --shadow-md: 0 14px 42px rgba(37, 45, 65, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size:calc(16px * var(--hr-text-scale, 1));
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+button,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  color: white;
+  background: rgba(123, 140, 255, 0.62);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  min-height: 40px;
+  border: 3px solid transparent;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--text-muted) 42%, transparent);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--text-muted) 68%, transparent);
+  background-clip: padding-box;
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/profile.schema.json",
+  "title": "HiRoute black-box E2E process profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "name", "cpa_binary", "sut_binary"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "cpa_binary": { "const": "${HIROUTE_E2E_CPA_BIN}" },
+    "sut_binary": { "const": "${HIROUTE_E2E_SUT_BIN}" }
+  }
+}

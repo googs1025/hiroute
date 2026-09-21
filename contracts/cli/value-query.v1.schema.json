@@ -1,0 +1,39 @@
+{
+  "$id": "hiroute://contracts/cli/value-query.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "agent_plan_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "currency": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "from_ms": {
+      "type": "integer"
+    },
+    "group_by": {
+      "enum": [
+        "none",
+        "day"
+      ]
+    },
+    "period": {
+      "enum": [
+        "today",
+        "seven_days",
+        "thirty_days"
+      ]
+    },
+    "session_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "to_ms": {
+      "type": "integer"
+    }
+  },
+  "type": "object"
+}

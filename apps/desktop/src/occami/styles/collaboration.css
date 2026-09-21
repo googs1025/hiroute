@@ -1,0 +1,31 @@
+.agents-workspace { height: 100%; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.agent-tabs { margin: 12px 20px; justify-self: start; }
+.agents-workspace .master-pane .master-list { height:auto; }
+.task-fact-row > * { min-width: 0; }
+.task-actions { display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0; }
+.task-text { font-size:calc(16px * var(--hr-text-scale)); line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+.worker-choices { display: grid; gap: 10px; }
+.worker-choices .check-row { align-items: start; }
+.worker-choices .check-row > div { min-width: 0; }
+.task-fact-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size:calc(14px * var(--hr-text-scale)); overflow-wrap: anywhere; }
+.task-fact-row small { display: block; color: var(--text-muted); margin-top: 5px; }
+.task-session-link { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; padding: 12px; background: var(--accent-soft); border-radius: 10px; }
+.agents-workspace .detail-hero { flex-wrap: wrap; gap: 12px; }
+.agents-workspace .agent-card { flex-wrap: wrap; }
+.modal .select, .plan-editor .select { width: 100%; min-width: 0; text-overflow: ellipsis; }
+.modal textarea { min-height: 110px; resize: vertical; }
+.plan-editor .field { margin-top: 14px; }
+@media (max-width: 860px) {
+  .task-fact-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .prototype-dock { max-width: calc(100vw - 20px); flex-wrap: wrap; }
+}
+.new-plan-workspace { max-width: 1120px; margin: 0 auto; }
+.new-plan-workspace .plan-editor { padding: 0; }
+.plan-mode-switcher { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.setup-body .plan-editor { padding: 0; }
+.plan-identity-fields .input { min-width: 0; }
+@media (max-width: 860px) {
+  .plan-mode-switcher { grid-template-columns: minmax(0, 1fr); }
+}
+/* Apply the existing editor's container breakpoints in every entry path. */
+.new-plan-workspace, .setup-body { container: detail-pane / inline-size; }

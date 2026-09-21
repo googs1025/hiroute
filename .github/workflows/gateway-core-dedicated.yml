@@ -1,0 +1,32 @@
+name: gateway-hosted-stability
+on:
+  workflow_dispatch:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  stability:
+    runs-on:
+      group: Default Larger Runners
+      labels: ubuntu-latest-16-cores
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/ci-setup
+      - name: Sixty-second production stability
+        run: python3 scripts/ci-run.py --name stability-short -- bash scripts/run-p0-gateway-stability.sh --scenario sixty-second --result artifacts/stability/sixty-second.json
+      - name: Ten-minute production stability
+        run: python3 scripts/ci-run.py --name stability-long -- bash scripts/run-p0-gateway-stability.sh --scenario ten-minute --result artifacts/stability/ten-minute.json
+      - name: Real-socket churn
+        env:
+          HIROUTE_CONNECTION_STRESS_SECONDS: '600'
+          HIROUTE_STRESS_CONNECTIONS: 1000,10000
+        run: python3 scripts/ci-run.py --name churn --require-tests -- cargo test --locked -p hiroute-gateway-core --all-features --test gateway_stability dedicated_1k_10k_sse_connection_churn_for_ten_minutes -- --ignored --exact --nocapture
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hosted-stability-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts
+          if-no-files-found: warn

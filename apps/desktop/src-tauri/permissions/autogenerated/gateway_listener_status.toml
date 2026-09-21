@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-gateway-listener-status"
+description = "Enables the gateway_listener_status command without any pre-configured scope."
+commands.allow = ["gateway_listener_status"]
+
+[[permission]]
+identifier = "deny-gateway-listener-status"
+description = "Denies the gateway_listener_status command without any pre-configured scope."
+commands.deny = ["gateway_listener_status"]

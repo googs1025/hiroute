@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-register-protected-model-input"
+description = "Enables the register_protected_model_input command without any pre-configured scope."
+commands.allow = ["register_protected_model_input"]
+
+[[permission]]
+identifier = "deny-register-protected-model-input"
+description = "Denies the register_protected_model_input command without any pre-configured scope."
+commands.deny = ["register_protected_model_input"]

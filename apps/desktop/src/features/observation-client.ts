@@ -1,0 +1,24 @@
+import { invoke } from '@tauri-apps/api/core';
+
+let readers = 0;
+const queue: (() => void)[] = [];
+
+/** Shared bounded reader for every Desktop observation surface. */
+export async function observationRead<T>(view: string, query: object, signal?: AbortSignal): Promise<T> {
+  if (queue.length >= 32) throw new Error('OBSERVATION_QUERY_BUSY');
+  if (readers >= 2) await new Promise<void>(resolve => queue.push(resolve));
+  else readers++;
+  try {
+    if (signal?.aborted) throw new Error('OBSERVATION_QUERY_CANCELLED');
+    return await invoke<T>('observation_read', {
+      request: {
+        schema: 'hiroute.observation.query/v2',
+        intent: { view, query },
+      },
+    });
+  } finally {
+    const next = queue.shift();
+    if (next) next();
+    else readers--;
+  }
+}

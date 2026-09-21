@@ -1,0 +1,29 @@
+[package]
+name = "hiroute-cpa-bridge"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+hiroute-diagnostics = { path = "../diagnostics" }
+base64.workspace = true
+fs2.workspace = true
+getrandom.workspace = true
+hiroute-application = { path = "../application" }
+hiroute-application-api = { path = "../application-api" }
+hiroute-domain = { path = "../domain" }
+hiroute-integrations = { path = "../integrations" }
+http.workspace = true
+parking_lot.workspace = true
+rustix = { workspace = true, features = ["fs"] }
+semver.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+sha2.workspace = true
+tempfile.workspace = true
+thiserror.workspace = true
+zeroize.workspace = true
+
+[dev-dependencies]

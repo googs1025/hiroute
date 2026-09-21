@@ -1,0 +1,677 @@
+#!/usr/bin/env python3
+"""Non-compiling tests for the SSH workbench contract."""
+import importlib.util
+import fcntl
+from pathlib import Path
+import signal
+import sys
+import tempfile
+import time
+import unittest
+from unittest.mock import patch
+import hashlib
+import io
+import json
+import os
+import socket
+import subprocess
+
+spec = importlib.util.spec_from_file_location("remote_rust", Path(__file__).with_name("remote-rust.py"))
+runner = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(runner)
+
+
+class Contract(unittest.TestCase):
+    def test_eight_shared_slots_and_exclusive_build_really_exclude_each_other(self):
+        import contextlib
+        with tempfile.TemporaryDirectory() as directory, contextlib.ExitStack() as stack:
+            root = Path(directory)
+            self.assertEqual((runner.WORKBENCH_SLOTS, runner.SHARED_BUILD_JOBS, runner.EXCLUSIVE_BUILD_JOBS), (8, 8, 64))
+            occupied = [stack.enter_context(runner.capacity(root, False)) for _ in range(8)]
+            self.assertEqual(len({handles[-1].name for handles in occupied}), 8)
+            for exclusive in (False, True):
+                with self.assertRaises(runner.RunBlocked):
+                    with runner.capacity(root, exclusive, time.monotonic()):
+                        self.fail('Capacity overcommitted')
+            stack.close()
+            with runner.capacity(root, True) as handles:
+                self.assertEqual(len(handles), 11)
+                with self.assertRaises(runner.RunBlocked):
+                    with runner.capacity(root, False, time.monotonic()):
+                        self.fail('Shared job entered an exclusive build')
+
+    def test_new_capacity_waits_for_legacy_workers_and_blocks_old_exclusive_workers(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with (root / 'slot-1.lock').open('a') as old:
+                fcntl.flock(old, fcntl.LOCK_EX)
+                with self.assertRaises(runner.RunBlocked):
+                    with runner.capacity(root, False, time.monotonic()):
+                        self.fail('New policy bypassed old worker')
+            with runner.capacity(root, False):
+                for index in range(3):
+                    with (root / ('slot-%s.lock' % index)).open('a') as old:
+                        with self.assertRaises(BlockingIOError):
+                            fcntl.flock(old, fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+    def test_command_monitor_retains_lock_without_leaking_it_to_command(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            lock_path = root / 'validation.lock'
+            ready = root / 'ready'
+            release = root / 'release'
+            code = '''import os,sys,time
+descriptor=int(sys.argv[1]); lock,ready,release=sys.argv[2:]
+try:
+ inherited=os.fstat(descriptor).st_ino==os.stat(lock).st_ino
+except OSError:
+ inherited=False
+open(ready,'w').write('leaked' if inherited else 'clean')
+while not os.path.exists(release): time.sleep(0.01)
+'''
+            with lock_path.open('a') as handle:
+                fcntl.flock(handle, fcntl.LOCK_EX)
+                # The old direct pass_fds call exposes this descriptor to Cargo.
+                legacy = subprocess.run(
+                    [runner.sys.executable, '-c',
+                     'import os,sys; print(os.fstat(int(sys.argv[1])).st_ino)',
+                     str(handle.fileno())],
+                    pass_fds=(handle.fileno(),), capture_output=True, text=True, check=True)
+                self.assertEqual(int(legacy.stdout), lock_path.stat().st_ino)
+                monitor = runner.start_locked_command(
+                    [runner.sys.executable, '-c', code, str(handle.fileno()),
+                     str(lock_path), str(ready), str(release)], root, None,
+                    subprocess.DEVNULL, [handle])
+                try:
+                    deadline = time.monotonic() + 5
+                    while not ready.exists() and monitor.poll() is None and time.monotonic() < deadline:
+                        time.sleep(0.01)
+                    self.assertEqual(ready.read_text(), 'clean')
+                except BaseException:
+                    os.killpg(monitor.pid, signal.SIGKILL)
+                    monitor.wait()
+                    raise
+            try:
+                with lock_path.open('a') as probe:
+                    with self.assertRaises(BlockingIOError):
+                        fcntl.flock(probe, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    release.touch()
+                    self.assertEqual(monitor.wait(timeout=5), 0)
+                    fcntl.flock(probe, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            finally:
+                if monitor.poll() is None:
+                    os.killpg(monitor.pid, signal.SIGKILL)
+                    monitor.wait()
+
+    def test_worker_records_linked_focused_and_final_feedback(self):
+        # Exercise real git checkouts/locks/subprocesses with a fake compiler, no SSH/SUT.
+        with tempfile.TemporaryDirectory(dir='/tmp') as folder:
+            base = Path(folder)
+            source = base / 'source'
+            subprocess.run(['git', 'init', '-q', str(source)], check=True)
+            git = ['git', '-C', str(source)]
+            subprocess.run([*git, '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid',
+                            '-c', 'commit.gpgsign=false', 'commit', '--allow-empty', '-qm', 'fixture'], check=True)
+            sha = subprocess.check_output([*git, 'rev-parse', 'HEAD'], text=True).strip()
+            ref = subprocess.check_output([*git, 'symbolic-ref', 'HEAD'], text=True).strip()
+            workbench = base / 'workbench'
+            home = base / 'home'
+            binary = home / '.cargo/bin'
+            binary.mkdir(parents=True)
+            fake = '''import sys,json,pathlib
+if '--version' in sys.argv:
+ print(pathlib.Path(sys.argv[0]).name+' fixture');sys.exit(0)
+if 'metadata' in sys.argv:
+ print(json.dumps({'target_directory':str(pathlib.Path.cwd()/'target')}));sys.exit(0)
+bad='--workspace' in sys.argv
+print('Running tests/runtime.rs (target/debug/deps/runtime-abcdef0123456789)')
+print('running 1 test')
+print('test regression ... '+('FAILED' if bad else 'ok'))
+print('test result: '+('FAILED' if bad else 'ok')+'. '+str(int(not bad))+' passed; '+str(int(bad))+' failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s')
+sys.exit(101 if bad else 0)
+'''
+            for name in ('cargo', 'rustc'):
+                path = binary / name
+                path.write_text('#!' + runner.sys.executable + '\n' + fake)
+                path.chmod(0o700)
+            previous = None
+            for index, phase in enumerate(('focused', 'final')):
+                key = '20260916-00000' + str(index) + '-abcdef12'
+                run = workbench / 'runs' / key
+                run.mkdir(parents=True)
+                command = ['cargo', 'test', '-p', 'hiroute-e2e'] if index == 0 else ['cargo', 'test', '--workspace', '--exclude', 'hiroute-desktop']
+                request = dict(id=key, ref=ref, sha=sha, executor_sha=sha, origin=str(source),
+                               command=command, retention='always', exclusive=bool(index),
+                               timeout=10, plan='worker-feedback', phase=phase, related_runs=[previous] if previous else [])
+                if previous:
+                    request['reuse_checkout'] = previous
+                path = run / 'request.json'
+                runner.save(path, request)
+                with patch.object(runner.Path, 'home', return_value=home), patch.dict(os.environ, {}, clear=False), \
+                     patch.object(runner.tempfile, 'gettempdir', return_value=str(base.resolve())), \
+                     patch.object(runner, 'MIN_FREE_BYTES', 0), \
+                     patch.object(runner, 'stats', return_value={'max_cache_size': 30 * 1024**3}):
+                    runner.worker(path)
+                result = json.loads((run / 'result.json').read_text())
+                if result.get('temporary_directory'):
+                    runner.cleanup_temp_directory(result['temporary_directory'])
+                self.assertEqual(result['process_exit'], 101 if index else 0, result)
+                if previous:
+                    self.assertEqual(result['checkout_owner'], previous)
+                    self.assertEqual(result['checkout'], str(workbench / 'worktrees' / previous))
+                self.assertTrue((run / 'validation-report.md').exists())
+                previous = key
+            finding = result['validation_report']['findings'][0]
+            self.assertEqual(finding['kind'], 'focused_full_gap')
+            self.assertEqual(finding['focused_observation'], 'ok')
+            self.assertIn('package_scope', finding['context_differences'])
+
+    def test_submission_preserves_default_and_explicit_failure_policy_with_exclusive_workspace(self):
+        for extra in ([], ['--no-fail-fast']):
+            command = ['cargo', 'test', '--workspace', '--exclude', 'hiroute-desktop', *extra,
+                       '--', '--exact', 'case']
+            def git(argv):
+                if argv[:2] == ['git', 'rev-parse']:
+                    return 'a' * 40
+                if argv[:2] == ['git', 'show']:
+                    return '# committed executor fixture'
+                if argv[:2] == ['git', 'remote']:
+                    return 'fixture-origin'
+                raise AssertionError(argv)
+            with self.subTest(extra=extra), patch.object(runner, 'command', side_effect=git), \
+                 patch.object(runner.subprocess, 'run') as submit, \
+                 patch.object(runner.sys, 'argv', ['remote-rust.py', '--host', 'fixture-host', 'run',
+                                                 '--ref', 'refs/heads/fixture', '--', *command]):
+                runner.main()
+                payload = json.loads(submit.call_args.kwargs['input'])
+            self.assertEqual(payload['command'], command)
+            self.assertTrue(payload['exclusive'])
+
+    def test_bootstrap_preserves_report_helper_for_immutable_worker(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source, helper = '# driver\n', '# report\n'
+            payload = dict(source=source, report_source=helper, executor_sha='a' * 40, sha='b' * 40,
+                           executor_digest=hashlib.sha256(source.encode()).hexdigest(),
+                           report_digest=hashlib.sha256(helper.encode()).hexdigest(), id='run-1')
+            with patch('pathlib.Path.home', return_value=Path(directory)), \
+                 patch('sys.stdin', io.StringIO(json.dumps(payload))), patch('sys.stdout', io.StringIO()), \
+                 patch('os.umask'), patch('subprocess.Popen'):
+                exec(runner.BOOTSTRAP, {})
+            root = Path(directory) / runner.ROOT
+            helper_path = root / 'controllers' / ('a' * 40 + '-report.py')
+            self.assertEqual(helper_path.read_text(), helper)
+            request = json.loads((root / 'runs/run-1/request.json').read_text())
+            self.assertNotIn('report_source', request)
+            payload.update(id='run-2', report_source='# replaced',
+                           report_digest=hashlib.sha256(b'# replaced').hexdigest())
+            with patch('pathlib.Path.home', return_value=Path(directory)), \
+                 patch('sys.stdin', io.StringIO(json.dumps(payload))), patch('os.umask'), \
+                 self.assertRaisesRegex(RuntimeError, 'immutable report helper mismatch'):
+                exec(runner.BOOTSTRAP, {})
+
+    def test_cache_server_temp_outlives_runs_and_does_not_change_test_environment(self):
+        with tempfile.TemporaryDirectory() as parent:
+            root = Path(parent) / "workbench"
+            root.mkdir()
+            run_temp = Path(parent) / "hr-disposable"
+            run_temp.mkdir(mode=0o700)
+            with patch.dict(os.environ, {"TMPDIR": str(run_temp)}):
+                first = runner.cache_server_environment(root)
+                self.assertEqual(os.environ["TMPDIR"], str(run_temp))
+                self.assertNotEqual(first["TMPDIR"], str(run_temp))
+                self.assertEqual(first["SCCACHE_IDLE_TIMEOUT"], "0")
+                self.assertEqual(first["SCCACHE_CACHE_SIZE"], "30G")
+                self.assertEqual(runner.cleanup_temp_directory({
+                    "path": str(run_temp), "system_directory": parent,
+                })["state"], "removed")
+                second = runner.cache_server_environment(root)
+            self.assertEqual(first["TMPDIR"], second["TMPDIR"])
+            self.assertEqual(Path(second["TMPDIR"]).stat().st_mode & 0o7777, 0o700)
+            with patch.object(runner, "command", return_value='{"max_cache_size": 32212254720}') as call:
+                runner.stats(root, "cache-after", second)
+            self.assertEqual(call.call_args.kwargs["env"]["TMPDIR"], second["TMPDIR"])
+
+    def test_cache_server_temp_rejects_symlink_or_unsafe_mode(self):
+        with tempfile.TemporaryDirectory() as parent:
+            root = Path(parent)
+            target = root / "other"
+            target.mkdir(mode=0o700)
+            directory = root / "sccache-tmp"
+            directory.symlink_to(target, target_is_directory=True)
+            with self.assertRaises(runner.RunBlocked):
+                runner.cache_server_environment(root)
+            directory.unlink()
+            directory.mkdir(mode=0o700)
+            directory.chmod(0o755)
+            with self.assertRaises(runner.RunBlocked):
+                runner.cache_server_environment(root)
+
+    def test_private_canonical_temp_is_unique_and_usable_by_child(self):
+        with tempfile.TemporaryDirectory() as parent:
+            base = Path(parent) / "system"
+            base.mkdir()
+            alias = Path(parent) / "alias"
+            alias.symlink_to(base, target_is_directory=True)
+            # macOS's unittest root can exceed the Linux operational limit; test that separately.
+            with patch.object(runner.tempfile, "gettempdir", return_value=str(alias)), \
+                 patch.object(runner, "MAX_TMPDIR_BYTES", 1024):
+                first = runner.prepare_temp_directory()
+                second = runner.prepare_temp_directory()
+            self.assertNotEqual(first["path"], second["path"])
+            path = Path(first["path"])
+            self.assertEqual(path.parent, base.resolve())
+            self.assertEqual(path.stat().st_mode & 0o7777, 0o700)
+            self.assertEqual(path.stat().st_uid, os.geteuid())
+            env = dict(os.environ, TMPDIR=str(path))
+            child = subprocess.run([runner.sys.executable, "-c",
+                                    "import tempfile; print(tempfile.gettempdir()); raise SystemExit(9)"],
+                                   env=env, stdout=subprocess.PIPE, text=True)
+            self.assertEqual(child.returncode, 9)
+            self.assertEqual(child.stdout.strip(), str(path))
+            self.assertTrue(path.is_dir())  # A failed child does not discard diagnosis artifacts.
+
+    def test_long_temp_parent_is_rejected_before_allocation(self):
+        with tempfile.TemporaryDirectory() as parent:
+            base = Path(parent) / ("long" * 12)
+            base.mkdir()
+            with patch.object(runner.tempfile, "gettempdir", return_value=str(base)):
+                with self.assertRaisesRegex(RuntimeError, "too long"):
+                    runner.prepare_temp_directory()
+            self.assertEqual(list(base.iterdir()), [])
+
+    def test_cleanup_temp_removes_only_a_verified_runner_directory(self):
+        with tempfile.TemporaryDirectory() as parent:
+            system = Path(parent) / "system"
+            system.mkdir()
+            owned = system / "hr-owned"
+            owned.mkdir(mode=0o700)
+            os.chmod(owned, 0o700)
+            info = {"path": str(owned), "system_directory": str(system), "mode": "0700"}
+            result = runner.cleanup_temp_directory(info)
+            self.assertEqual(result["state"], "removed")
+            self.assertFalse(owned.exists())
+
+            unsafe = system / "not-a-runner-directory"
+            unsafe.mkdir(mode=0o700)
+            os.chmod(unsafe, 0o700)
+            rejected = runner.cleanup_temp_directory({"path": str(unsafe), "system_directory": str(system)})
+            self.assertEqual(rejected["state"], "retained")
+            self.assertTrue(unsafe.exists())
+
+    def test_retention_policy_only_auto_cleans_the_intended_terminal_results(self):
+        self.assertTrue(runner.should_auto_cleanup({"status": "completed", "retention": "on-failure"}))
+        self.assertFalse(runner.should_auto_cleanup({"status": "failed", "retention": "on-failure"}))
+        self.assertTrue(runner.should_auto_cleanup({"status": "failed", "retention": "never"}))
+        self.assertFalse(runner.should_auto_cleanup({"status": "completed", "retention": "always"}))
+
+    def test_gc_preview_never_changes_result_evidence(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            run = root / "runs" / "20260905-010203-abcdef12"
+            run.mkdir(parents=True)
+            result_path = run / "result.json"
+            result_path.write_text(json.dumps({
+                "id": "20260905-010203-abcdef12", "status": "failed",
+                "retention": "on-failure", "finished_at": 0, "worker_pid": None,
+            }))
+            preview = runner.gc_terminal_runs(root, 1, False, False)
+            self.assertEqual([item["id"] for item in preview["candidates"]], ["20260905-010203-abcdef12"])
+            self.assertEqual(json.loads(result_path.read_text())["status"], "failed")
+
+    def test_cleanup_terminal_run_removes_only_its_registered_generated_worktree(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "workbench"
+            source = Path(directory) / "source"
+            root.mkdir()
+            subprocess.run(["git", "init", str(source)], check=True, stdout=subprocess.DEVNULL)
+            subprocess.run(["git", "-C", str(source), "config", "user.name", "Test"], check=True)
+            subprocess.run(["git", "-C", str(source), "config", "user.email", "test@example.invalid"], check=True)
+            (source / "README").write_text("test\n")
+            subprocess.run(["git", "-C", str(source), "add", "README"], check=True)
+            subprocess.run(["git", "-C", str(source), "commit", "-m", "test"], check=True,
+                           stdout=subprocess.DEVNULL)
+            bare = root / "repository.git"
+            subprocess.run(["git", "clone", "--bare", str(source), str(bare)], check=True,
+                           stdout=subprocess.DEVNULL)
+            run_id = "20260905-010203-abcdef12"
+            checkout = root / "worktrees" / run_id
+            checkout.parent.mkdir()
+            subprocess.run(["git", "--git-dir", str(bare), "worktree", "add", "--detach", str(checkout), "HEAD"],
+                           check=True, stdout=subprocess.DEVNULL)
+            generated = checkout / "crates" / "daemon" / "tests" / "support" / "__pycache__"
+            generated.mkdir(parents=True)
+            (generated / "module.pyc").write_bytes(b"fixture")
+            run = root / "runs" / run_id
+            run.mkdir(parents=True)
+            (run / "command.log").write_text("preserved evidence\n")
+            runner.save(run / "result.json", {
+                "id": run_id, "status": "completed", "retention": "on-failure",
+                "worker_pid": None, "checkout": str(checkout), "finished_at": 0,
+            })
+            cleanup = runner.cleanup_terminal_run(root, run_id)
+            self.assertEqual(cleanup["checkout"]["state"], "removed")
+            self.assertEqual(cleanup["checkout"]["method"], "git-worktree-remove-force")
+            self.assertFalse(checkout.exists())
+            self.assertEqual((run / "command.log").read_text(), "preserved evidence\n")
+
+    def test_reused_checkout_is_exact_leased_and_cleanup_remains_with_owner(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'workbench'
+            source = Path(directory) / 'source'
+            root.mkdir()
+            subprocess.run(['git', 'init', '-q', str(source)], check=True)
+            (source / '.gitignore').write_text('target/\n')
+            subprocess.run(['git', '-C', str(source), 'add', '.gitignore'], check=True)
+            subprocess.run(['git', '-C', str(source), '-c', 'user.name=Fixture',
+                            '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false',
+                            'commit', '-qm', 'base'], check=True)
+            sha = subprocess.check_output(['git', '-C', str(source), 'rev-parse', 'HEAD'], text=True).strip()
+            bare = root / 'repository.git'
+            subprocess.run(['git', 'clone', '-q', '--bare', str(source), str(bare)], check=True)
+            owner = '20260920-010203-abcdef12'
+            borrower = '20260920-010204-abcdef12'
+            checkout = root / 'worktrees' / owner
+            checkout.parent.mkdir()
+            subprocess.run(['git', '--git-dir', str(bare), 'worktree', 'add', '-q', '--detach',
+                            str(checkout), sha], check=True)
+            generated = checkout / 'target' / 'smoke' / 'builds'
+            generated.mkdir(parents=True)
+            (generated / 'artifact').write_bytes(b'attested fixture')
+            owner_run = root / 'runs' / owner
+            owner_run.mkdir(parents=True)
+            runner.save(owner_run / 'result.json', dict(id=owner, status='completed',
+                retention='always', sha=sha, origin=str(source), executor_sha=sha,
+                checkout=str(checkout), worker_pid=None))
+            request = dict(reuse_checkout=owner, sha=sha, origin=str(source), executor_sha=sha)
+            self.assertEqual(runner.verify_reused_checkout(root, request), checkout)
+            borrowed = root / 'runs' / borrower
+            borrowed.mkdir()
+            runner.save(borrowed / 'result.json', dict(id=borrower, status='completed',
+                retention='on-failure', checkout_owner=owner, checkout=str(checkout), worker_pid=None))
+            self.assertEqual(runner.cleanup_terminal_run(root, borrower)['checkout']['state'], 'retained')
+            self.assertEqual((generated / 'artifact').read_bytes(), b'attested fixture')
+            with self.assertRaises(runner.RunBlocked):
+                runner.verify_reused_checkout(root, dict(request, sha='0' * 40))
+            with self.assertRaises(runner.RunBlocked):
+                runner.verify_reused_checkout(root, dict(request, executor_sha='0' * 40))
+            lease = runner.checkout_lease(root, owner)
+            try:
+                self.assertEqual(runner.cleanup_terminal_run(root, owner)['checkout']['state'], 'retained')
+            finally:
+                lease.close()
+            self.assertEqual(runner.cleanup_terminal_run(root, owner)['checkout']['state'], 'removed')
+            self.assertFalse(checkout.exists())
+
+    def test_continuation_preserves_target_and_old_sha_but_rejects_stale_or_dirty_source(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'workbench'
+            source = Path(directory) / 'source'
+            root.mkdir()
+            subprocess.run(['git', 'init', '-q', str(source)], check=True)
+            git = ['git', '-C', str(source)]
+            (source / '.gitignore').write_text('target/\n')
+            subprocess.run([*git, 'add', '.gitignore'], check=True)
+            commit = [*git, '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid',
+                      '-c', 'commit.gpgsign=false', 'commit', '-qm']
+            subprocess.run([*commit, 'base'], check=True)
+            base = subprocess.check_output([*git, 'rev-parse', 'HEAD'], text=True).strip()
+            (source / 'change').write_text('new candidate')
+            subprocess.run([*git, 'add', 'change'], check=True)
+            subprocess.run([*commit, 'candidate'], check=True)
+            candidate = subprocess.check_output([*git, 'rev-parse', 'HEAD'], text=True).strip()
+            bare = root / 'repository.git'
+            subprocess.run(['git', 'clone', '-q', '--bare', str(source), str(bare)], check=True)
+            owner = '20260920-010201-abcdef12'
+            next_run = '20260920-010202-abcdef12'
+            checkout = root / 'worktrees' / owner
+            checkout.parent.mkdir()
+            subprocess.run(['git', '--git-dir', str(bare), 'worktree', 'add', '-q', '--detach', str(checkout), base], check=True)
+            target = checkout / 'target'
+            target.mkdir()
+            (target / 'sentinel').write_bytes(b'compiler objects')
+            owner_run = root / 'runs' / owner
+            owner_run.mkdir(parents=True)
+            common = dict(origin=str(source), ref='refs/heads/fixture', executor_digest='driver',
+                          schedule_digest='scheduler', plan='integration')
+            previous = dict(common, id=owner, status='failed', sha=base, retention='always',
+                            checkout=str(checkout), worker_pid=None)
+            runner.save(owner_run / 'result.json', previous)
+            runner.save(root / ('checkout-' + owner + '.json'), dict(run_id=owner, sha=base))
+            request = dict(common, id=next_run, continue_checkout=owner, sha=candidate)
+            self.assertEqual(runner.continuation_owner(root, request), owner)
+            (checkout / 'uncommitted').touch()
+            with self.assertRaises(runner.RunBlocked):
+                runner.continue_checkout(root, request, owner)
+            (checkout / 'uncommitted').unlink()
+            for key, value in (('plan', 'other'), ('executor_digest', 'changed')):
+                with self.assertRaises(runner.RunBlocked):
+                    runner.continue_checkout(root, dict(request, **{key: value}), owner)
+            runner.continue_checkout(root, request, owner)
+            self.assertEqual((target / 'sentinel').read_bytes(), b'compiler objects')
+            self.assertEqual(subprocess.check_output(['git', '-C', str(checkout), 'rev-parse', 'HEAD'], text=True).strip(), candidate)
+            self.assertEqual(json.loads((owner_run / 'result.json').read_text())['sha'], base)
+            with self.assertRaises(runner.RunBlocked):
+                runner.continue_checkout(root, request, owner)
+
+    @unittest.skipUnless(runner.sys.platform.startswith("linux"), "Linux socket path budget")
+    def test_linux_socket_under_default_short_directory(self):
+        info = runner.prepare_temp_directory()
+        path = Path(info["path"])
+        try:
+            socket_path = path / "test-123456789" / "run" / "hiroute" / "control.sock"
+            socket_path.parent.mkdir(parents=True)
+            with socket.socket(socket.AF_UNIX) as server:
+                server.bind(str(socket_path))
+        finally:
+            runner.shutil.rmtree(path)  # Only this test's freshly allocated directory.
+
+    def test_bootstrap_keeps_immutable_driver(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source = "# committed driver\n"
+            payload = dict(source=source, executor_sha="a" * 40, sha="b" * 40,
+                           executor_digest=hashlib.sha256(source.encode()).hexdigest())
+            # Both submissions use the same controller without rewriting its inode.
+            inode = None
+            for index in range(2):
+                payload["id"] = "run-%s" % index
+                with patch("pathlib.Path.home", return_value=Path(directory)), \
+                     patch("sys.stdin", io.StringIO(json.dumps(payload))), \
+                     patch("sys.stdout", io.StringIO()), patch("os.umask"), \
+                     patch("subprocess.Popen") as launch:
+                    exec(runner.BOOTSTRAP, {})
+                    launch.assert_called_once()
+                driver = Path(directory) / runner.ROOT / "controllers" / ("a" * 40 + ".py")
+                self.assertEqual(driver.read_text(), source)
+                if inode is not None:
+                    self.assertEqual(driver.stat().st_ino, inode)
+                inode = driver.stat().st_ino
+
+    def test_bootstrap_dispatches_maintenance_without_creating_a_run(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source = "# committed driver\n"
+            payload = dict(
+                mode="maintenance", driver_args=["_cleanup", "20260905-010203-abcdef12"],
+                source=source, executor_sha="b" * 40,
+                executor_digest=hashlib.sha256(source.encode()).hexdigest(),
+            )
+            with patch("pathlib.Path.home", return_value=Path(directory)), \
+                 patch("sys.stdin", io.StringIO(json.dumps(payload))), \
+                 patch("sys.stdout", io.StringIO()), patch("os.umask"), \
+                 patch("subprocess.run") as invoke:
+                exec(runner.BOOTSTRAP, {})
+            invoke.assert_called_once()
+            command = invoke.call_args.args[0]
+            self.assertEqual(command[-2:], ["_cleanup", "20260905-010203-abcdef12"])
+            self.assertFalse((Path(directory) / runner.ROOT / "runs").exists())
+
+    def test_home_symlink_but_not_shared_target(self):
+        with tempfile.TemporaryDirectory() as directory:
+            real = Path(directory) / "real"
+            real.mkdir()
+            alias = Path(directory) / "alias"
+            alias.symlink_to(real, target_is_directory=True)
+            runner.check_target(alias, str(real / "target"))
+            with self.assertRaises(RuntimeError):
+                runner.check_target(alias, str(real / "shared"))
+            (real / "target").symlink_to(real / "shared", target_is_directory=True)
+            with self.assertRaises(RuntimeError):
+                runner.check_target(alias, str(real / "target"))
+
+    def test_command_boundary(self):
+        runner.validate("refs/heads/codex/test", "a" * 40, ["cargo", "test", "--locked"])
+        runner.validate("refs/heads/codex/test", "a" * 40, ["cargo", "fmt", "--all", "--", "--check"])
+        for argv in (["cargo", "clean"], ["sh", "-c", "true"],
+                     ["cargo", "fmt"],
+                     ["cargo", "test", "--target-dir=/tmp/shared"],
+                     ["cargo", "check", "--config", "build.target-dir='x'"]):
+            with self.assertRaises(ValueError):
+                runner.validate("refs/heads/codex/test", "a" * 40, argv)
+
+    def test_sha_and_ref_boundary(self):
+        for ref, sha in (("HEAD", "a" * 40), ("refs/heads/a..b", "a" * 40),
+                         ("refs/heads/a", "main")):
+            with self.assertRaises(ValueError):
+                runner.validate(ref, sha, ["cargo", "test"])
+
+    def test_zero_selected_is_not_success(self):
+        result = runner.test_summary("test result: ok. 0 passed; 0 failed; 80 ignored", ["cargo", "test"])
+        self.assertEqual(result["state"], "zero_tests_passed")
+
+    def test_test_exit_is_not_scenario_verdict(self):
+        result = runner.test_summary("test result: ok. 80 passed; 0 failed; 0 ignored", ["cargo", "test"])
+        self.assertEqual(result["counts"]["passed"], 80)
+        self.assertEqual(result["scenario_state"], "not_assessed")
+
+    def test_scheduled_result_uses_terminal_counts_instead_of_nested_child_counts(self):
+        log = ("test result: ok. 40 passed; 0 failed; 0 ignored\n"
+               "test result: ok. 1 passed; 0 failed; 0 ignored\n")
+        result = runner.scheduled_test_summary(
+            log, ["cargo", "test"], {"complete": True,
+                                    "counts": {"passed": 1, "failed": 0, "ignored": 0}})
+        self.assertEqual(result["counts"], {"passed": 1, "failed": 0, "ignored": 0})
+        self.assertEqual(result["state"], "rust_tests_passed")
+        self.assertEqual(result["scenario_state"], "not_assessed")
+
+    def test_compile_is_not_test(self):
+        self.assertEqual(runner.test_summary("", ["cargo", "check"])["state"], "not_assessed")
+
+    def test_atomic_result(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "result.json"
+            runner.save(path, {"status": "waiting"})
+            runner.save(path, {"status": "completed"})
+            self.assertIn("completed", path.read_text())
+            self.assertFalse(path.with_suffix(".tmp").exists())
+
+    def test_completed_dag_requires_complete_report_without_hiding_test_exit(self):
+        result = {"schedule": "workspace-dag", "status": "completed", "process_exit": 0,
+                  "tests": {"state": "rust_tests_passed"},
+                  "validation_report": {"complete": False, "error": "report write failed"}}
+        runner.require_dag_report(result)
+        self.assertEqual(result["status"], "failed")
+        self.assertEqual(result["process_exit"], 0)
+        self.assertIn("report write failed", result["error"])
+        result.update(status="completed", validation_report={"complete": True})
+        result.pop("error")
+        runner.require_dag_report(result)
+        self.assertEqual(result["status"], "completed")
+        result.update(status="completed", validation_report={"complete": False})
+        runner.require_dag_report(result)
+        self.assertEqual(result["status"], "failed")
+        result.update(status="completed", schedule="workspace-smoke")
+        runner.require_dag_report(result)
+        self.assertEqual(result["status"], "completed")
+
+    def test_wait_observes_terminal_result_once_without_verbose_run_data(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            run_id = "20260920-120000-abcdef12"
+            result = root / "runs" / run_id / "result.json"
+            result.parent.mkdir(parents=True)
+            runner.save(result, {"id": run_id, "status": "running", "sha": "a" * 40})
+            process = subprocess.Popen(
+                [sys.executable, "-c", runner.WAIT_BOOTSTRAP, run_id, "3", str(root)],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+            )
+            try:
+                time.sleep(0.1)
+                runner.save(result, {"id": run_id, "status": "completed", "sha": "a" * 40,
+                                     "schedule": "workspace-dag",
+                                     "process_exit": 0, "execution_seconds": 140.611,
+                                     "performance_goal_met": True,
+                                     "validation_report": {"complete": True,
+                                                           "top_modules": [{"module": "large"}]},
+                                     "tests": {"state": "rust_tests_passed",
+                                               "counts": {"passed": 2164, "failed": 0, "ignored": 19}},
+                                     "schedule_result": {"complete": True, "targets": 86,
+                                                         "executed_targets": 86,
+                                                         "target_results": [{"log": "/private/large.log"}]}})
+                output, error = process.communicate(timeout=4)
+            finally:
+                if process.poll() is None:
+                    process.kill()
+                    process.wait()
+            self.assertEqual((process.returncode, error), (0, ""))
+            self.assertEqual(len(output.splitlines()), 1)
+            summary = json.loads(output)
+            self.assertEqual(summary["wait_state"], "terminal")
+            self.assertEqual(summary["tests"]["counts"]["passed"], 2164)
+            self.assertTrue(summary["performance_goal_met"])
+            self.assertEqual(summary["validation_report"], {"complete": True})
+            self.assertEqual(summary["schedule"], {"complete": True, "targets": 86,
+                                                   "executed_targets": 86})
+            self.assertNotIn("/private/large.log", output)
+
+    def test_wait_exposes_incomplete_dag_report(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            run_id = "20260920-120000-abcdef12"
+            result = root / "runs" / run_id / "result.json"
+            result.parent.mkdir(parents=True)
+            runner.save(result, {"id": run_id, "status": "failed", "sha": "a" * 40,
+                                 "schedule": "workspace-dag", "process_exit": 0,
+                                 "validation_report": {"complete": False,
+                                                       "error": "report write failed " * 50}})
+            observed = subprocess.run([sys.executable, "-c", runner.WAIT_BOOTSTRAP,
+                                       run_id, "0", str(root)], capture_output=True,
+                                      text=True, check=True)
+            summary = json.loads(observed.stdout)
+            self.assertEqual(summary["status"], "failed")
+            self.assertEqual(summary["process_exit"], 0)
+            self.assertFalse(summary["validation_report"]["complete"])
+            self.assertEqual(len(summary["validation_report"]["error"]), 300)
+
+    def test_wait_timeout_and_missing_run_are_distinct(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            run_id = "20260920-120000-abcdef12"
+            command = [sys.executable, "-c", runner.WAIT_BOOTSTRAP, run_id, "0", str(root)]
+            missing = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(missing.returncode, 2)
+            self.assertEqual(json.loads(missing.stdout)["wait_state"], "missing")
+            result = root / "runs" / run_id / "result.json"
+            result.parent.mkdir(parents=True)
+            runner.save(result, {"id": run_id, "status": "running", "sha": "a" * 40})
+            pending = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(pending.returncode, 0)
+            self.assertEqual(json.loads(pending.stdout), {
+                "run_id": run_id, "wait_state": "timeout", "status": "running", "sha": "a" * 40})
+            runner.save(result, {"id": run_id, "status": "failed", "sha": "a" * 40,
+                                 "process_exit": 101, "error": "build failed " * 100})
+            failed = subprocess.run(command, capture_output=True, text=True)
+            summary = json.loads(failed.stdout)
+            self.assertEqual((failed.returncode, summary["wait_state"], summary["process_exit"]),
+                             (0, "terminal", 101))
+            self.assertEqual(len(summary["error"]), 300)
+            runner.save(result, {"id": run_id, "status": "completed", "sha": "a" * 40,
+                                 "process_exit": 0, "performance_goal_met": True,
+                                 "tests": {"state": "not_assessed",
+                                           "counts": {"passed": 0, "failed": 0, "ignored": 0}}})
+            format_check = json.loads(subprocess.run(command, capture_output=True,
+                                                     text=True, check=True).stdout)
+            self.assertNotIn("performance_goal_met", format_check)
+            self.assertNotIn("tests", format_check)
+
+
+if __name__ == "__main__":
+    unittest.main()

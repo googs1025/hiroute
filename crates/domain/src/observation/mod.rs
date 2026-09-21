@@ -1,0 +1,42 @@
+//! Product-owned observation contracts.
+//!
+//! Execution types describe the versioned adapter-facing fact boundary consumed by the local
+//! writer; content remains an independent versioned channel. They are not a dependency on a
+//! Gateway implementation DTO and contain no telemetry mapping. Observation is evidence-only:
+//! none of these ports may mutate routing/runtime state.
+
+mod envelope;
+mod execution;
+mod execution_attempt;
+#[cfg(test)]
+mod execution_tests;
+mod execution_validation;
+mod feedback;
+mod identity;
+mod lifecycle;
+mod plan_quality;
+mod pricing;
+mod projection;
+mod query;
+mod query_v2;
+
+pub use envelope::*;
+pub use execution::*;
+pub use execution_attempt::*;
+pub use feedback::*;
+pub use identity::*;
+pub use lifecycle::*;
+pub use plan_quality::*;
+pub use pricing::*;
+pub use projection::*;
+pub use query::*;
+pub use query_v2::*;
+
+mod content_catalog;
+pub use content_catalog::*;
+
+mod retention_v2;
+pub use retention_v2::*;
+
+mod value_summary;
+pub use value_summary::*;

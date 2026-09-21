@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-worker-dependencies-select-cancel"
+description = "Enables the worker_dependencies_select_cancel command without any pre-configured scope."
+commands.allow = ["worker_dependencies_select_cancel"]
+
+[[permission]]
+identifier = "deny-worker-dependencies-select-cancel"
+description = "Denies the worker_dependencies_select_cancel command without any pre-configured scope."
+commands.deny = ["worker_dependencies_select_cancel"]

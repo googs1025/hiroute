@@ -1,0 +1,300 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "HiRoute Decision API",
+    "version": "1.0.0",
+    "description": "Choose from the allowed branches and optionally assess the preceding execution stage. This multi-branch decision contract can be implemented with Jev, an LLM, or a custom strategy; it is not restricted to smart-saving or binary classification."
+  },
+  "servers": [
+    {
+      "url": "https://classifier.example",
+      "description": "Example only. HiRoute posts to the complete endpoint configured in the AgentPlan."
+    }
+  ],
+  "paths": {
+    "/v1/decisions": {
+      "post": {
+        "operationId": "decideAgentTurn",
+        "summary": "Choose an allowed branch and optionally assess the preceding execution stage",
+        "description": "HiRoute sends one request when no valid branch decision can be inherited, a real user message is appended to history that ContextHold proved continuous, or ContextHold no longer supplies a preferred candidate. These causes are coalesced into one decision. The service does not detect compaction and must not require latest_user text to change. The configured endpoint may use an optional operator-configured authentication header. It must return one branch from the request. An assessment is valid only when assessment_from is not null.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClassifierRequest"
+              },
+              "example": {
+                "branches": {
+                  "smart_saving_simple": "Use the economy model group for a clear, well-scoped task.",
+                  "smart_saving_complex": "Use the primary model group for an ambiguous, cross-module, diagnostic, concurrent, or deep-reasoning task."
+                },
+                "latest_user": [
+                  {
+                    "kind": "text",
+                    "text": "Fix this failing test."
+                  }
+                ],
+                "visible_conversation": [],
+                "history_partial": false,
+                "assessment_from": null
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A strict branch decision with an optional competence assessment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassifierResponse"
+                },
+                "examples": {
+                  "selectionOnly": {
+                    "summary": "Choose a branch without updating an assessment",
+                    "value": {
+                      "branch_id": "smart_saving_simple"
+                    }
+                  },
+                  "selectionAndAssessment": {
+                    "summary": "Choose a branch and assess the requested preceding stage",
+                    "value": {
+                      "branch_id": "smart_saving_complex",
+                      "assessment": {
+                        "score": 0.82,
+                        "partial": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ClassifierRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "branches",
+          "latest_user",
+          "visible_conversation",
+          "history_partial",
+          "assessment_from"
+        ],
+        "properties": {
+          "branches": {
+            "type": "object",
+            "description": "The branch IDs allowed for this request and their HiRoute-defined meanings. The service must return one of these exact IDs.",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "latest_user": {
+            "type": "array",
+            "description": "The complete, non-empty user content projection from the current request. It may repeat the preceding routing round or be a client-generated summary or continuation; that shape alone is not feedback.",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/UserContentPart"
+            }
+          },
+          "visible_conversation": {
+            "type": "array",
+            "description": "Sealed routing execution rounds retained by HiRoute, in original order. A round is one branch decision plus inherited model requests, and may have unknown status when sealed at a later decision boundary without a task terminal.",
+            "items": {
+              "$ref": "#/components/schemas/VisibleAgentTurn"
+            }
+          },
+          "history_partial": {
+            "type": "boolean",
+            "description": "True when restart, TTL, LRU eviction, or an observation gap makes the supplied history incomplete."
+          },
+          "assessment_from": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "A zero-based index into visible_conversation. When non-null, the suffix beginning here is the preceding execution stage that may be assessed."
+          }
+        }
+      },
+      "ClassifierResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "branch_id"
+        ],
+        "properties": {
+          "branch_id": {
+            "type": "string",
+            "description": "One exact key from the request branches object."
+          },
+          "assessment": {
+            "$ref": "#/components/schemas/CompetenceAssessment"
+          }
+        }
+      },
+      "CompetenceAssessment": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "score",
+          "partial"
+        ],
+        "properties": {
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Model competence for the assessed stage, not confidence or task-complexity probability."
+          },
+          "partial": {
+            "type": "boolean",
+            "description": "Whether the service omitted any evidence from the requested stage while assessing it."
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Optional human-readable evidence summary."
+          }
+        }
+      },
+      "VisibleAgentTurn": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "branch_id",
+          "user",
+          "status",
+          "steps"
+        ],
+        "properties": {
+          "branch_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The branch selected at the routing execution-round boundary, or null when unavailable."
+          },
+          "executed_branch_id": {
+            "type": "string",
+            "description": "Present only when the accepted output came entirely from a fallback branch different from branch_id."
+          },
+          "user": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserContentPart"
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "failed",
+              "interrupted",
+              "unknown"
+            ]
+          },
+          "steps": {
+            "type": "array",
+            "description": "One ordered item per business-model request. Each item contains only accepted text and coarse tool activity.",
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/VisibleContentPart"
+              }
+            }
+          }
+        }
+      },
+      "UserContentPart": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TextPart"
+          },
+          {
+            "$ref": "#/components/schemas/UnavailablePart"
+          }
+        ]
+      },
+      "VisibleContentPart": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TextPart"
+          },
+          {
+            "$ref": "#/components/schemas/ToolActivityPart"
+          },
+          {
+            "$ref": "#/components/schemas/UnavailablePart"
+          }
+        ]
+      },
+      "TextPart": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "text"
+        ],
+        "properties": {
+          "kind": {
+            "const": "text"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "ToolActivityPart": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "tool",
+          "status"
+        ],
+        "properties": {
+          "kind": {
+            "const": "tool_activity"
+          },
+          "tool": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "failed",
+              "unknown"
+            ]
+          }
+        }
+      },
+      "UnavailablePart": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "source_kind"
+        ],
+        "properties": {
+          "kind": {
+            "const": "unavailable"
+          },
+          "source_kind": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

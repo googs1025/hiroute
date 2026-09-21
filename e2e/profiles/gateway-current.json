@@ -1,0 +1,7 @@
+{
+  "schema_version": "hiroute.e2e.production-profile/v2",
+  "name": "gateway-current",
+  "identity_source": "verified_checkout",
+  "completion_policy": "green_only",
+  "scenario": "gateway.responses.controlled"
+}

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-worker-dependencies-select-prepare"
+description = "Enables the worker_dependencies_select_prepare command without any pre-configured scope."
+commands.allow = ["worker_dependencies_select_prepare"]
+
+[[permission]]
+identifier = "deny-worker-dependencies-select-prepare"
+description = "Denies the worker_dependencies_select_prepare command without any pre-configured scope."
+commands.deny = ["worker_dependencies_select_prepare"]

@@ -1,0 +1,139 @@
+--- a/cmd/server/main.go
++++ b/cmd/server/main.go
+@@ -85,6 +85,7 @@
+ 	var vertexImportPrefix string
+ 	var configPath string
+ 	var password string
++	var localPasswordStdin bool
+ 	var homeJWT string
+ 	var homeDisableClusterDiscovery bool
+ 	var tuiMode bool
+@@ -104,6 +105,7 @@
+ 	flag.StringVar(&vertexImport, "vertex-import", "", "Import Vertex service account key JSON file")
+ 	flag.StringVar(&vertexImportPrefix, "vertex-import-prefix", "", "Prefix for Vertex model namespacing (use with -vertex-import)")
+ 	flag.StringVar(&password, "password", "", "")
++	flag.BoolVar(&localPasswordStdin, "local-password-stdin", false, "Read the local management credential from the parent pipe")
+ 	flag.StringVar(&homeJWT, "home-jwt", "", "Home control plane JWT for mTLS certificate bootstrap and connection")
+ 	flag.BoolVar(&homeDisableClusterDiscovery, "home-disable-cluster-discovery", false, "Disable Home CLUSTER NODES discovery and keep using the configured -home-jwt address")
+ 	flag.BoolVar(&tuiMode, "tui", false, "Start with terminal management UI")
+@@ -145,6 +147,18 @@
+ 
+ 	// Parse the command-line flags.
+ 	flag.Parse()
++	if localPasswordStdin {
++		if password != "" || os.Getenv("MANAGEMENT_PASSWORD") != "" {
++			log.Error("local management pipe cannot be combined with another password input")
++			return
++		}
++		localPassword, errPassword := readLocalManagementPassword(os.Stdin)
++		if errPassword != nil {
++			log.Error("local management pipe credential is invalid")
++			return
++		}
++		password = localPassword
++	}
+ 
+ 	// Core application variables.
+ 	var err error
+@@ -752,6 +766,11 @@
+ 			managementasset.StartAutoUpdater(context.Background(), configFilePath)
+ 			misc.StartAntigravityVersionUpdater(context.Background())
+ 			startModelCatalogUpdaters(localModel, cfg.Home.Enabled)
++			if localPasswordStdin {
++				// The managed parent owns process lifetime, not the interactive keep-alive endpoint.
++				serverOptions = append(serverOptions, api.WithLocalManagementPassword(password))
++				password = ""
++			}
+ 			cmd.StartServiceWithPluginHost(cfg, configFilePath, password, pluginHost, serverOptions...)
+ 		}
+ 	}
+--- /dev/null
++++ b/cmd/server/local_management_password.go
+@@ -0,0 +1,24 @@
++package main
++
++import (
++	"errors"
++	"io"
++)
++
++// The managed parent owns this pipe and closes it after one bounded random credential.
++// Keep credentials out of argv, environment variables and diagnostic messages.
++func readLocalManagementPassword(input io.Reader) (string, error) {
++	content, errRead := io.ReadAll(io.LimitReader(input, 129))
++	if errRead != nil || len(content) < 32 || len(content) > 128 {
++		return "", errors.New("invalid local management credential")
++	}
++	for _, c := range content {
++		if !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
++			(c >= '0' && c <= '9') || c == '-' || c == '_') {
++			return "", errors.New("invalid local management credential")
++		}
++	}
++	password := string(content)
++	clear(content)
++	return password, nil
++}
+--- /dev/null
++++ b/cmd/server/local_management_password_test.go
+@@ -0,0 +1,19 @@
++package main
++
++import (
++	"strings"
++	"testing"
++)
++
++func TestLocalManagementPasswordPipeBounds(t *testing.T) {
++	for _, invalid := range []string{"", strings.Repeat("x", 31), strings.Repeat("x", 129), strings.Repeat("x", 32) + "\n", strings.Repeat("x", 32) + "\x00"} {
++		if value, errRead := readLocalManagementPassword(strings.NewReader(invalid)); errRead == nil || value != "" {
++			t.Fatal("invalid credential was accepted")
++		}
++	}
++	for _, valid := range []string{strings.Repeat("x", 32), strings.Repeat("x", 128), strings.Repeat("a-B_", 10)} {
++		if value, errRead := readLocalManagementPassword(strings.NewReader(valid)); errRead != nil || value != valid {
++			t.Fatal("valid credential was rejected")
++		}
++	}
++}
+--- /dev/null
++++ b/internal/api/handlers/management/local_machine_password_test.go
+@@ -0,0 +1,38 @@
++package management
++
++import (
++	"github.com/router-for-me/CLIProxyAPI/v7/internal/config"
++	"golang.org/x/crypto/bcrypt"
++	"net/http"
++	"strings"
++	"testing"
++)
++
++func TestLocalMachinePasswordPreservesRemotePolicy(t *testing.T) {
++	t.Setenv("MANAGEMENT_PASSWORD", "")
++	machine := strings.Repeat("m", 40)
++	cfg := &config.Config{}
++	hash, errHash := bcrypt.GenerateFromPassword([]byte("different-config-secret"), bcrypt.MinCost)
++	if errHash != nil {
++		t.Fatal(errHash)
++	}
++	cfg.RemoteManagement.SecretKey = string(hash)
++	cfg.RemoteManagement.AllowRemote = false
++	handler := NewHandlerWithoutConfigFilePath(cfg, nil)
++	handler.SetLocalPassword(machine)
++	if ok, _, _ := handler.AuthenticateManagementKey("127.0.0.1", true, machine); !ok {
++		t.Fatal("local machine credential rejected")
++	}
++	if ok, code, _ := handler.AuthenticateManagementKey("198.51.100.1", false, machine); ok || code != http.StatusForbidden {
++		t.Fatal("remote policy overridden")
++	}
++	for _, invalid := range []string{"", "wrong", strings.Repeat("m", 39) + "n"} {
++		if ok, _, _ := handler.AuthenticateManagementKey("127.0.0.1", true, invalid); ok {
++			t.Fatal("invalid machine credential accepted")
++		}
++	}
++	handler.SetLocalPassword(strings.Repeat("n", 40))
++	if ok, _, _ := handler.AuthenticateManagementKey("127.0.0.2", true, machine); ok {
++		t.Fatal("old instance credential accepted")
++	}
++}

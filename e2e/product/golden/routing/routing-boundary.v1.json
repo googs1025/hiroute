@@ -1,0 +1,12 @@
+{
+  "scenario_id": "process-25004-routing-plans",
+  "compiler_contract": "green",
+  "publication_closure_repair": "green",
+  "production_cli_daemon_routing": "green",
+  "production_evidence": "installed-standalone-headless-management-loop",
+  "composition_owner": "TASK-142003",
+  "publication_schema": "hiroute.gateway-publication/v2",
+  "publication_digest": "sha256:791a7c32d21111570a7697be94709c3ee82e517a4b88b8ff85b34d7ba8088e30",
+  "gateway_snapshot_schema": "hiroute.gateway.publication-snapshot/v3",
+  "gateway_snapshot_digest": "sha256:9b659ad170d5923d227b93f554fee923f49c2b5b45ed758ca622aba66419496b"
+}

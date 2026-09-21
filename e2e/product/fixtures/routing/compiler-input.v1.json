@@ -1,0 +1,28 @@
+{
+  "schema": "hiroute.routing-compiler-fixture/v1",
+  "desired_modes": [
+    "custom",
+    "free_first",
+    "smart_saving"
+  ],
+  "compiler_inputs": [
+    "agent_connection_grants",
+    "capability_slice",
+    "catalog_renderer_revision",
+    "credential_references",
+    "free_offer_slice",
+    "gateway_authority",
+    "local_inventory",
+    "materialized_bindings",
+    "ordering_price_slice",
+    "rating_slice",
+    "registered_protocol_endpoints"
+  ],
+  "runtime_forbidden_inputs": [
+    "control_database",
+    "price_service",
+    "rating_service",
+    "routing_template"
+  ],
+  "contains_secret_literal": false
+}

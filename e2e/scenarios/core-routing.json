@@ -1,0 +1,531 @@
+{
+  "schema_version": 2,
+  "name": "dual-protocol-rule-routing",
+  "case_shards": [
+    {
+      "id": "responses-simple-to-claude",
+      "steps": ["responses-simple-to-claude"]
+    },
+    {
+      "id": "responses-complex-continuation",
+      "steps": [
+        "responses-complex-to-codex",
+        "responses-tool-continuation-affinity-hit"
+      ]
+    },
+    {
+      "id": "responses-large-agent-envelope",
+      "steps": ["responses-large-agent-envelope-still-simple"]
+    },
+    {
+      "id": "messages-simple-to-claude",
+      "steps": ["messages-simple-to-claude"]
+    },
+    {
+      "id": "messages-complex-continuation",
+      "steps": [
+        "messages-complex-to-codex",
+        "messages-tool-continuation-affinity-hit"
+      ]
+    },
+    {
+      "id": "messages-large-agent-envelope",
+      "steps": ["messages-large-agent-envelope-still-simple"]
+    },
+    {
+      "id": "responses-fallback-continuation",
+      "steps": [
+        "responses-simple-fallback-claude-500-to-codex",
+        "responses-fallback-tool-continuation-stays-on-codex"
+      ]
+    },
+    {
+      "id": "responses-context-hold-and-rebuild",
+      "steps": [
+        "responses-context-hold-complex-first",
+        "responses-context-hold-simple-append",
+        "responses-context-rebuild-reselects-simple"
+      ]
+    },
+    {
+      "id": "messages-context-hold-and-instruction-edit",
+      "steps": [
+        "messages-context-hold-simple-first",
+        "messages-context-hold-complex-append",
+        "messages-instruction-edit-reselects-complex"
+      ]
+    },
+    {
+      "id": "responses-server-continuation-rejected",
+      "steps": ["responses-previous-response-id-rejected-before-routing"]
+    }
+  ],
+  "steps": [
+    {
+      "id": "responses-simple-to-claude",
+      "protocol": "responses",
+      "request": {
+        "model": "hiroute-pool",
+        "stream": true,
+        "input": "2+2 等于多少？"
+      },
+      "attempts": [
+        { "source": "claude-compatible", "response_head_status": 200 }
+      ],
+      "expected_source": "claude-compatible",
+      "expected_class": "simple",
+      "expected_affinity": "new_turn"
+    },
+    {
+      "id": "responses-complex-to-codex",
+      "protocol": "responses",
+      "request": {
+        "model": "hiroute-pool",
+        "stream": true,
+        "prompt_cache_key": "hiroute-e2e-complex-turn",
+        "input": [
+          {
+            "type": "message",
+            "role": "user",
+            "content": [
+              {
+                "type": "input_text",
+                "text": "请实现并调试这个并发状态机，同时分析性能和安全问题。"
+              }
+            ]
+          }
+        ]
+      },
+      "attempts": [
+        { "source": "codex-chatgpt", "response_head_status": 200 }
+      ],
+      "expected_source": "codex-chatgpt",
+      "expected_class": "complex",
+      "expected_affinity": "new_turn"
+    },
+    {
+      "id": "responses-large-agent-envelope-still-simple",
+      "protocol": "responses",
+      "request": {
+        "model": "hiroute-pool",
+        "stream": true,
+        "instructions": "你是一个负责大型代码库实现、调试、并发、状态机、性能和安全分析的 Coding Agent。工具说明和系统规则不代表当前用户任务的复杂度，路由器必须只判断最后一个真实用户指令。",
+        "tools": [
+          {
+            "type": "function",
+            "name": "read_file",
+            "description": "读取任意大型源码文件，用于实现、调试、重构、并发、性能、安全、架构和多文件分析。",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": { "type": "string" }
+              },
+              "required": ["path"]
+            }
+          }
+        ],
+        "input": [
+          {
+            "type": "message",
+            "role": "user",
+            "content": [
+              {
+                "type": "input_text",
+                "text": "2+2 等于多少？"
+              }
+            ]
+          }
+        ]
+      },
+      "attempts": [
+        { "source": "claude-compatible", "response_head_status": 200 }
+      ],
+      "expected_source": "claude-compatible",
+      "expected_class": "simple",
+      "expected_affinity": "new_turn"
+    },
+    {
+      "id": "messages-simple-to-claude",
+      "protocol": "messages",
+      "request": {
+        "model": "hiroute-pool",
+        "max_tokens": 64,
+        "stream": true,
+        "messages": [
+          {
+            "role": "user",
+            "content": "用一句话解释 HTTP。"
+          }
+        ]
+      },
+      "attempts": [
+        { "source": "claude-compatible", "response_head_status": 200 }
+      ],
+      "expected_source": "claude-compatible",
+      "expected_class": "simple",
+      "expected_affinity": "new_turn"
+    },
+    {
+      "id": "messages-complex-to-codex",
+      "protocol": "messages",
+      "request": {
+        "model": "hiroute-pool",
+        "max_tokens": 64,
+        "stream": true,
+        "messages": [
+          {
+            "role": "user",
+            "content": "请实现并调试一个高并发网关状态机，重点处理性能、安全和竞态问题。"
+          }
+        ]
+      },
+      "attempts": [
+        { "source": "codex-chatgpt", "response_head_status": 200 }
+      ],
+      "expected_source": "codex-chatgpt",
+      "expected_class": "complex",
+      "expected_affinity": "new_turn"
+    },
+    {
+      "id": "messages-large-agent-envelope-still-simple",
+      "protocol": "messages",
+      "request": {
+        "model": "hiroute-pool",
+        "max_tokens": 64,
+        "stream": true,
+        "system": "你是一个负责大型代码库实现、调试、并发、状态机、性能和安全分析的 Coding Agent。工具说明和系统规则不代表当前用户任务的复杂度，路由器必须只判断最后一个真实用户指令。",
+        "tools": [
+          {
+            "name": "read_file",
+            "description": "读取任意大型源码文件，用于实现、调试、重构、并发、性能、安全、架构和多文件分析。",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "path": { "type": "string" }
+              },
+              "required": ["path"]
+            }
+          }
+        ],
+        "messages": [
+          {
+            "role": "user",
+            "content": "2+2 等于多少？"
+          }
+        ]
+      },
+      "attempts": [
+        { "source": "claude-compatible", "response_head_status": 200 }
+      ],
+      "expected_source": "claude-compatible",
+      "expected_class": "simple",
+      "expected_affinity": "new_turn"
+    },
+    {
+      "id": "responses-tool-continuation-affinity-hit",
+      "protocol": "responses",
+      "request": {
+        "model": "hiroute-pool",
+        "stream": true,
+        "prompt_cache_key": "hiroute-e2e-complex-turn",
+        "input": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_hiroute_e2e",
+            "output": "tool completed"
+          }
+        ]
+      },
+      "attempts": [
+        { "source": "codex-chatgpt", "response_head_status": 200 }
+      ],
+      "expected_source": "codex-chatgpt",
+      "expected_class": "complex",
+      "expected_affinity": "continuation_hit"
+    },
+    {
+      "id": "messages-tool-continuation-affinity-hit",
+      "protocol": "messages",
+      "request": {
+        "model": "hiroute-pool",
+        "max_tokens": 64,
+        "stream": true,
+        "messages": [
+          {
+            "role": "user",
+            "content": "请实现并调试一个高并发网关状态机，重点处理性能、安全和竞态问题。"
+          },
+          {
+            "role": "assistant",
+            "content": [
+              {
+                "type": "tool_use",
+                "id": "call_hiroute_e2e",
+                "name": "read_file",
+                "input": { "path": "src/state.rs" }
+              }
+            ]
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "tool_result",
+                "tool_use_id": "call_hiroute_e2e",
+                "content": "tool completed"
+              }
+            ]
+          }
+        ]
+      },
+      "attempts": [
+        { "source": "codex-chatgpt", "response_head_status": 200 }
+      ],
+      "expected_source": "codex-chatgpt",
+      "expected_class": "complex",
+      "expected_affinity": "continuation_hit"
+    },
+    {
+      "id": "responses-simple-fallback-claude-500-to-codex",
+      "protocol": "responses",
+      "request": {
+        "model": "hiroute-pool",
+        "stream": true,
+        "prompt_cache_key": "hiroute-e2e-fallback-turn",
+        "input": "2+2 等于多少？"
+      },
+      "attempts": [
+        { "source": "claude-compatible", "response_head_status": 500 },
+        { "source": "codex-chatgpt", "response_head_status": 200 }
+      ],
+      "expected_source": "codex-chatgpt",
+      "expected_class": "simple",
+      "expected_affinity": "new_turn"
+    },
+    {
+      "id": "responses-fallback-tool-continuation-stays-on-codex",
+      "protocol": "responses",
+      "request": {
+        "model": "hiroute-pool",
+        "stream": true,
+        "prompt_cache_key": "hiroute-e2e-fallback-turn",
+        "input": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_hiroute_e2e_fallback",
+            "output": "tool completed"
+          }
+        ]
+      },
+      "attempts": [
+        { "source": "codex-chatgpt", "response_head_status": 200 }
+      ],
+      "expected_source": "codex-chatgpt",
+      "expected_class": "simple",
+      "expected_affinity": "continuation_hit"
+    },
+    {
+      "id": "responses-context-hold-complex-first",
+      "protocol": "responses",
+      "request_headers": {
+        "session-id": "e2e-responses-context-hold"
+      },
+      "request": {
+        "model": "hiroute-pool",
+        "stream": true,
+        "input": [
+          {
+            "type": "message",
+            "role": "user",
+            "content": [{ "type": "input_text", "text": "工作区规则：保持完整可见历史。" }]
+          },
+          {
+            "type": "message",
+            "role": "assistant",
+            "content": [{ "type": "output_text", "text": "规则已加载。" }]
+          },
+          {
+            "type": "message",
+            "role": "user",
+            "content": [{ "type": "input_text", "text": "请实现并调试并发状态机，并分析性能、安全和竞态。" }]
+          }
+        ]
+      },
+      "attempts": [
+        { "source": "codex-chatgpt", "response_head_status": 200 }
+      ],
+      "expected_source": "codex-chatgpt",
+      "expected_class": "complex",
+      "expected_affinity": "new_turn"
+    },
+    {
+      "id": "responses-context-hold-simple-append",
+      "protocol": "responses",
+      "request_headers": {
+        "session-id": "e2e-responses-context-hold"
+      },
+      "request": {
+        "model": "hiroute-pool",
+        "stream": true,
+        "input": [
+          {
+            "type": "message",
+            "role": "user",
+            "content": [{ "type": "input_text", "text": "工作区规则：保持完整可见历史。" }]
+          },
+          {
+            "type": "message",
+            "role": "assistant",
+            "content": [{ "type": "output_text", "text": "规则已加载。" }]
+          },
+          {
+            "type": "message",
+            "role": "user",
+            "content": [{ "type": "input_text", "text": "请实现并调试并发状态机，并分析性能、安全和竞态。" }]
+          },
+          {
+            "type": "message",
+            "role": "assistant",
+            "content": [{ "type": "output_text", "text": "codex-native-ok" }]
+          },
+          {
+            "type": "message",
+            "role": "user",
+            "content": [{ "type": "input_text", "text": "2+2 等于多少？" }]
+          }
+        ]
+      },
+      "attempts": [
+        { "source": "codex-chatgpt", "response_head_status": 200 }
+      ],
+      "expected_source": "codex-chatgpt",
+      "expected_class": "simple",
+      "expected_affinity": "new_turn"
+    },
+    {
+      "id": "responses-context-rebuild-reselects-simple",
+      "protocol": "responses",
+      "request_headers": {
+        "session-id": "e2e-responses-context-hold"
+      },
+      "request": {
+        "model": "hiroute-pool",
+        "stream": true,
+        "input": [
+          {
+            "type": "message",
+            "role": "user",
+            "content": [{ "type": "input_text", "text": "工作区规则：保持完整可见历史。" }]
+          },
+          {
+            "type": "message",
+            "role": "assistant",
+            "content": [{ "type": "output_text", "text": "规则已加载。" }]
+          },
+          {
+            "type": "message",
+            "role": "user",
+            "content": [{ "type": "input_text", "text": "请实现并调试并发状态机，并分析性能、安全和竞态。" }]
+          },
+          {
+            "type": "message",
+            "role": "assistant",
+            "content": [{ "type": "output_text", "text": "压缩摘要：之前已完成复杂分析。" }]
+          },
+          {
+            "type": "message",
+            "role": "user",
+            "content": [{ "type": "input_text", "text": "今天星期几？" }]
+          }
+        ]
+      },
+      "attempts": [
+        { "source": "claude-compatible", "response_head_status": 200 }
+      ],
+      "expected_source": "claude-compatible",
+      "expected_class": "simple",
+      "expected_affinity": "new_turn"
+    },
+    {
+      "id": "messages-context-hold-simple-first",
+      "protocol": "messages",
+      "request_headers": {
+        "session-id": "e2e-messages-context-hold"
+      },
+      "request": {
+        "model": "hiroute-pool",
+        "max_tokens": 64,
+        "stream": true,
+        "messages": [
+          { "role": "user", "content": "用一句话解释 HTTP。" }
+        ]
+      },
+      "attempts": [
+        { "source": "claude-compatible", "response_head_status": 200 }
+      ],
+      "expected_source": "claude-compatible",
+      "expected_class": "simple",
+      "expected_affinity": "new_turn"
+    },
+    {
+      "id": "messages-context-hold-complex-append",
+      "protocol": "messages",
+      "request_headers": {
+        "session-id": "e2e-messages-context-hold"
+      },
+      "request": {
+        "model": "hiroute-pool",
+        "max_tokens": 64,
+        "stream": true,
+        "messages": [
+          { "role": "user", "content": "用一句话解释 HTTP。" },
+          { "role": "assistant", "content": "claude-native-ok" },
+          { "role": "user", "content": "请实现并调试并发状态机，并分析性能、安全和竞态。" }
+        ]
+      },
+      "attempts": [
+        { "source": "claude-compatible", "response_head_status": 200 }
+      ],
+      "expected_source": "claude-compatible",
+      "expected_class": "complex",
+      "expected_affinity": "new_turn"
+    },
+    {
+      "id": "messages-instruction-edit-reselects-complex",
+      "protocol": "messages",
+      "request_headers": {
+        "session-id": "e2e-messages-context-hold"
+      },
+      "request": {
+        "model": "hiroute-pool",
+        "max_tokens": 64,
+        "stream": true,
+        "system": "新的系统指令会使上下文保持失效。",
+        "messages": [
+          { "role": "user", "content": "用一句话解释 HTTP。" },
+          { "role": "assistant", "content": "claude-native-ok" },
+          { "role": "user", "content": "请实现并调试并发状态机，并分析性能、安全和竞态。" }
+        ]
+      },
+      "attempts": [
+        { "source": "codex-chatgpt", "response_head_status": 200 }
+      ],
+      "expected_source": "codex-chatgpt",
+      "expected_class": "complex",
+      "expected_affinity": "new_turn"
+    },
+    {
+      "id": "responses-previous-response-id-rejected-before-routing",
+      "protocol": "responses",
+      "request": {
+        "model": "hiroute-pool",
+        "stream": true,
+        "previous_response_id": "resp_server_side_state",
+        "input": "继续"
+      },
+      "attempts": [],
+      "expected_http_status": 400,
+      "expected_error_code": "RESPONSES_PREVIOUS_RESPONSE_ID_UNSUPPORTED"
+    }
+  ]
+}

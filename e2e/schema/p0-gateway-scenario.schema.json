@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/p0-gateway-scenario.schema.json",
+  "title": "HiRoute bounded production Oracle scenario",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "oracle_version", "name", "contract_manifest", "fixture", "coverage", "checkpoints", "matrix_extension"],
+  "properties": {
+    "schema_version": {"const": "hiroute.e2e.production-scenario/v1"},
+    "oracle_version": {"const": "p0-gateway-production-oracle-v1"},
+    "name": {"type": "string", "minLength": 1},
+    "contract_manifest": {"const": "schema/p0-production-manifest.json"},
+    "fixture": {"const": "fixtures/p0-oracle/production-smoke.json"},
+    "coverage": {
+      "type": "array", "minItems": 1, "maxItems": 1,
+      "items": {"type": "object", "additionalProperties": false, "required": ["id", "evidence"], "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "evidence": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }}
+    },
+    "checkpoints": {
+      "type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true,
+      "items": {"type": "object", "additionalProperties": false, "required": ["id", "evidence"], "properties": {
+        "id": {"enum": ["listener_client", "native_provider", "semantic_observation", "privacy_resource"]},
+        "evidence": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }}
+    },
+    "matrix_extension": {
+      "type": "object", "additionalProperties": false,
+      "required": ["owner", "contract", "protocol_pairs"],
+      "properties": {
+        "owner": {"const": "PROCESS-22009"},
+        "contract": {"type": "string", "minLength": 1},
+        "protocol_pairs": {"type": "array", "minItems": 9, "maxItems": 9, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    }
+  }
+}

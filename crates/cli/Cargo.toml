@@ -1,0 +1,33 @@
+[package]
+name = "hiroute-cli"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+getrandom.workspace = true
+hiroute-integrations = { path = "../integrations" }
+hiroute-client-core = { path = "../client-core" }
+hiroute-host-runtime = { path = "../host-runtime" }
+tokio = { workspace = true, features = ["signal", "time"] }
+hiroute-application-api = { path = "../application-api" }
+nix = { workspace = true, features = ["signal", "user"] }
+serde.workspace = true
+serde_json.workspace = true
+zeroize.workspace = true
+
+[dev-dependencies]
+hiroute-application = { path = "../application" }
+hiroute-daemon = { path = "../daemon" }
+hiroute-domain = { path = "../domain" }
+hiroute-local-storage = { path = "../local-storage" }
+tempfile.workspace = true
+
+[[bin]]
+name = "hiroute"
+path = "src/main.rs"
+
+[[bin]]
+name = "generate-cli-contract"
+path = "src/bin/generate_cli_contract.rs"

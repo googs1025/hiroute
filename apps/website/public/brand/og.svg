@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">HiRoute</title><desc id="desc">Intelligent routing for long-horizon agents.</desc>
+  <rect width="1200" height="630" fill="#0b0d12"/>
+  <path d="M109 173v230l90-63V110h58v293l90-63V110" fill="none" stroke="#9aa7ff" stroke-width="42" stroke-linejoin="round"/>
+  <text x="420" y="292" fill="#f3f5fa" font-family="Arial,Helvetica,sans-serif" font-size="112" font-weight="700" letter-spacing="-4">HiRoute</text>
+  <text x="424" y="370" fill="#a8b0c4" font-family="Arial,Helvetica,sans-serif" font-size="32">Intelligent routing for long-horizon agents.</text>
+  <path d="M424 421h580" stroke="#303746"/><circle cx="447" cy="476" r="7" fill="#9aa7ff"/><text x="474" y="487" fill="#c2caff" font-family="Arial,Helvetica,sans-serif" font-size="26">Choose agents by task. Choose models by stage.</text>
+</svg>

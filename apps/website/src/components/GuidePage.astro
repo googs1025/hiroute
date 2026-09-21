@@ -1,0 +1,19 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import DocsNav from './DocsNav.astro';
+import { guidePages, guideRoute, renderUserGuide } from '../lib/user-guides.mjs';
+const { language = 'zh', guide } = Astro.props;
+const en = language === 'en';
+const title = guidePages[guide][language];
+const path = guideRoute(guide, language);
+const alternatePath = guideRoute(guide, en ? 'zh' : 'en');
+const html = await renderUserGuide(guide, language);
+---
+<SiteLayout language={language} title={`${title} · HiRoute`}
+  description={en ? 'Install HiRoute and learn model routing, task routing, and the current CLI.' : '安装 HiRoute，学习模型路由、任务路由及当前 CLI 的使用方式。'}
+  path={path} alternatePath={alternatePath}>
+  <div class="docs-shell wrap">
+    <DocsNav language={language} active={guide} />
+    <article class="docs-content" set:html={html} />
+  </div>
+</SiteLayout>

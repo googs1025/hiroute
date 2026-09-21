@@ -1,0 +1,23 @@
+{
+  "$id": "hiroute://contracts/cli/worker-list-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cursor": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "type": "string"
+    },
+    "limit": {
+      "maximum": 200,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "title": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "type": "object"
+}

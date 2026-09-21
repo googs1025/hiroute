@@ -1,0 +1,10 @@
+.model-reference { min-width: 0; padding: 1rem; border: 1px solid #cdd5da; border-radius: 12px; margin-block: 1rem; }
+.model-reference h3 { margin-block: 0 .5rem; }
+.model-reference dd { margin: .3rem 0 1rem; overflow-wrap: anywhere; }
+.mr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: 1rem; }
+.mr-grid input { display: block; width: 100%; min-width: 0; box-sizing: border-box; margin-block: .5rem; }
+.mr-badge { display: inline-block; margin-inline-start: .5rem; padding: .15rem .4rem; border: 1px solid currentColor; border-radius: .3rem; }
+.mr-actions { display: flex; gap: .75rem; flex-wrap: wrap; }
+.model-reference fieldset { min-width: 0; padding: 1rem; }
+.model-reference [role=alert] { color: #a52921; overflow-wrap: anywhere; }
+.model-reference summary { cursor: pointer; padding-block: .5rem; }

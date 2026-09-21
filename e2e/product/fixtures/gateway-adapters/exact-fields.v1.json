@@ -1,0 +1,55 @@
+{
+  "schema": "hiroute.gateway-exact-adapter-fields/v1",
+  "publication_candidate": [
+    "connector_runtime",
+    "credential_destination_ref",
+    "credential_ref",
+    "endpoint",
+    "native_transport_model",
+    "operational_target",
+    "operational_target_digest",
+    "protocol_profile_digest",
+    "protocol_profiles",
+    "stable_target_key",
+    "upstream_model_id"
+  ],
+  "credential_request": [
+    "authentication",
+    "connector_id",
+    "connector_runtime",
+    "credential_destination_ref",
+    "credential_ref",
+    "excluded_key_ids",
+    "logical_endpoint",
+    "native_transport_model",
+    "operational_target",
+    "operational_target_digest",
+    "protocol_profile_digest",
+    "request_path",
+    "runtime_epoch",
+    "stable_binding_id",
+    "target_epoch",
+    "upstream_model_id",
+    "upstream_protocol"
+  ],
+  "probe_outcomes": ["acquired", "busy", "conflict"],
+  "content_events": ["begin", "append", "finish", "abort"],
+  "rich_ack": [
+    "acknowledged_blobs",
+    "delta_parent_transcript_root",
+    "highest_accounted_sequence",
+    "highest_contiguous_sequence",
+    "next_chunk_ordinal",
+    "transcript_root"
+  ],
+  "rich_nack": [
+    "content_state_conflict",
+    "detail",
+    "expected_sequence",
+    "missing_blob",
+    "missing_sequence_ranges",
+    "rejected_sequence",
+    "retryable",
+    "unknown_transcript_root"
+  ]
+}

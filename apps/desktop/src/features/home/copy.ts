@@ -1,0 +1,167 @@
+import type { Language } from '../../ui';
+import type { HomeFacetState, HomeOperation, HomeSaveDisposition } from './types';
+
+export type HomeCopy = typeof zh;
+
+const zh = {
+  eyebrow: 'HIRoute · 本机工作台',
+  title: '把模型与 Agent 放在清楚、可控的路径上。',
+  loadingTitle: '正在读取你的实际配置',
+  loadingBody: '各领域会独立返回；已读到的内容会先显示，不用等所有查询完成。',
+  firstTitle: '从一个日常动作开始',
+  firstBody: '接入模型、创建路由和配置 Agent 都能随时单独重做。每一步只在确认后生效。',
+  partialTitle: '继续你已经开始的设置',
+  partialBody: '已有结果会保留。你可以直接处理下一项，不必从头再来。',
+  configuredTitle: '配置已就绪，等待第一次真实使用',
+  configuredBody: '从已配置的 Agent 开始使用后，近期记录和真实用量会出现在这里。',
+  dailyTitle: '今天的调用与工作，一眼可见',
+  dailyBody: '这里组合各领域已确认的事实；未知、待核实和局部异常会分别显示。',
+  connectModels: '接入模型',
+  connectModelsHint: '扫描 API、订阅或添加自定义来源',
+  browseFree: '浏览免费模型',
+  browseFreeHint: '不需要本机配置即可先查看',
+  createPlan: '创建智能路由',
+  createPlanHint: '固定单模型或按需组合多个模型',
+  configureAgent: '配置 Agent',
+  configureAgentHint: '配置模型路由与 Agent 路由',
+  service: '本机服务',
+  gateway: '模型调用入口',
+  models: '已保存模型来源',
+  plans: '智能路由',
+  agents: 'Agent 状态',
+  recentSessions: '近期会话',
+  recentTasks: '任务记录',
+  value: '近期价值',
+  needsAttention: '需要处理',
+  retry: '重试读取',
+  viewAll: '查看全部',
+  noSessions: '还没有真实会话记录。',
+  noTasks: '还没有任务记录。',
+  noValue: '暂无可核实的用量或金额。',
+  unknownAmount: '未知',
+  apiEquivalent: 'API 等价值',
+  usageEstimate: '估算调用成本',
+  estimatedSavings: '估算节省',
+  requests: '请求',
+  switches: '模型接力',
+  partialCoverage: '部分数据',
+  unknownCoverage: '覆盖未知',
+  provisional: '暂定',
+  pending: '待结算',
+  missingTarget: '缺少准确目标，暂不能打开',
+  userConfigured: '用户配置',
+  catalog: '内置目录',
+  connectorOwned: '订阅连接',
+  capabilitiesUnknown: '能力待核实',
+  priceUnknown: '价格未知',
+  priceFree: '明确免费',
+  operation: '操作进度',
+  inspect: '查看原操作',
+  statusUnknown: '状态待核实',
+  modelFacet: '模型接入',
+  collaborationFacet: 'Agent 路由',
+  authentication: { bearer: 'Bearer', header: '指定 Header', none: '无认证', unknown: '认证待核实' },
+};
+
+const en: HomeCopy = {
+  eyebrow: 'HIRoute · LOCAL WORKSPACE',
+  title: 'A clear, controlled path from models to Agents.',
+  loadingTitle: 'Reading your actual configuration',
+  loadingBody: 'Each domain returns independently. Facts already available appear without waiting for every query.',
+  firstTitle: 'Start with one everyday action',
+  firstBody: 'Connect models, create routing, and configure an Agent whenever you need. Each change takes effect only after confirmation.',
+  partialTitle: 'Continue what you already started',
+  partialBody: 'Completed results stay in place. Continue with the next action without starting over.',
+  configuredTitle: 'Configuration is ready for its first real use',
+  configuredBody: 'Use a configured Agent to see real routed activity and usage here.',
+  dailyTitle: 'Today’s calls and work, in one view',
+  dailyBody: 'This page composes confirmed domain facts. Unknown, pending, and local failures remain distinct.',
+  connectModels: 'Connect models',
+  connectModelsHint: 'Scan APIs, subscriptions, or add a custom source',
+  browseFree: 'Browse free models',
+  browseFreeHint: 'Explore before configuring the local service',
+  createPlan: 'Create smart routing',
+  createPlanHint: 'Use one fixed model or combine several on purpose',
+  configureAgent: 'Configure an Agent',
+  configureAgentHint: 'Configure model routing and Agent routing',
+  service: 'Local service',
+  gateway: 'Model call entry',
+  models: 'Saved model sources',
+  plans: 'Smart routing',
+  agents: 'Agent status',
+  recentSessions: 'Recent sessions',
+  recentTasks: 'Task history',
+  value: 'Recent value',
+  needsAttention: 'Needs attention',
+  retry: 'Retry read',
+  viewAll: 'View all',
+  noSessions: 'No real sessions yet.',
+  noTasks: 'No task history yet.',
+  noValue: 'No verifiable usage or amount is available.',
+  unknownAmount: 'Unknown',
+  apiEquivalent: 'API equivalent',
+  usageEstimate: 'Estimated call cost',
+  estimatedSavings: 'Estimated savings',
+  requests: 'Requests',
+  switches: 'Model relays',
+  partialCoverage: 'Partial data',
+  unknownCoverage: 'Coverage unknown',
+  provisional: 'Provisional',
+  pending: 'Pending settlement',
+  missingTarget: 'An exact target is unavailable',
+  userConfigured: 'User configured',
+  catalog: 'Built-in catalog',
+  connectorOwned: 'Subscription connection',
+  capabilitiesUnknown: 'Capabilities unverified',
+  priceUnknown: 'Price unknown',
+  priceFree: 'Explicitly free',
+  operation: 'Operation progress',
+  inspect: 'Inspect operation',
+  statusUnknown: 'Status unverified',
+  modelFacet: 'Model access',
+  collaborationFacet: 'Agent routing',
+  authentication: { bearer: 'Bearer', header: 'Named header', none: 'No authentication', unknown: 'Authentication unverified' },
+};
+
+export function homeCopy(language: Language): HomeCopy {
+  return language === 'zh' ? zh : en;
+}
+
+export function facetLabel(state: HomeFacetState, language: Language): string {
+  const labels: Record<HomeFacetState, [string, string]> = {
+    unconfigured: ['未配置', 'Not configured'],
+    configured: ['已配置', 'Configured'],
+    verified: ['已验证', 'Verified'],
+    pending: ['正在处理', 'Pending'],
+    degraded: ['受到影响', 'Degraded'],
+    unavailable: ['不可用', 'Unavailable'],
+    unknown: ['待核实', 'Unverified'],
+  };
+  return labels[state][language === 'zh' ? 0 : 1];
+}
+
+export function dispositionLabel(disposition: HomeSaveDisposition, language: Language): string {
+  const labels: Record<HomeSaveDisposition, [string, string]> = {
+    saved: ['已保存', 'Saved'],
+    unchanged: ['无需更改', 'Unchanged'],
+    needs_input: ['需要补充', 'Needs input'],
+    conflict: ['需要重新核对', 'Needs review'],
+    failed: ['保存失败', 'Save failed'],
+    pending: ['正在核实保存结果', 'Verifying save result'],
+  };
+  return labels[disposition][language === 'zh' ? 0 : 1];
+}
+
+export function operationLabel(operation: HomeOperation, language: Language): string {
+  const labels: Record<HomeOperation['state'], [string, string]> = {
+    accepted: ['已受理，尚未完成', 'Accepted, not completed'],
+    running: ['正在处理', 'In progress'],
+    succeeded: ['已完成', 'Completed'],
+    unchanged: ['无需更改', 'Unchanged'],
+    needs_input: ['需要补充', 'Needs input'],
+    conflict: ['需要重新核对', 'Needs review'],
+    failed: ['操作失败', 'Operation failed'],
+    unknown: ['结果待核实', 'Result unverified'],
+  };
+  return labels[operation.state][language === 'zh' ? 0 : 1];
+}

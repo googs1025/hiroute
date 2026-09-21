@@ -1,0 +1,32 @@
+[package]
+name = "hiroute-product-e2e"
+default-run = "generate-product-contract"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+clap.workspace = true
+getrandom.workspace = true
+sha2.workspace = true
+fs2.workspace = true
+tempfile.workspace = true
+tokio = { workspace = true, features = ["signal"] }
+nix = { workspace = true, features = ["signal", "process"] }
+hiroute-application-api = { path = "../../crates/application-api" }
+hiroute-cpa-bridge = { path = "../../crates/cpa-bridge" }
+hiroute-domain = { path = "../../crates/domain" }
+hiroute-gateway = { path = "../../crates/gateway" }
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+
+[[bin]]
+name = "generate-product-contract"
+path = "src/bin/generate_product_contract.rs"
+
+[[bin]]
+name = "hiroute-smoke"
+path = "src/bin/hiroute_smoke.rs"

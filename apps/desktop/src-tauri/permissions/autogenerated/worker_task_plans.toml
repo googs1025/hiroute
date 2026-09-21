@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-worker-task-plans"
+description = "Enables the worker_task_plans command without any pre-configured scope."
+commands.allow = ["worker_task_plans"]
+
+[[permission]]
+identifier = "deny-worker-task-plans"
+description = "Denies the worker_task_plans command without any pre-configured scope."
+commands.deny = ["worker_task_plans"]

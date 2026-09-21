@@ -1,0 +1,31 @@
+/target/
+/artifacts/
+/design
+/crates/hiroute-poc
+/docs/poc
+# Artificial Analysis Free Data API is internal-use only until client/API
+# redistribution rights are explicitly cleared. Keep raw, ranked, derived, and
+# narrative score evidence local even if a broad `git add` is used.
+/docs/poc/artificial-analysis-score-catalog-poc.md
+/docs/poc/free-model-intelligence-research.md
+/docs/poc/artifacts/*/artificial-analysis-*
+/docs/poc/artifacts/*/free-model-score-*
+/docs/poc/artifacts/*/model-quality-seed-preview.json
+# The normalized source snapshot retains rights-unverified LiveBench rows for
+# internal comparison, while the complete AA half-star projection is expressly
+# internal-only.  The separately generated public model-star catalog excludes
+# both data sources and is intentionally not ignored.
+/docs/poc/artifacts/*/open-model-rating-source-snapshot.json
+/docs/poc/artifacts/*/model-star-rating-catalog-internal-aa.json
+# The complete seed currently contains AA-derived decimal projections as well;
+# keep both delivery formats owner-only until redistribution is cleared.
+/docs/poc/artifacts/*/complete-model-star-ratings.json
+/docs/poc/artifacts/*/complete-model-star-ratings.csv
+/e2e/profiles/real-local.json
+/e2e/results/
+*.profraw
+__pycache__/
+*.pyc
+# Local iteration assessments and stage-review working notes (not product contracts).
+/docs/acp-mvp-roi-review.md
+/docs/stage-product-integration-review.md

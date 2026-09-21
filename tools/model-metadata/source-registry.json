@@ -1,0 +1,527 @@
+{
+  "artifact_kind": "hiroute.model-metadata-source-registry",
+  "default_refresh_days": 30,
+  "policy": {
+    "allowed_evidence": [
+      "provider-controlled documentation",
+      "provider-controlled product or model pages",
+      "authenticated service metadata captured without secrets"
+    ],
+    "allowed_client_metadata_sources": [
+      "Hermes Agent source tree pinned to an exact Git commit",
+      "OpenClaw source tree pinned to an exact Git commit"
+    ],
+    "metadata_usage": [
+      "derive scenario eligibility from field completeness",
+      "retain provenance for audit, refresh, identity normalization, and conflict handling",
+      "never assign a record-wide confidence tier from source type"
+    ],
+    "discovery_only": [
+      "third-party aggregate catalogs",
+      "search snippets",
+      "community posts without provider confirmation"
+    ],
+    "new_authority_requirements": [
+      "confirm provider or product-owner control",
+      "use the narrowest stable HTTPS prefix",
+      "declare evidence scope and refresh interval",
+      "add a concrete catalog evidence source separately"
+    ]
+  },
+  "authorities": [
+    {
+      "authority_key": "alibaba-model-studio",
+      "allowed_https_prefixes": [
+        "https://help.aliyun.com/"
+      ],
+      "scope": [
+        "interfaces",
+        "models",
+        "pricing",
+        "products"
+      ],
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "amazon-web-services",
+      "description": "Primary provider documentation for amazon-web-services",
+      "allowed_https_prefixes": [
+        "https://docs.aws.amazon.com/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "anthropic",
+      "allowed_https_prefixes": [
+        "https://docs.anthropic.com/",
+        "https://platform.claude.com/",
+        "https://support.claude.com/"
+      ],
+      "scope": [
+        "interfaces",
+        "limits",
+        "models",
+        "products",
+        "reasoning"
+      ],
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "arcee",
+      "description": "Primary provider documentation for arcee",
+      "allowed_https_prefixes": [
+        "https://docs.arcee.ai/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "baidu-qianfan",
+      "description": "Primary provider documentation for baidu-qianfan",
+      "allowed_https_prefixes": [
+        "https://cloud.baidu.com/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "baseten",
+      "description": "Primary provider documentation for baseten",
+      "allowed_https_prefixes": [
+        "https://docs.baseten.co/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "byteplus",
+      "description": "Primary provider documentation for byteplus",
+      "allowed_https_prefixes": [
+        "https://docs.byteplus.com/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "cerebras",
+      "description": "Primary provider documentation for cerebras",
+      "allowed_https_prefixes": [
+        "https://inference-docs.cerebras.ai/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "chutes",
+      "description": "Primary provider documentation for chutes",
+      "allowed_https_prefixes": [
+        "https://docs.chutes.ai/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "cohere",
+      "description": "Primary provider documentation for cohere",
+      "allowed_https_prefixes": [
+        "https://docs.cohere.com/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "deepinfra",
+      "description": "Primary provider documentation for deepinfra",
+      "allowed_https_prefixes": [
+        "https://deepinfra.com/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "deepseek",
+      "allowed_https_prefixes": [
+        "https://api-docs.deepseek.com/"
+      ],
+      "scope": [
+        "interfaces",
+        "models",
+        "pricing",
+        "products"
+      ],
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "featherless",
+      "description": "Primary provider documentation for featherless",
+      "allowed_https_prefixes": [
+        "https://featherless.ai/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "fireworks",
+      "description": "Primary provider documentation for fireworks",
+      "allowed_https_prefixes": [
+        "https://docs.fireworks.ai/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "github",
+      "description": "Primary provider documentation for github",
+      "allowed_https_prefixes": [
+        "https://docs.github.com/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "gmi",
+      "description": "Primary provider documentation for gmi",
+      "allowed_https_prefixes": [
+        "https://docs.gmicloud.ai/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "google",
+      "allowed_https_prefixes": [
+        "https://ai.google.dev/",
+        "https://cloud.google.com/",
+        "https://developers.google.com/"
+      ],
+      "scope": [
+        "cloud-hosting",
+        "interfaces",
+        "models",
+        "pricing",
+        "products"
+      ],
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "groq",
+      "allowed_https_prefixes": [
+        "https://console.groq.com/"
+      ],
+      "scope": [
+        "interfaces",
+        "limits",
+        "models",
+        "products"
+      ],
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "hugging-face",
+      "description": "Primary provider documentation for hugging-face",
+      "allowed_https_prefixes": [
+        "https://huggingface.co/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "kilo-code",
+      "description": "Primary provider documentation for kilo-code",
+      "allowed_https_prefixes": [
+        "https://kilocode.ai/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "longcat",
+      "description": "Primary provider documentation for longcat",
+      "allowed_https_prefixes": [
+        "https://longcat.chat/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "meta",
+      "description": "Primary provider documentation for meta",
+      "allowed_https_prefixes": [
+        "https://ai.developer.meta.com/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "microsoft-azure",
+      "allowed_https_prefixes": [
+        "https://learn.microsoft.com/"
+      ],
+      "scope": [
+        "authentication",
+        "cloud-hosting",
+        "interfaces",
+        "products"
+      ],
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "minimax",
+      "allowed_https_prefixes": [
+        "https://platform.minimax.io/",
+        "https://platform.minimaxi.com/"
+      ],
+      "scope": [
+        "interfaces",
+        "models",
+        "pricing",
+        "products"
+      ],
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "mistral",
+      "allowed_https_prefixes": [
+        "https://docs.mistral.ai/"
+      ],
+      "scope": [
+        "interfaces",
+        "limits",
+        "models",
+        "products"
+      ],
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "moonshot",
+      "allowed_https_prefixes": [
+        "https://platform.kimi.ai/",
+        "https://platform.kimi.com/",
+        "https://www.kimi.com/"
+      ],
+      "scope": [
+        "interfaces",
+        "limits",
+        "models",
+        "products",
+        "subscriptions"
+      ],
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "nebius",
+      "description": "Primary provider documentation for nebius",
+      "allowed_https_prefixes": [
+        "https://docs.nebius.com/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "nous-research",
+      "description": "Primary provider documentation for nous-research",
+      "allowed_https_prefixes": [
+        "https://nousresearch.com/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "novita",
+      "description": "Primary provider documentation for novita",
+      "allowed_https_prefixes": [
+        "https://novita.ai/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "nvidia",
+      "description": "Primary provider documentation for nvidia",
+      "allowed_https_prefixes": [
+        "https://build.nvidia.com/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "ollama",
+      "description": "Primary provider documentation for ollama",
+      "allowed_https_prefixes": [
+        "https://docs.ollama.com/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "openai",
+      "allowed_https_prefixes": [
+        "https://developers.openai.com/",
+        "https://learn.chatgpt.com/"
+      ],
+      "scope": [
+        "interfaces",
+        "models",
+        "products",
+        "reasoning",
+        "subscriptions"
+      ],
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "opencode",
+      "description": "Primary provider documentation for opencode",
+      "allowed_https_prefixes": [
+        "https://opencode.ai/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "openrouter",
+      "allowed_https_prefixes": [
+        "https://openrouter.ai/"
+      ],
+      "scope": [
+        "dynamic-routes",
+        "interfaces",
+        "models",
+        "pricing",
+        "products"
+      ],
+      "refresh_days": 7
+    },
+    {
+      "authority_key": "poolside",
+      "description": "Primary provider documentation for poolside",
+      "allowed_https_prefixes": [
+        "https://docs.poolside.ai/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "stepfun",
+      "description": "Primary provider documentation for stepfun",
+      "allowed_https_prefixes": [
+        "https://platform.stepfun.com/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "tencent-cloud",
+      "allowed_https_prefixes": [
+        "https://cloud.tencent.com/"
+      ],
+      "scope": [
+        "interfaces",
+        "lifecycle",
+        "models",
+        "pricing",
+        "products"
+      ],
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "together",
+      "description": "Primary provider documentation for together",
+      "allowed_https_prefixes": [
+        "https://docs.together.ai/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "upstage",
+      "description": "Primary provider documentation for upstage",
+      "allowed_https_prefixes": [
+        "https://console.upstage.ai/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "venice",
+      "description": "Primary provider documentation for venice",
+      "allowed_https_prefixes": [
+        "https://docs.venice.ai/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "vercel",
+      "description": "Primary provider documentation for vercel",
+      "allowed_https_prefixes": [
+        "https://vercel.com/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 30
+    },
+    {
+      "authority_key": "volcano-engine",
+      "allowed_https_prefixes": [
+        "https://www.volcengine.com/"
+      ],
+      "scope": [
+        "deployments",
+        "interfaces",
+        "models",
+        "products"
+      ],
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "xai",
+      "allowed_https_prefixes": [
+        "https://docs.x.ai/"
+      ],
+      "scope": [
+        "interfaces",
+        "limits",
+        "models",
+        "pricing",
+        "products"
+      ],
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "xiaomi-mimo",
+      "description": "Primary provider documentation for xiaomi-mimo",
+      "allowed_https_prefixes": [
+        "https://mimo.xiaomi.com/"
+      ],
+      "evidence_scope": "provider identity, model capability, endpoint, authentication and discovery facts",
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "zai",
+      "allowed_https_prefixes": [
+        "https://docs.z.ai/"
+      ],
+      "scope": [
+        "interfaces",
+        "models",
+        "pricing",
+        "products",
+        "subscriptions"
+      ],
+      "refresh_days": 14
+    },
+    {
+      "authority_key": "zhipu-bigmodel",
+      "allowed_https_prefixes": [
+        "https://docs.bigmodel.cn/"
+      ],
+      "scope": [
+        "interfaces",
+        "models",
+        "products",
+        "subscriptions"
+      ],
+      "refresh_days": 14
+    }
+  ]
+}

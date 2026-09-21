@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/p0-gateway-fixture.schema.json",
+  "title": "Private gateway launch fixture",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "oracle_version", "contract_digest", "publication", "provider_bindings", "secret_store", "observation", "readiness"],
+  "properties": {
+    "schema_version": {"const": "hiroute.gateway.e2e-fixture/v2"},
+    "oracle_version": {"const": "p0-gateway-oracle-v1"},
+    "contract_digest": {"type": "string", "minLength": 71, "maxLength": 71},
+    "publication": {"type": "object", "minProperties": 10},
+    "provider_bindings": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["binding_ref", "credential_ref", "endpoint", "protocol"], "properties": {"binding_ref": {"type": "string", "minLength": 1}, "credential_ref": {"const": "credential:p0-native-provider"}, "endpoint": {"type": "string", "minLength": 18}, "protocol": {"enum": ["responses", "chat_completions", "messages"]}}}},
+    "secret_store": {"type": "object", "additionalProperties": false, "required": ["client_grants", "credentials"], "properties": {"client_grants": {"type": "object", "additionalProperties": false, "required": ["grant:p0-client"], "properties": {"grant:p0-client": {"type": "string", "minLength": 40}}}, "credentials": {"type": "object", "additionalProperties": false, "required": ["credential:p0-native-provider"], "properties": {"credential:p0-native-provider": {"type": "string", "minLength": 40}}}}},
+    "observation": {"type": "object", "additionalProperties": false, "required": ["directory", "run_nonce", "terminal_receipt"], "properties": {"directory": {"type": "string", "minLength": 1}, "run_nonce": {"type": "string", "minLength": 32}, "terminal_receipt": {"type": "string", "minLength": 1}}},
+    "readiness": {"type": "object", "additionalProperties": false, "required": ["nonce", "path"], "properties": {"nonce": {"type": "string", "minLength": 32}, "path": {"type": "string", "minLength": 1}}}
+  }
+}

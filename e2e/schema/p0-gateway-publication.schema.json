@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/p0-gateway-publication.schema.json",
+  "title": "GatewayPublicationSnapshotV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "authority", "epoch", "revision", "payload_digest", "protocol_routes", "alias_index", "grant_index", "agent_plans", "adapter_catalog", "model_catalog"],
+  "properties": {
+    "schema_version": {"const": "hiroute.gateway.publication-snapshot/v1"},
+    "authority": {"type": "object", "additionalProperties": false, "required": ["issuer", "subject", "policy_revision"], "properties": {"issuer": {"type": "string", "minLength": 1}, "subject": {"type": "string", "minLength": 1}, "policy_revision": {"type": "string", "minLength": 1}}},
+    "epoch": {"type": "integer", "minimum": 1},
+    "revision": {"type": "string", "minLength": 1},
+    "payload_digest": {"type": "string", "minLength": 71, "maxLength": 71},
+    "protocol_routes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["agent_plan_revision", "ingress_protocol", "model_alias", "upstream_protocols"], "properties": {"agent_plan_revision": {"type": "string", "minLength": 1}, "ingress_protocol": {"enum": ["responses", "chat_completions", "messages"]}, "model_alias": {"type": "string", "minLength": 1}, "upstream_protocols": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["responses", "chat_completions", "messages"]}}}}},
+    "alias_index": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["agent_plan_revision", "model_alias"], "properties": {"agent_plan_revision": {"type": "string", "minLength": 1}, "model_alias": {"type": "string", "minLength": 1}}}},
+    "grant_index": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["allowed_aliases", "grant_ref"], "properties": {"allowed_aliases": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}, "grant_ref": {"type": "string", "minLength": 1}}}},
+    "agent_plans": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["candidates", "plan_id", "revision", "served_model_id"],
+        "properties": {
+          "candidates": {
+            "type": "array", "minItems": 1, "uniqueItems": true,
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["adapter_ref", "binding_ref", "capability_fingerprint", "model_id", "ordinal", "protocol"],
+              "properties": {
+                "adapter_ref": {"type": "string", "minLength": 1},
+                "binding_ref": {"type": "string", "minLength": 1},
+                "capability_fingerprint": {"type": "string", "minLength": 71, "maxLength": 71},
+                "model_id": {"type": "string", "minLength": 1},
+                "ordinal": {"type": "integer", "minimum": 1},
+                "protocol": {"enum": ["responses", "chat_completions", "messages"]}
+              }
+            }
+          },
+          "plan_id": {"type": "string", "minLength": 1},
+          "revision": {"type": "string", "minLength": 1},
+          "served_model_id": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "adapter_catalog": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["capability_fingerprint", "descriptor_revision", "protocol"], "properties": {"capability_fingerprint": {"type": "string", "minLength": 71, "maxLength": 71}, "descriptor_revision": {"type": "string", "minLength": 1}, "protocol": {"enum": ["responses", "chat_completions", "messages"]}}}},
+    "model_catalog": {"type": "object", "additionalProperties": false, "required": ["entries", "revision"], "properties": {"entries": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["model_alias", "plan_revision", "purpose"], "properties": {"model_alias": {"type": "string", "minLength": 1}, "plan_revision": {"type": "string", "minLength": 1}, "purpose": {"type": "string", "minLength": 1}}}}, "revision": {"type": "string", "minLength": 1}}}
+  }
+}

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-worker-task-list"
+description = "Enables the worker_task_list command without any pre-configured scope."
+commands.allow = ["worker_task_list"]
+
+[[permission]]
+identifier = "deny-worker-task-list"
+description = "Denies the worker_task_list command without any pre-configured scope."
+commands.deny = ["worker_task_list"]

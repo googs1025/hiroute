@@ -1,0 +1,51 @@
+[package]
+name = "hiroute-daemon"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[features]
+integration-test-hooks = []
+
+[dependencies]
+agent-client-protocol = "=2.1.0"
+arc-swap.workspace = true
+async-trait.workspace = true
+futures.workspace = true
+hiroute-application = { path = "../application" }
+hiroute-application-api = { path = "../application-api" }
+hiroute-cpa-bridge = { path = "../cpa-bridge" }
+hiroute-diagnostics = { path = "../diagnostics" }
+hiroute-domain = { path = "../domain" }
+hiroute-gateway = { path = "../gateway" }
+hiroute-host-runtime = { path = "../host-runtime" }
+hiroute-integrations = { path = "../integrations" }
+hiroute-local-storage = { path = "../local-storage" }
+hiroute-observation = { path = "../observation" }
+getrandom.workspace = true
+http.workspace = true
+rusqlite.workspace = true
+same-file = "=1.0.6"
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+tempfile.workspace = true
+tokio = { workspace = true, features = ["process"] }
+tokio-util = { workspace = true, features = ["codec", "rt"] }
+zeroize.workspace = true
+
+[target.'cfg(unix)'.dependencies]
+nix.workspace = true
+rustix = { workspace = true, features = ["fs"] }
+
+[[bin]]
+name = "hirouted"
+path = "src/control/bin.rs"
+
+[dev-dependencies]
+command-fds = "0.3.3"
+hiroute-client-core = { path = "../client-core" }
+tokio.workspace = true
+tokio-util.workspace = true

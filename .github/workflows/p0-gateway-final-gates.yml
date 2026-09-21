@@ -1,0 +1,27 @@
+name: hosted-validation-suite
+# This suite reports current hosted checks, not the historical fixed-machine final Gate.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  backend:
+    uses: ./.github/workflows/gateway-core.yml
+  gateway:
+    uses: ./.github/workflows/p0-gateway-gates.yml
+  stability:
+    uses: ./.github/workflows/gateway-core-dedicated.yml
+  result:
+    needs: [backend, gateway, stability]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require all hosted checks
+        env:
+          BACKEND: ${{ needs.backend.result }}
+          GATEWAY: ${{ needs.gateway.result }}
+          STABILITY: ${{ needs.stability.result }}
+        run: |
+          test "$BACKEND" = success
+          test "$GATEWAY" = success
+          test "$STABILITY" = success

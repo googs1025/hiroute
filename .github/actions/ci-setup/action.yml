@@ -1,0 +1,17 @@
+name: CI Rust environment
+description: Prepare the hosted Linux checkout without using the SSH workbench
+runs:
+  using: composite
+  steps:
+    - name: Native build prerequisites
+      shell: bash
+      run: sudo apt-get update && sudo apt-get install --yes cmake clang pkg-config libssl-dev
+    - name: Repository Rust toolchain
+      shell: bash
+      run: rustup show active-toolchain
+    - uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+        key: cargo-sources-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('Cargo.lock') }}

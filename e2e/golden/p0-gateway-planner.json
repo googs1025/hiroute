@@ -1,0 +1,136 @@
+{
+  "schema_version": "hiroute.planner-complexity-golden/v1",
+  "strategy_digest": "sha256:52538aba36f48b47ae2de6cdb7060e84138c7d3093ae9908e05021f26d0bf5da",
+  "planner_input_digest": "sha256:fb43642d52e5a5cd960b9399d2aadd196bcd7034f535750611bae8dbfe9b5436",
+  "planner_output_digest": "sha256:d307b125d55628b67427375785ee5db9c7b782fd3d7f80ce9af3b9bf091bb0c6",
+  "cases": [
+    {
+      "id": "readme-responses",
+      "branch": "smart_saving_simple",
+      "score": 1,
+      "source": "builtin_rules",
+      "reasons": ["IMPLEMENTATION_ACTION"],
+      "matched_user_phrase_ids": []
+    },
+    {
+      "id": "readme-chat",
+      "branch": "smart_saving_simple",
+      "score": 1,
+      "source": "builtin_rules",
+      "reasons": ["IMPLEMENTATION_ACTION"],
+      "matched_user_phrase_ids": []
+    },
+    {
+      "id": "readme-messages",
+      "branch": "smart_saving_simple",
+      "score": 1,
+      "source": "builtin_rules",
+      "reasons": ["IMPLEMENTATION_ACTION"],
+      "matched_user_phrase_ids": []
+    },
+    {
+      "id": "complex-zh",
+      "branch": "smart_saving_complex",
+      "score": 6,
+      "source": "builtin_rules",
+      "reasons": ["DEEP_REASONING", "MULTI_FILE_SCOPE", "MULTI_CONSTRAINT", "IMPLEMENTATION_ACTION"],
+      "matched_user_phrase_ids": []
+    },
+    {
+      "id": "constraints-zh",
+      "branch": "smart_saving_complex",
+      "score": 3,
+      "source": "builtin_rules",
+      "reasons": ["DEEP_REASONING", "MULTI_CONSTRAINT"],
+      "matched_user_phrase_ids": []
+    },
+    {
+      "id": "complex-en",
+      "branch": "smart_saving_complex",
+      "score": 6,
+      "source": "builtin_rules",
+      "reasons": ["DEEP_REASONING", "MULTI_FILE_SCOPE", "MULTI_CONSTRAINT", "IMPLEMENTATION_ACTION"],
+      "matched_user_phrase_ids": []
+    },
+    {
+      "id": "capital-token-boundary",
+      "branch": "smart_saving_simple",
+      "score": 0,
+      "source": "builtin_rules",
+      "reasons": [],
+      "matched_user_phrase_ids": []
+    },
+    {
+      "id": "human-ambiguous-character",
+      "branch": "smart_saving_simple",
+      "score": 0,
+      "source": "builtin_rules",
+      "reasons": [],
+      "matched_user_phrase_ids": []
+    },
+    {
+      "id": "history-tool-excluded",
+      "branch": "smart_saving_simple",
+      "score": 0,
+      "source": "builtin_rules",
+      "reasons": [],
+      "matched_user_phrase_ids": []
+    },
+    {
+      "id": "user-phrase",
+      "branch": "smart_saving_complex",
+      "score": 3,
+      "source": "user_phrase",
+      "reasons": ["USER_COMPLEX_PHRASE"],
+      "matched_user_phrase_ids": ["user-production-race"]
+    },
+    {
+      "id": "task-root-continuation",
+      "branch": "smart_saving_simple",
+      "score": 1,
+      "source": "inherited",
+      "reasons": ["INHERITED_TASK_ROOT", "IMPLEMENTATION_ACTION"],
+      "matched_user_phrase_ids": []
+    },
+    {
+      "id": "unresolved-pure-continuation-en",
+      "branch": "smart_saving_complex",
+      "score": 3,
+      "source": "unresolved",
+      "reasons": ["TASK_CONTEXT_UNRESOLVED"],
+      "matched_user_phrase_ids": []
+    },
+    {
+      "id": "unresolved-pure-continuation-zh",
+      "branch": "smart_saving_complex",
+      "score": 3,
+      "source": "unresolved",
+      "reasons": ["TASK_CONTEXT_UNRESOLVED"],
+      "matched_user_phrase_ids": []
+    },
+    {
+      "id": "wrong-kind-pure-continuation",
+      "branch": "smart_saving_complex",
+      "score": 3,
+      "source": "unresolved",
+      "reasons": ["TASK_CONTEXT_UNRESOLVED"],
+      "matched_user_phrase_ids": []
+    },
+    {
+      "id": "tool-continuation",
+      "branch": "smart_saving_complex",
+      "score": 6,
+      "source": "inherited",
+      "reasons": ["INHERITED_TOOL_CONTINUATION", "DEEP_REASONING", "MULTI_FILE_SCOPE", "MULTI_CONSTRAINT", "IMPLEMENTATION_ACTION"],
+      "matched_user_phrase_ids": []
+    },
+    {
+      "id": "unresolved-continuation",
+      "branch": "smart_saving_complex",
+      "score": 3,
+      "source": "unresolved",
+      "reasons": ["TASK_CONTEXT_UNRESOLVED"],
+      "matched_user_phrase_ids": []
+    }
+  ]
+}

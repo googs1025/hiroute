@@ -1,0 +1,6432 @@
+{
+  "schema": "hiroute.model-metadata-inference-rules/v1",
+  "as_of": "2026-09-13",
+  "policy": "Deterministic closure rules for provider-scoped metadata records. A rule never overrides an observed fact and is always recorded per field as basis=inferred with its rule_key. unsupported and not-applicable are determinate outcomes distinct from unknown. Rules must stay anchored to the cited official sources.",
+  "semantics_updates": {
+    "capability_state": [
+      "conditional",
+      "not-applicable",
+      "supported",
+      "unknown",
+      "unsupported"
+    ],
+    "cost_hint_state": [
+      "not-recorded",
+      "recorded"
+    ],
+    "execution_fit_state": [
+      "native-text-representable",
+      "not-applicable",
+      "unsupported"
+    ],
+    "metadata_completeness_state": [
+      "complete",
+      "missing",
+      "not-applicable",
+      "partial"
+    ],
+    "metadata_fact_state": [
+      "conflict",
+      "entitlement-dependent",
+      "known",
+      "not-applicable",
+      "runtime-required",
+      "shared-total-budget",
+      "unknown"
+    ],
+    "token_limit_state": [
+      "conflict",
+      "entitlement-dependent",
+      "exact",
+      "not-applicable",
+      "runtime-required",
+      "shared-total-budget",
+      "unknown"
+    ]
+  },
+  "encoding_rules_additions": [
+    "every provider-scoped metadata field is closed to a determinate outcome: an observed fact, a conservative inference recorded per field as basis=inferred with its rule_key, or an explicit unsupported/not-applicable outcome; indeterminate values do not survive closure",
+    "an inferred value is never presented as an observed assertion: each inference rule cites official or family evidence, and its per-field application stays inspectable through field_provenance"
+  ],
+  "model_rules": [
+    {
+      "rule_key": "rule.codex.auto-review/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^codex-auto-review$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "not-applicable",
+        "capability_hints.streaming": "not-applicable",
+        "capability_hints.tool": "not-applicable",
+        "capability_hints.vision": "not-applicable",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "runtime-required",
+          "value": null
+        },
+        "max_output_tokens": {
+          "state": "runtime-required",
+          "value": null
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "unsupported",
+          "reason": "Codex internal auto-review reviewer agent; it is not a user-selectable text model and exposes no first-party chat/Responses contract"
+        }
+      },
+      "reason": "The Codex auto-review mode is an internal reviewer agent, not a selectable model; the repository has no dedicated reviewer-agent protocol, so text-model routing does not apply and no static limits are published.",
+      "evidence_refs": [
+        "source-080"
+      ]
+    },
+    {
+      "rule_key": "rule.codex.gpt-5.3-codex-spark/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gpt-5\\.3-codex-spark$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "xhigh"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Spark's reviewed current executable definition carries 128,000 context / 8,192 output and the xhigh reasoning profile; the Codex subscription listing exposes it as a real-time coding model.",
+      "evidence_refs": [
+        "source-079",
+        "source-080"
+      ]
+    },
+    {
+      "rule_key": "rule.openai.gpt-image-generation/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gpt-image-(1\\.5|2)$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "not-applicable",
+        "capability_hints.streaming": "not-applicable",
+        "capability_hints.tool": "not-applicable",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "not-applicable",
+          "value": null
+        },
+        "max_output_tokens": {
+          "state": "not-applicable",
+          "value": null
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "not-applicable",
+          "reason": "Image generation/editing model served by the images API; the native text Responses execution contract does not apply"
+        }
+      },
+      "reason": "Both models are served only by v1/images/generations and v1/images/edits with image output; they expose no chat/Responses surface, so text token limits and text-routing capabilities are not applicable rather than unknown.",
+      "evidence_refs": [
+        "source-081",
+        "source-082",
+        "source-083"
+      ]
+    },
+    {
+      "rule_key": "rule.openai.gpt-5.6/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gpt-5\\.6-(sol|terra|luna)(-pro)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1050000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "none",
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Official GPT-5.6 model pages document 1,050,000 context, 128,000 max output, text/image input, function calling, streaming, and reasoning.effort none..max for Sol, Terra, and Luna.",
+      "evidence_refs": [
+        "source-084",
+        "source-085",
+        "source-086"
+      ]
+    },
+    {
+      "rule_key": "rule.openai.gpt-5.5/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gpt-5\\.5(-pro)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1050000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "none",
+            "low",
+            "medium",
+            "high",
+            "xhigh"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The official GPT-5.5 model page documents 1,050,000 context, 128,000 max output, text/image input, function calling, streaming, and reasoning.effort none..xhigh.",
+      "evidence_refs": [
+        "source-087"
+      ]
+    },
+    {
+      "rule_key": "rule.openai.gpt-5.4-mini-nano/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gpt-5\\.4-(mini|nano)$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 400000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "none",
+            "low",
+            "medium",
+            "high",
+            "xhigh"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The small GPT-5.4 tiers follow the conservative documented GPT-5.x coding surface: 400,000 context and 128,000 max output with the shared effort ladder.",
+      "evidence_refs": [
+        "source-022"
+      ]
+    },
+    {
+      "rule_key": "rule.openai.gpt-5.4/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gpt-5\\.4(-pro)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1050000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "none",
+            "low",
+            "medium",
+            "high",
+            "xhigh"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The GPT-5.4 frontier tier follows the documented GPT-5.x limits of 1,050,000 context and 128,000 max output with image input and the effort ladder.",
+      "evidence_refs": [
+        "source-022"
+      ]
+    },
+    {
+      "rule_key": "rule.openai.gpt-6-astra/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gpt-6-astra(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1050000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The official GPT-6 Astra model page documents 1,050,000 context, 128,000 max output, text/image input, function calling, streaming, and reasoning.effort low..max.",
+      "evidence_refs": [
+        "source-088"
+      ]
+    },
+    {
+      "rule_key": "rule.openai.gpt-5.3-codex/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gpt-5\\.3-codex$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 400000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The documented GPT-5.3 Codex surface is 400,000 context, 128,000 max output, text/image input, and reasoning.effort low..xhigh.",
+      "evidence_refs": [
+        "source-022"
+      ]
+    },
+    {
+      "rule_key": "rule.openai.gpt-5.1-5.2/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gpt-5\\.[12](-codex(-max|-mini)?)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 400000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The GPT-5.1/5.2 generation follows the conservative documented GPT-5 coding surface: 400,000 context, 128,000 max output, image input, and effort reasoning.",
+      "evidence_refs": [
+        "source-022"
+      ]
+    },
+    {
+      "rule_key": "rule.openai.gpt-5-base/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gpt-5(-chat|-mini|-nano)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 400000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The original GPT-5 family is documented with 400,000 context and 128,000 max output; the minimal/low/medium/high effort ladder is the conservative subset.",
+      "evidence_refs": [
+        "source-022"
+      ]
+    },
+    {
+      "rule_key": "rule.openai.o-series-mini-preview/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^o(1-mini|1-preview)$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 65536
+        },
+        "lifecycle": "deprecated",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The early o1 mini/preview tiers are text-only 128,000-context reasoning models superseded by the current o-series; lifecycle is recorded as deprecated.",
+      "evidence_refs": [
+        "source-022"
+      ]
+    },
+    {
+      "rule_key": "rule.openai.o-series/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^(o1|o3(-mini)?|o4-mini)$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 200000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 65536
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The o-series reasoning models are documented with a 200,000-token window, image input, and low/medium/high reasoning effort.",
+      "evidence_refs": [
+        "source-022"
+      ]
+    },
+    {
+      "rule_key": "rule.openai.gpt-4.1/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gpt-4\\.1(-mini|-nano)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1047576
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 32768
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "GPT-4.1 is a non-reasoning multimodal model documented with a 1,047,576-token window and 32,768 max output; no reasoning-level rendering exists for it.",
+      "evidence_refs": [
+        "source-022"
+      ]
+    },
+    {
+      "rule_key": "rule.openai.gpt-4o/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gpt-4o(-mini|-2024-05-13|-2024-08-06|-2024-11-20)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 16384
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "GPT-4o is a non-reasoning multimodal model documented with a 128,000-token window and 16,384 max output.",
+      "evidence_refs": [
+        "source-022"
+      ]
+    },
+    {
+      "rule_key": "rule.openai.gpt-oss/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gpt-oss(-safeguard)?(-(20b|120b))?(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 65536
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The open-weight GPT-OSS family is documented with a 131,072-token window, 65,536 max output, text-only input, and low/medium/high reasoning effort.",
+      "evidence_refs": [
+        "source-019",
+        "source-022"
+      ]
+    },
+    {
+      "rule_key": "rule.anthropic.claude-5-line/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^claude-(opus|sonnet|haiku|fable|mythos)-?(5(-1)?|5\\.1)(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1000000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The Claude 5 generation (Opus 5, Sonnet 5, Fable 5.1, Mythos 5) is documented with a 1,000,000-token window, 128,000 max output, image input, tool use, and low..max adaptive effort.",
+      "evidence_refs": [
+        "source-058",
+        "source-060",
+        "source-061"
+      ]
+    },
+    {
+      "rule_key": "rule.anthropic.claude-4-line/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^claude-(opus|sonnet|haiku)-?4([.-][0-9]{1,2})?(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 200000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 64000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The Claude 4 generation is documented with a 200,000-token standard window, 64,000 max output, image input, and tool use; extended thinking has no documented nameable effort ladder in the pinned sources.",
+      "evidence_refs": [
+        "source-060"
+      ]
+    },
+    {
+      "rule_key": "rule.anthropic.claude-3-line/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^claude-3(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 200000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "retired",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Claude 3 is the pre-reasoning generation: 200,000-token window, 8,192 max output, image input, no reasoning capability, and legacy lifecycle.",
+      "evidence_refs": [
+        "source-060"
+      ]
+    },
+    {
+      "rule_key": "rule.google.gemini-preview/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gemini-.*-preview$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1048576
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 65536
+        },
+        "lifecycle": "preview",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Preview Gemini 3.x models are documented with a 1,048,576-token window, 65,536 max output, multimodal input, function calling, and low/medium/high thinking levels.",
+      "evidence_refs": [
+        "source-003",
+        "source-004"
+      ]
+    },
+    {
+      "rule_key": "rule.google.gemini/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gemini-"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1048576
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 65536
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The current Gemini API line is documented with a 1,048,576-token window, 65,536 max output, multimodal input, function calling, and thinking levels low/medium/high.",
+      "evidence_refs": [
+        "source-001",
+        "source-004"
+      ]
+    },
+    {
+      "rule_key": "rule.google.gemma-4/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gemma-?4(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Gemma 4 is documented in the permissive open-model line with a 262,144-token window, image input, and tool support; 8,192 is the conservative documented output bound.",
+      "evidence_refs": [
+        "source-001"
+      ]
+    },
+    {
+      "rule_key": "rule.google.gemma-3/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^gemma-?3(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 16384
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Gemma 3 is the pre-reasoning open-model generation with a 131,072-token window, image input, and no reasoning ladder.",
+      "evidence_refs": [
+        "source-001"
+      ]
+    },
+    {
+      "rule_key": "rule.xai.grok-4.20-reasoning/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^grok-4\\.20-.*(reasoning|multi-agent).*$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1000000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 30000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Grok 4.20 reasoning variants are documented with a 1,000,000-token window and 30,000 max output; the non-reasoning variant is covered by its own rule.",
+      "evidence_refs": [
+        "source-033"
+      ]
+    },
+    {
+      "rule_key": "rule.xai.grok-non-reasoning/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^grok-.*non-reasoning$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1000000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 30000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The non-reasoning Grok variant exposes no thinking control; limits follow the Grok 4.20 surface.",
+      "evidence_refs": [
+        "source-033"
+      ]
+    },
+    {
+      "rule_key": "rule.xai.grok-4.5-4.6/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^grok-4\\.(5|6)(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 500000
+        },
+        "max_output_tokens": {
+          "state": "shared-total-budget",
+          "value": null
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Grok 4.6 documents a 500,000-token window without a separate textual output cap, so max output stays a shared total budget; reasoning effort is always on.",
+      "evidence_refs": [
+        "source-031"
+      ]
+    },
+    {
+      "rule_key": "rule.xai.grok-4.3/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^grok-4\\.3(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1000000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 64000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Grok 4.3 is documented with a 1,000,000-token window and 64,000 max output.",
+      "evidence_refs": [
+        "source-033"
+      ]
+    },
+    {
+      "rule_key": "rule.xai.grok-build-composer/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^grok-(build|composer)(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 256000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 64000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The Grok coding variants follow the conservative xAI coding surface: 256,000 context and 64,000 max output with effort control.",
+      "evidence_refs": [
+        "source-033"
+      ]
+    },
+    {
+      "rule_key": "rule.xai.grok-legacy/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^grok-"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 16384
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Unspecified Grok variants fall back to the conservative pre-4.3 xAI surface: 131,072 context and 16,384 max output.",
+      "evidence_refs": [
+        "source-033"
+      ]
+    },
+    {
+      "rule_key": "rule.deepseek.v4-flash/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^deepseek-v4-flash(-vision.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1048576
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 384000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "DeepSeek V4 Flash is documented with a 1,000,000+/384,000 surface and accepts image input; thinking is a toggle rather than a named ladder.",
+      "evidence_refs": [
+        "source-007",
+        "source-010"
+      ]
+    },
+    {
+      "rule_key": "rule.deepseek.v4/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^deepseek-v4-pro(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1048576
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 384000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "DeepSeek V4 Pro is documented with 1,048,576 context and 384,000 max output, text-only input, and a thinking toggle.",
+      "evidence_refs": [
+        "source-007",
+        "source-010"
+      ]
+    },
+    {
+      "rule_key": "rule.deepseek.v4-generic/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^deepseek-v4(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1048576
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 384000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The V4 generation shares the documented 1,048,576 context and 384,000 max output surface with a thinking toggle.",
+      "evidence_refs": [
+        "source-007",
+        "source-010"
+      ]
+    },
+    {
+      "rule_key": "rule.deepseek.v3.2/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^deepseek-v3\\.2(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 163840
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 65536
+        },
+        "lifecycle": "deprecated",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "DeepSeek V3.2 is a superseded text-only generation with a 163,840-token window and 65,536 max output.",
+      "evidence_refs": [
+        "source-007"
+      ]
+    },
+    {
+      "rule_key": "rule.deepseek.v3-r1/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^deepseek-(v3|r1)(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "deprecated",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The earlier DeepSeek V3/R1 line is text-only with a 131,072-token window and 8,192 max output.",
+      "evidence_refs": [
+        "source-007"
+      ]
+    },
+    {
+      "rule_key": "rule.qwen.3.8/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^qwen3\\.8(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1000000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "xhigh"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Qwen 3.8 Max is documented with a 1,000,000-token window, 131,072 max output, multimodal input, and reasoning_effort low/medium/xhigh.",
+      "evidence_refs": [
+        "source-041",
+        "source-042"
+      ]
+    },
+    {
+      "rule_key": "rule.qwen.3.7-plus/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^qwen3\\.7-plus$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1000000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 65536
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Qwen 3.7 Plus follows the documented 1,000,000-token / 65,536-output Qwen3 API surface with image input.",
+      "evidence_refs": [
+        "source-041"
+      ]
+    },
+    {
+      "rule_key": "rule.qwen.3.7/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^qwen3\\.7(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1000000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 65536
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Qwen 3.7 Max is documented with a 1,000,000-token window and 65,536 max output; the text-only variant keeps text input.",
+      "evidence_refs": [
+        "source-041"
+      ]
+    },
+    {
+      "rule_key": "rule.qwen.3.6/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^qwen3\\.6(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1000000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 65536
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Qwen 3.6 follows the documented 1,000,000-token / 65,536-output Qwen3 API surface with multimodal input.",
+      "evidence_refs": [
+        "source-041"
+      ]
+    },
+    {
+      "rule_key": "rule.qwen.3.5/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^qwen3\\.5(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Qwen 3.5 is documented with a 262,144-token window and 8,192 max output; thinking is a model toggle rather than a named ladder.",
+      "evidence_refs": [
+        "source-041"
+      ]
+    },
+    {
+      "rule_key": "rule.qwen.coder-next-conflict/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^qwen3-coder-next$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "conditional",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 65536
+        },
+        "lifecycle": "deprecated",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Bailian documents conflicting thinking support for qwen3-coder-next; the conflict is preserved as a determinate conditional capability instead of a guessed boolean.",
+      "evidence_refs": [
+        "source-039",
+        "source-043"
+      ]
+    },
+    {
+      "rule_key": "rule.qwen.coder/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^qwen3-coder(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 65536
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The Qwen3 Coder line is a text-only coding surface with a 262,144-token window and 65,536 max output.",
+      "evidence_refs": [
+        "source-039",
+        "source-041"
+      ]
+    },
+    {
+      "rule_key": "rule.qwen3.vl/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^qwen3-vl(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 16384
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Qwen3-VL variants accept image input with the conservative Qwen3 open-model window.",
+      "evidence_refs": [
+        "source-039"
+      ]
+    },
+    {
+      "rule_key": "rule.qwen3.thinking/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^qwen3-.*thinking.*$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 16384
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The Qwen3 thinking open models support reasoning with the conservative 131,072-token window.",
+      "evidence_refs": [
+        "source-039"
+      ]
+    },
+    {
+      "rule_key": "rule.qwen3.legacy/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^qwen3(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 16384
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The earlier Qwen3 open models are text-only with a conservative 131,072-token window.",
+      "evidence_refs": [
+        "source-039"
+      ]
+    },
+    {
+      "rule_key": "rule.zai.glm-5.3-flash/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^glm-5\\.3-flash$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1048576
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "high",
+            "max"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "GLM-5.3 Flash is documented with a 1,000,000-token window, 131,072 max output, and image input (the Flash variant carries vision).",
+      "evidence_refs": [
+        "source-035",
+        "source-036"
+      ]
+    },
+    {
+      "rule_key": "rule.zai.glm-5.3/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^glm-5\\.3$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1048576
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "high",
+            "max"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "GLM-5.3 is documented with a 1,000,000-token window, 131,072 max output, forced thinking with low/high/max, and text input.",
+      "evidence_refs": [
+        "source-035",
+        "source-036"
+      ]
+    },
+    {
+      "rule_key": "rule.zai.glm-5.2/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^glm-5\\.2(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1048576
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "high",
+            "max"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "GLM-5.2 is documented with a 1,000,000-token window and 131,072 max output; the maintained evidence lists high/max thinking.",
+      "evidence_refs": [
+        "source-027"
+      ]
+    },
+    {
+      "rule_key": "rule.zai.glm-5.1/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^glm-5\\.1(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 200000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 16384
+        },
+        "lifecycle": "deprecated",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "GLM-5.1 is the superseded previous generation with a 200,000-token window and conservative 16,384 max output.",
+      "evidence_refs": [
+        "source-027"
+      ]
+    },
+    {
+      "rule_key": "rule.zai.glm-5-base/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^glm-?5(-turbo)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 202752
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 16384
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The base GLM-5 line is documented with a 202,752-token window and conservative 16,384 max output.",
+      "evidence_refs": [
+        "source-027"
+      ]
+    },
+    {
+      "rule_key": "rule.zai.glm-4.x/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^glm-4\\.(5|6|7)(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 202752
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 16384
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "high",
+            "max"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The GLM-4.5/4.6/4.7 line is documented with a 202,752-token window, reasoning effort control, and text input.",
+      "evidence_refs": [
+        "source-027"
+      ]
+    },
+    {
+      "rule_key": "rule.zai.glm-4-legacy/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^glm-4(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The earlier GLM-4 line is text-only with a 131,072-token window and 8,192 max output.",
+      "evidence_refs": [
+        "source-027"
+      ]
+    },
+    {
+      "rule_key": "rule.zai.glm-5v/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^glm-5v(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 200000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "high",
+            "max"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "GLM-5V Turbo is the vision variant with a 200,000-token window and 131,072 max output.",
+      "evidence_refs": [
+        "source-027"
+      ]
+    },
+    {
+      "rule_key": "rule.kimi.k3/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^k3(-256k)?$|^kimi-k3$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1048576
+        },
+        "max_output_tokens": {
+          "state": "entitlement-dependent",
+          "value": null
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "high",
+            "max"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Kimi K3 is documented with a 1,048,576-token window; the completion cap is entitlement-dependent per plan, and always-thinking effort is low/high/max.",
+      "evidence_refs": [
+        "source-062",
+        "source-074"
+      ]
+    },
+    {
+      "rule_key": "rule.kimi.k3-256k/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^k3-256k$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "high",
+            "max"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The k3-256k code-plan cap serves the same model with a fixed 262,144-token window.",
+      "evidence_refs": [
+        "source-075"
+      ]
+    },
+    {
+      "rule_key": "rule.kimi.k2.7-code/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^kimi-k2\\.7-code(-highspeed)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Kimi K2.7 Code is documented with a 262,144-token shared window.",
+      "evidence_refs": [
+        "source-063"
+      ]
+    },
+    {
+      "rule_key": "rule.kimi.k2.6/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^kimi-k2\\.6(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 65536
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Kimi K2.6 is documented with a 256,000-window and 65,536 conservative output bound; 32,768 is only its default, not its maximum.",
+      "evidence_refs": [
+        "source-064"
+      ]
+    },
+    {
+      "rule_key": "rule.kimi.k2.5/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^kimi-k2[.-]5(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "shared-total-budget",
+          "value": null
+        },
+        "lifecycle": "deprecated",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Kimi K2.5 shares its 262,144-token total budget between input and output; the generation is superseded by K2.6/K2.7.",
+      "evidence_refs": [
+        "source-063"
+      ]
+    },
+    {
+      "rule_key": "rule.kimi.k2-thinking/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^kimi-k2-thinking(-turbo)?$|^moonshotai/kimi-k2-thinking$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 16384
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Kimi K2 Thinking is a thinking-mode K2 with a 262,144-token window and conservative 16,384 output bound.",
+      "evidence_refs": [
+        "source-063"
+      ]
+    },
+    {
+      "rule_key": "rule.kimi.k2-legacy/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^kimi-k2(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 16384
+        },
+        "lifecycle": "deprecated",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Legacy K2 preview/turbo ids are superseded text-only ids with a 262,144-token window.",
+      "evidence_refs": [
+        "source-063"
+      ]
+    },
+    {
+      "rule_key": "rule.minimax.m3/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^minimax-m3$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 512000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "MiniMax M3 is observed with a 512,000-token configured window; without a first-party model card the conservative output bound is kept.",
+      "evidence_refs": [
+        "source-065"
+      ]
+    },
+    {
+      "rule_key": "rule.minimax.m2.7/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^minimax-m2\\.7(-highspeed)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 204800
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 204800
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "MiniMax M2.7 is documented with a 204,800-token window and Anthropic-compatible output up to 204,800.",
+      "evidence_refs": [
+        "source-066",
+        "source-067"
+      ]
+    },
+    {
+      "rule_key": "rule.minimax.m2/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^minimax-m2(\\.1|\\.5)?(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 196608
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 32768
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The M2.x line is documented with a 196,608-token window and conservative 32,768 output bound.",
+      "evidence_refs": [
+        "source-065"
+      ]
+    },
+    {
+      "rule_key": "rule.tencent.hy4/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^hy4(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1024000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 64000
+        },
+        "lifecycle": "preview",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Hunyuan Hy4 preview is documented with a 1,024,000-token window and 64,000 max output.",
+      "evidence_refs": [
+        "source-016"
+      ]
+    },
+    {
+      "rule_key": "rule.tencent.hy3/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^hy3(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 256000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "none",
+            "low",
+            "high"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Hunyuan Hy3 is documented with a 256,000-token window, 192,000 input / 128,000 output, and none/low/high reasoning.",
+      "evidence_refs": [
+        "source-015",
+        "source-016"
+      ]
+    },
+    {
+      "rule_key": "rule.bytedance.seed/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^(doubao-|dola-|seed-).*$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 256000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The Doubao Seed 2.x line is observed with a 256,000-token window and 128,000 max output; thinking is a toggle.",
+      "evidence_refs": [
+        "source-076"
+      ]
+    },
+    {
+      "rule_key": "rule.baidu.ernie-5.1/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^ernie-5\\.1(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 65536
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "ERNIE 5.1 is observed as a text-only non-reasoning record with a 128,000-token window and 65,536 max output.",
+      "evidence_refs": [
+        "source-089"
+      ]
+    },
+    {
+      "rule_key": "rule.baidu.ernie/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^ernie-"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 65536
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "ERNIE 5.x is observed with a 128,000-token window, 65,536 max output, and multimodal input.",
+      "evidence_refs": [
+        "source-089"
+      ]
+    },
+    {
+      "rule_key": "rule.xiaomi.mimo-omni/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^mimo-.*(omni|2\\.5)(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1048576
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "MiMo V2.5 / Omni records are observed with a 1,048,576-token window and 131,072 max output with image input.",
+      "evidence_refs": [
+        "source-090"
+      ]
+    },
+    {
+      "rule_key": "rule.xiaomi.mimo/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^mimo-"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1048576
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The MiMo V2 code line is observed with a 1,048,576-token window and text-first input.",
+      "evidence_refs": [
+        "source-090"
+      ]
+    },
+    {
+      "rule_key": "rule.stepfun.step-3.7/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^step-3\\.7(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Step 3.7 Flash is observed with a 262,144-token window and shared output budget with image input.",
+      "evidence_refs": [
+        "source-091"
+      ]
+    },
+    {
+      "rule_key": "rule.stepfun.step/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^step-"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 65536
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Step 3.5 is observed with a 262,144-token window and 65,536 max output.",
+      "evidence_refs": [
+        "source-091"
+      ]
+    },
+    {
+      "rule_key": "rule.amazon.nova/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^nova-"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 5000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Amazon Nova keeps a conservative lower bound of 128,000 context and 5,000 output from the Nova product documentation; exact per-model limits remain the Bedrock model card's authority.",
+      "evidence_refs": [
+        "source-092"
+      ]
+    },
+    {
+      "rule_key": "rule.meta.muse-spark/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^muse-spark-"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1048576
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Meta Muse Spark is observed with a 1,048,576-token window and 131,072 max output across model and contributor tiers.",
+      "evidence_refs": [
+        "source-093"
+      ]
+    },
+    {
+      "rule_key": "rule.meta.llama-4/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^llama-?4(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Llama 4 hosted variants keep the conservative hosted service bound of 131,072 context and 8,192 output.",
+      "evidence_refs": [
+        "source-094"
+      ]
+    },
+    {
+      "rule_key": "rule.meta.llama/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^llama-?"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Llama 3.x hosted ids are text-only with a 131,072-token window and 8,192 max output.",
+      "evidence_refs": [
+        "source-094"
+      ]
+    },
+    {
+      "rule_key": "rule.nous.hermes-4/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^hermes-4(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Nous Hermes 4 is a Llama-3.1-based reasoning fine-tune with a 131,072-token window and text-only input.",
+      "evidence_refs": [
+        "source-095"
+      ]
+    },
+    {
+      "rule_key": "rule.nous.hermes/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^hermes-"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Nous Hermes 3 is a non-reasoning Llama-based fine-tune with a 131,072-token window.",
+      "evidence_refs": [
+        "source-095"
+      ]
+    },
+    {
+      "rule_key": "rule.mistral.small/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^mistral-small(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "shared-total-budget",
+          "value": null
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Mistral Small 4 shares one 256,000-token total budget between input and output with reasoning effort support.",
+      "evidence_refs": [
+        "source-030"
+      ]
+    },
+    {
+      "rule_key": "rule.mistral.large/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^mistral-large(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "shared-total-budget",
+          "value": null
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Mistral Large 3 documents a 256,000-token window with a shared output budget and multimodal input.",
+      "evidence_refs": [
+        "source-029"
+      ]
+    },
+    {
+      "rule_key": "rule.mistral.medium/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^mistral-medium(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Mistral Medium 3.x follows the 262,144-token platform window with a conservative 8,192 output bound.",
+      "evidence_refs": [
+        "source-028"
+      ]
+    },
+    {
+      "rule_key": "rule.nvidia.nemotron-omni/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^nemotron-.*omni.*$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Nemotron 3 Nano Omni keeps the 262,144-token Nemotron family window and adds image input.",
+      "evidence_refs": [
+        "source-096"
+      ]
+    },
+    {
+      "rule_key": "rule.nvidia.nemotron/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^nemotron-"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 262144
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "reasoning_effort_maps": [],
+          "supported_reasoning_efforts": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "thinking_level_maps": []
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The Nemotron 3 line is text-first with a 262,144-token conservative window and 8,192 output bound and reasoning support.",
+      "evidence_refs": [
+        "source-096"
+      ]
+    },
+    {
+      "rule_key": "rule.nvidia.llama-nemotron/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^llama-.*nemotron.*$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Llama-Nemotron derivatives keep the Llama 3.1 hosted bound of 131,072 context and 8,192 output.",
+      "evidence_refs": [
+        "source-096"
+      ]
+    },
+    {
+      "rule_key": "rule.cohere.north-mini-code/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^north-mini-code(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 256000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 64000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Cohere North Mini Code is observed with a 256,000-token window and 64,000 max output.",
+      "evidence_refs": [
+        "source-097"
+      ]
+    },
+    {
+      "rule_key": "rule.cohere.command-a-reasoning/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^command-a-reasoning(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 256000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 32000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Command A Reasoning is observed with a 256,000-token window and 32,000 max output.",
+      "evidence_refs": [
+        "source-097"
+      ]
+    },
+    {
+      "rule_key": "rule.cohere.command-a-vision/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^command-a-vision(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "unsupported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Command A Vision is observed with a 128,000-token window and 8,000 max output; it exposes no tool calling.",
+      "evidence_refs": [
+        "source-097"
+      ]
+    },
+    {
+      "rule_key": "rule.cohere.command-a-plus/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^command-a-plus(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 64000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Command A Plus is observed with a 128,000-token window, 64,000 max output, and multimodal input.",
+      "evidence_refs": [
+        "source-097"
+      ]
+    },
+    {
+      "rule_key": "rule.cohere.command/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^command-"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 256000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8000
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "The original Command A is observed with a 256,000-token window and 8,000 max output.",
+      "evidence_refs": [
+        "source-097"
+      ]
+    },
+    {
+      "rule_key": "rule.upstage.solar/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^solar-"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Upstage Solar keeps the conservative 131,072-token window and 8,192 output bound from its platform documentation.",
+      "evidence_refs": [
+        "source-098"
+      ]
+    },
+    {
+      "rule_key": "rule.longcat.longcat/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^longcat-"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 1048576
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "LongCat 2.0 is observed with a 1,048,576-token window and 131,072 max output.",
+      "evidence_refs": [
+        "source-099"
+      ]
+    },
+    {
+      "rule_key": "rule.venice.uncensored/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^venice-uncensored(-.*)?$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "supported",
+        "input_modalities": [
+          "image",
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 128000
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Venice Uncensored is observed with a 128,000-token window and 8,192 output bound; no reasoning ladder is documented.",
+      "evidence_refs": [
+        "source-100"
+      ]
+    },
+    {
+      "rule_key": "rule.poolside.laguna/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^laguna-"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "supported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "Poolside Laguna code models keep the conservative 131,072-token window and 8,192 output bound.",
+      "evidence_refs": [
+        "source-101"
+      ]
+    },
+    {
+      "rule_key": "rule.client.alias-default/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "^default$"
+      },
+      "assignments": {
+        "capability_hints.reasoning": "not-applicable",
+        "capability_hints.streaming": "not-applicable",
+        "capability_hints.tool": "not-applicable",
+        "capability_hints.vision": "not-applicable",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "not-applicable",
+          "value": null
+        },
+        "max_output_tokens": {
+          "state": "not-applicable",
+          "value": null
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "not-applicable",
+          "reason": "Client-side alias literal, not a callable upstream model identity"
+        }
+      },
+      "reason": "The literal id `default` is a client alias, not a model: no text-routing capabilities or limits apply.",
+      "evidence_refs": [
+        "source-079"
+      ]
+    },
+    {
+      "rule_key": "rule.fallback.unclassified-text-model/v1",
+      "record_kind": "model",
+      "match": {
+        "upstream_model_id_pattern": "."
+      },
+      "assignments": {
+        "capability_hints.reasoning": "unsupported",
+        "capability_hints.streaming": "supported",
+        "capability_hints.tool": "supported",
+        "capability_hints.vision": "unsupported",
+        "input_modalities": [
+          "text"
+        ],
+        "context_tokens": {
+          "state": "known",
+          "value": 131072
+        },
+        "max_output_tokens": {
+          "state": "known",
+          "value": 8192
+        },
+        "lifecycle": "active",
+        "reasoning_rendering_hints": {
+          "state": "not-applicable"
+        },
+        "execution_fit": {
+          "state": "native-text-representable"
+        }
+      },
+      "reason": "No family-specific official model card matched this provider-scoped id. Applied the conservative project default for an unclassified text response model: tools and streaming supported, vision and reasoning unsupported, smallest documented family-free limits (131,072/8,192), lifecycle active unless observed otherwise. Replace with exact evidence when the provider publishes a model card.",
+      "evidence_refs": [
+        "source-079"
+      ]
+    }
+  ],
+  "provider_rules": [
+    {
+      "rule_key": "rule.provider.auth.external-process/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^(claude-cli|copilot-acp)$"
+      },
+      "assignments": {
+        "domain": "authentication",
+        "authentication_candidates": [
+          "external_process"
+        ]
+      },
+      "reason": "CLI/ACP-backed providers authenticate through the local process rather than a stored API key.",
+      "evidence_refs": [
+        "source-102"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.auth.vertex/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^vertex$"
+      },
+      "assignments": {
+        "domain": "authentication",
+        "authentication_candidates": [
+          "vertex"
+        ]
+      },
+      "reason": "Vertex AI uses Google Cloud application default credentials.",
+      "evidence_refs": [
+        "source-056"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.auth.bedrock/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^bedrock$"
+      },
+      "assignments": {
+        "domain": "authentication",
+        "authentication_candidates": [
+          "aws_sdk"
+        ]
+      },
+      "reason": "Amazon Bedrock uses AWS SDK credentials.",
+      "evidence_refs": [
+        "source-055"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.auth.copilot/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^(copilot|github-copilot|copilot-model-aliases)$"
+      },
+      "assignments": {
+        "domain": "authentication",
+        "authentication_candidates": [
+          "copilot"
+        ]
+      },
+      "reason": "The Copilot integrations authenticate with a GitHub Copilot token.",
+      "evidence_refs": [
+        "source-103"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.auth.oauth/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^(gemini|qwen-oauth|minimax-oauth)$"
+      },
+      "assignments": {
+        "domain": "authentication",
+        "authentication_candidates": [
+          "oauth_external"
+        ]
+      },
+      "reason": "These providers expose a documented external OAuth login beside API keys.",
+      "evidence_refs": [
+        "source-104",
+        "source-105",
+        "source-106"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.auth.not-applicable/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^(custom|preferred-silent-default|moa)$"
+      },
+      "assignments": {
+        "domain": "authentication",
+        "completeness": "not-applicable"
+      },
+      "reason": "These entries are local placeholders or aggregations; credential requirements are defined by the user or composed at runtime, so no fixed authentication contract exists.",
+      "evidence_refs": [
+        "source-079"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.auth.api-key/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "."
+      },
+      "assignments": {
+        "domain": "authentication",
+        "authentication_candidates": [
+          "api_key"
+        ]
+      },
+      "reason": "Every remaining provider is a documented API service that authenticates bearer API keys on its HTTP interface.",
+      "evidence_refs": [
+        "source-022",
+        "source-053",
+        "source-107"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.openai-chat/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^openai-chat$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.openai.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for openai-chat.",
+      "evidence_refs": [
+        "source-022"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.openai-api/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^openai-api$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.openai.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for openai-api.",
+      "evidence_refs": [
+        "source-022"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.openai/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^openai$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.openai.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for openai.",
+      "evidence_refs": [
+        "source-022"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.moonshot/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^moonshot$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.moonshot.cn/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for moonshot.",
+      "evidence_refs": [
+        "source-063"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.kimi/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^kimi$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.moonshot.ai/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for kimi.",
+      "evidence_refs": [
+        "source-063"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.kimi-coding/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^kimi-coding$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.kimi.com/coding/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for kimi-coding.",
+      "evidence_refs": [
+        "source-075"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.kimi-coding-cn/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^kimi-coding-cn$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.kimi.com/coding/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for kimi-coding-cn.",
+      "evidence_refs": [
+        "source-075"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.anthropic/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^anthropic$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.anthropic.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for anthropic.",
+      "evidence_refs": [
+        "source-060"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.tencent/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^tencent$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.lkeap.cloud.tencent.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for tencent.",
+      "evidence_refs": [
+        "source-015"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.tencent-tokenhub/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^tencent-tokenhub$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.lkeap.cloud.tencent.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for tencent-tokenhub.",
+      "evidence_refs": [
+        "source-015"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.tencent-tokenplan/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^tencent-tokenplan$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.lkeap.cloud.tencent.com/plan/v3/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for tencent-tokenplan.",
+      "evidence_refs": [
+        "source-017"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.xai/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^xai$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.x.ai/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for xai.",
+      "evidence_refs": [
+        "source-033"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.xai-curated-extras/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^xai-curated-extras$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.x.ai/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for xai-curated-extras.",
+      "evidence_refs": [
+        "source-033"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.xai-static-fallback/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^xai-static-fallback$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.x.ai/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for xai-static-fallback.",
+      "evidence_refs": [
+        "source-033"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.xai-top/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^xai-top$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.x.ai/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for xai-top.",
+      "evidence_refs": [
+        "source-033"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.google/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^google$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://generativelanguage.googleapis.com/v1beta/openai/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for google.",
+      "evidence_refs": [
+        "source-005"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.gemini/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^gemini$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://generativelanguage.googleapis.com/v1beta/openai/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for gemini.",
+      "evidence_refs": [
+        "source-005"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.qwen/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^qwen$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://dashscope.aliyuncs.com/compatible-mode/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for qwen.",
+      "evidence_refs": [
+        "source-039"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.qwen-token-plan/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^qwen-token-plan$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for qwen-token-plan.",
+      "evidence_refs": [
+        "source-044"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.zai/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^zai$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.z.ai/api/paas/v4/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for zai.",
+      "evidence_refs": [
+        "source-035"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.zhipu/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^zhipu$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://open.bigmodel.cn/api/paas/v4/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for zhipu.",
+      "evidence_refs": [
+        "source-026"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.deepseek/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^deepseek$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.deepseek.com/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for deepseek.",
+      "evidence_refs": [
+        "source-007"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.mistral/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^mistral$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.mistral.ai/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for mistral.",
+      "evidence_refs": [
+        "source-028"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.groq/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^groq$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.groq.com/openai/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for groq.",
+      "evidence_refs": [
+        "source-020"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.openrouter/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^openrouter$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://openrouter.ai/api/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for openrouter.",
+      "evidence_refs": [
+        "source-053"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.nvidia/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^nvidia$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://integrate.api.nvidia.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for nvidia.",
+      "evidence_refs": [
+        "source-096"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.venice/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^venice$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.venice.ai/api/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for venice.",
+      "evidence_refs": [
+        "source-100"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.ollama-cloud/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^ollama-cloud$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://ollama.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for ollama-cloud.",
+      "evidence_refs": [
+        "source-108"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.together/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^together$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.together.xyz/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for together.",
+      "evidence_refs": [
+        "source-109"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.cerebras/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^cerebras$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.cerebras.ai/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for cerebras.",
+      "evidence_refs": [
+        "source-110"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.featherless/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^featherless$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.featherless.ai/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for featherless.",
+      "evidence_refs": [
+        "source-111"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.chutes/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^chutes$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://llm.chutes.ai/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for chutes.",
+      "evidence_refs": [
+        "source-112"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.deepinfra/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^deepinfra$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.deepinfra.com/v1/openai/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for deepinfra.",
+      "evidence_refs": [
+        "source-113"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.novita/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^novita$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.novita.ai/v3/openai/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for novita.",
+      "evidence_refs": [
+        "source-114"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.stepfun/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^stepfun$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.stepfun.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for stepfun.",
+      "evidence_refs": [
+        "source-091"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.stepfun-plan/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^stepfun-plan$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.stepfun.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for stepfun-plan.",
+      "evidence_refs": [
+        "source-091"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.xiaomi/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^xiaomi$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.mimo.xiaomi.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for xiaomi.",
+      "evidence_refs": [
+        "source-090"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.xiaomi-token-plan/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^xiaomi-token-plan$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.mimo.xiaomi.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for xiaomi-token-plan.",
+      "evidence_refs": [
+        "source-090"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.qianfan/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^qianfan$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://qianfan.baidubce.com/v2/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for qianfan.",
+      "evidence_refs": [
+        "source-089"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.longcat/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^longcat$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.longcat.chat/openai/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for longcat.",
+      "evidence_refs": [
+        "source-099"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.volcengine/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^volcengine$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://ark.cn-beijing.volces.com/api/v3/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for volcengine.",
+      "evidence_refs": [
+        "source-076"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.volcengine-plan/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^volcengine-plan$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://ark.cn-beijing.volces.com/api/v3/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for volcengine-plan.",
+      "evidence_refs": [
+        "source-076"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.byteplus/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^byteplus$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://ark.ap-southeast.bytepluses.com/api/v3/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for byteplus.",
+      "evidence_refs": [
+        "source-115"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.byteplus-plan/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^byteplus-plan$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://ark.ap-southeast.bytepluses.com/api/v3/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for byteplus-plan.",
+      "evidence_refs": [
+        "source-115"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.huggingface/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^huggingface$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://router.huggingface.co/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for huggingface.",
+      "evidence_refs": [
+        "source-116"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.baseten/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^baseten$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://inference.baseten.co/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for baseten.",
+      "evidence_refs": [
+        "source-117"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.fireworks/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^fireworks$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.fireworks.ai/inference/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for fireworks.",
+      "evidence_refs": [
+        "source-118"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.gmi/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^gmi$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.gmi-serving.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for gmi.",
+      "evidence_refs": [
+        "source-119"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.kilocode/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^kilocode$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://kilocode.ai/api/openrouter/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for kilocode.",
+      "evidence_refs": [
+        "source-120"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.opencode-zen/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^opencode-zen$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://opencode.ai/zen/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for opencode-zen.",
+      "evidence_refs": [
+        "source-121"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.opencode-go/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^opencode-go$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://opencode.ai/zen/go/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for opencode-go.",
+      "evidence_refs": [
+        "source-121"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.not-applicable/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^(claude-cli|copilot-acp|custom|preferred-silent-default|moa|bedrock|vertex|azure-foundry|router|ai-gateway|copilot-model-aliases|openai-codex)$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "completeness": "not-applicable"
+      },
+      "reason": "These providers expose no authenticated HTTP model directory; discovery is a local process, deployment, or console fact instead.",
+      "evidence_refs": [
+        "source-049",
+        "source-102"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.endpoint.openai/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^(openai-api|openai-chat|openai)$"
+      },
+      "assignments": {
+        "domain": "endpoint",
+        "base_url_candidates": [
+          "https://api.openai.com/v1"
+        ],
+        "protocol_candidates": [
+          "responses",
+          "chat_completions"
+        ],
+        "completeness": "partial"
+      },
+      "reason": "OpenAI Platform documents the shared /v1 base for the Responses and Chat Completions interfaces.",
+      "evidence_refs": [
+        "source-022"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.endpoint.not-applicable/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^(claude-cli|copilot-acp|custom|preferred-silent-default|moa|copilot-model-aliases)$"
+      },
+      "assignments": {
+        "domain": "endpoint",
+        "completeness": "not-applicable"
+      },
+      "reason": "These entries expose no first-party HTTP endpoint in this dataset; requests are mediated by a local process, a user-provided address, or an alias catalog.",
+      "evidence_refs": [
+        "source-102"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.identity.fallback-id/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "."
+      },
+      "assignments": {
+        "domain": "identity",
+        "completeness": "complete"
+      },
+      "reason": "The provider exposes exactly one unambiguous identity string: a single asserted name or the pinned scanner's provider id.",
+      "evidence_refs": [
+        "source-079"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.alibaba/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^alibaba$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for alibaba.",
+      "evidence_refs": [
+        "source-039"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.alibaba-cn/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^alibaba-cn$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://dashscope.aliyuncs.com/compatible-mode/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for alibaba-cn.",
+      "evidence_refs": [
+        "source-039"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.alibaba-coding-plan/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^alibaba-coding-plan$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://coding-intl.dashscope.aliyuncs.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for alibaba-coding-plan.",
+      "evidence_refs": [
+        "source-043"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.alibaba-coding-plan-cn/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^alibaba-coding-plan-cn$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://coding.dashscope.aliyuncs.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for alibaba-coding-plan-cn.",
+      "evidence_refs": [
+        "source-043"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.alibaba-token-plan/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^alibaba-token-plan$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for alibaba-token-plan.",
+      "evidence_refs": [
+        "source-044"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.alibaba-token-plan-cn/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^alibaba-token-plan-cn$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for alibaba-token-plan-cn.",
+      "evidence_refs": [
+        "source-044"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.arcee/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^arcee$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.arcee.ai/api/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for arcee.",
+      "evidence_refs": [
+        "source-122"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.minimax/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^minimax$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.minimax.io/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for minimax.",
+      "evidence_refs": [
+        "source-065"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.minimax-cn/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^minimax-cn$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.minimaxi.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for minimax-cn.",
+      "evidence_refs": [
+        "source-071"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.minimax-oauth/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^minimax-oauth$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.minimax.io/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for minimax-oauth.",
+      "evidence_refs": [
+        "source-065"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.nous/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^nous$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://inference-api.nousresearch.com/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for nous.",
+      "evidence_refs": [
+        "source-095"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.upstage/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^upstage$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.upstage.ai/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for upstage.",
+      "evidence_refs": [
+        "source-098"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.opencode-free/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^opencode-free$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://opencode.ai/zen/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for opencode-free.",
+      "evidence_refs": [
+        "source-121"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.cohere/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^cohere$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.cohere.com/v2/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for cohere.",
+      "evidence_refs": [
+        "source-097"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.github-copilot/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^github-copilot$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.individual.githubcopilot.com/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for github-copilot.",
+      "evidence_refs": [
+        "source-103"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.copilot/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^copilot$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.githubcopilot.com/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for copilot.",
+      "evidence_refs": [
+        "source-103"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.vercel-ai-gateway/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^vercel-ai-gateway$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://ai-gateway.vercel.sh/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for vercel-ai-gateway.",
+      "evidence_refs": [
+        "source-124"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.meta/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^meta(-ai)?$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://api.meta.ai/v1/models"
+        ]
+      },
+      "reason": "Meta documents an authenticated remote model directory on api.meta.ai for its Model API surface, covering the aliased meta and meta-ai provider profiles.",
+      "evidence_refs": [
+        "source-093"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery2.opencode/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^opencode$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ],
+        "models_url_candidates": [
+          "https://opencode.ai/zen/v1/models"
+        ]
+      },
+      "reason": "The provider documents an authenticated remote model directory for opencode.",
+      "evidence_refs": [
+        "source-121"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.nebius-modes/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^nebius-token-factory$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "discovery_modes": [
+          "remote_models"
+        ]
+      },
+      "reason": "The Nebius Token Factory directory URL is already recorded; the modes marker adds the remote-inventory semantics.",
+      "evidence_refs": [
+        "source-123"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.endpoint2.kimi-coding/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^kimi-coding$"
+      },
+      "assignments": {
+        "domain": "endpoint",
+        "base_url_candidates": [
+          "https://api.kimi.com/coding/v1"
+        ],
+        "protocol_candidates": [
+          "chat_completions",
+          "messages"
+        ],
+        "completeness": "partial"
+      },
+      "reason": "The provider documents this endpoint surface for kimi-coding.",
+      "evidence_refs": [
+        "source-075"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.endpoint2.kimi-coding-cn/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^kimi-coding-cn$"
+      },
+      "assignments": {
+        "domain": "endpoint",
+        "base_url_candidates": [
+          "https://api.kimi.com/coding/v1"
+        ],
+        "protocol_candidates": [
+          "chat_completions",
+          "messages"
+        ],
+        "completeness": "partial"
+      },
+      "reason": "The provider documents this endpoint surface for kimi-coding-cn.",
+      "evidence_refs": [
+        "source-075"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.endpoint2.moonshot/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^moonshot$"
+      },
+      "assignments": {
+        "domain": "endpoint",
+        "base_url_candidates": [
+          "https://api.moonshot.cn/v1"
+        ],
+        "protocol_candidates": [
+          "chat_completions"
+        ],
+        "completeness": "complete"
+      },
+      "reason": "The provider documents this endpoint surface for moonshot.",
+      "evidence_refs": [
+        "source-063"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.endpoint2.tencent/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^tencent$"
+      },
+      "assignments": {
+        "domain": "endpoint",
+        "base_url_candidates": [
+          "https://api.lkeap.cloud.tencent.com/v1"
+        ],
+        "protocol_candidates": [
+          "chat_completions"
+        ],
+        "completeness": "complete"
+      },
+      "reason": "The provider documents this endpoint surface for tencent.",
+      "evidence_refs": [
+        "source-015"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.endpoint2.xai-curated-extras/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^xai-curated-extras$"
+      },
+      "assignments": {
+        "domain": "endpoint",
+        "base_url_candidates": [
+          "https://api.x.ai/v1"
+        ],
+        "protocol_candidates": [
+          "responses"
+        ],
+        "completeness": "complete"
+      },
+      "reason": "The provider documents this endpoint surface for xai-curated-extras.",
+      "evidence_refs": [
+        "source-033"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.endpoint2.xai-static-fallback/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^xai-static-fallback$"
+      },
+      "assignments": {
+        "domain": "endpoint",
+        "base_url_candidates": [
+          "https://api.x.ai/v1"
+        ],
+        "protocol_candidates": [
+          "responses"
+        ],
+        "completeness": "complete"
+      },
+      "reason": "The provider documents this endpoint surface for xai-static-fallback.",
+      "evidence_refs": [
+        "source-033"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.endpoint2.xai-top/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^xai-top$"
+      },
+      "assignments": {
+        "domain": "endpoint",
+        "base_url_candidates": [
+          "https://api.x.ai/v1"
+        ],
+        "protocol_candidates": [
+          "responses"
+        ],
+        "completeness": "complete"
+      },
+      "reason": "The provider documents this endpoint surface for xai-top.",
+      "evidence_refs": [
+        "source-033"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.endpoint2.vercel-ai-gateway/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^vercel-ai-gateway$"
+      },
+      "assignments": {
+        "domain": "endpoint",
+        "base_url_candidates": [
+          "https://ai-gateway.vercel.sh/v1"
+        ],
+        "protocol_candidates": [
+          "chat_completions"
+        ],
+        "completeness": "complete"
+      },
+      "reason": "The provider documents this endpoint surface for vercel-ai-gateway.",
+      "evidence_refs": [
+        "source-124"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.endpoint2.meta-ai/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^meta-ai$"
+      },
+      "assignments": {
+        "domain": "endpoint",
+        "base_url_candidates": [
+          "https://api.meta.ai/v1"
+        ],
+        "protocol_candidates": [
+          "responses"
+        ],
+        "completeness": "complete"
+      },
+      "reason": "The provider documents this endpoint surface for meta-ai.",
+      "evidence_refs": [
+        "source-093"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.endpoint2.ollama-cloud/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^ollama-cloud$"
+      },
+      "assignments": {
+        "domain": "endpoint",
+        "base_url_candidates": [
+          "https://ollama.com"
+        ],
+        "protocol_candidates": [
+          "chat_completions"
+        ],
+        "completeness": "complete"
+      },
+      "reason": "The provider documents this endpoint surface for ollama-cloud.",
+      "evidence_refs": [
+        "source-108"
+      ]
+    },
+    {
+      "rule_key": "rule.provider.discovery.qwen-oauth/v1",
+      "record_kind": "provider",
+      "match": {
+        "provider_id_pattern": "^qwen-oauth$"
+      },
+      "assignments": {
+        "domain": "discovery",
+        "completeness": "not-applicable"
+      },
+      "reason": "The pinned scan records no authenticated models-directory contract for the Qwen OAuth consumer surface.",
+      "evidence_refs": [
+        "source-105"
+      ]
+    }
+  ],
+  "evidence_source_additions": [
+    {
+      "source_key": "source-079",
+      "authority": "learn.chatgpt.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://learn.chatgpt.com/docs/models",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-080",
+      "authority": "learn.chatgpt.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://learn.chatgpt.com/docs/sandboxing/auto-review",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-081",
+      "authority": "developers.openai.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://developers.openai.com/api/docs/models/gpt-image-1.5",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-082",
+      "authority": "developers.openai.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://developers.openai.com/api/docs/models/gpt-image-2",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-083",
+      "authority": "developers.openai.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://developers.openai.com/api/docs/guides/image-generation",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-084",
+      "authority": "developers.openai.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-085",
+      "authority": "developers.openai.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-086",
+      "authority": "developers.openai.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://developers.openai.com/api/docs/models/gpt-5.6-terra",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-087",
+      "authority": "developers.openai.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://developers.openai.com/api/docs/models/gpt-5.5",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-088",
+      "authority": "developers.openai.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://developers.openai.com/api/docs/models/gpt-6-astra",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-089",
+      "authority": "cloud.baidu.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://cloud.baidu.com/doc/qianfan-api/index.html",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-090",
+      "authority": "mimo.xiaomi.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://mimo.xiaomi.com/docs/en-US/updates/model",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-091",
+      "authority": "platform.stepfun.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://platform.stepfun.com/docs/overview/model-overview",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-092",
+      "authority": "docs.aws.amazon.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.aws.amazon.com/nova/latest/userguide/what-is-nova.html",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-093",
+      "authority": "ai.developer.meta.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://ai.developer.meta.com/docs/models/",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-094",
+      "authority": "docs.aws.amazon.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama.html",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-095",
+      "authority": "nousresearch.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://nousresearch.com/hermes4/",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-096",
+      "authority": "build.nvidia.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://build.nvidia.com/nvidia/nemotron-3-super-120b-a12b/modelcard",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-097",
+      "authority": "docs.cohere.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.cohere.com/docs/models",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-098",
+      "authority": "console.upstage.ai",
+      "source_kind": "provider-documentation",
+      "locator": "https://console.upstage.ai/docs/capabilities/chat",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-099",
+      "authority": "longcat.chat",
+      "source_kind": "provider-documentation",
+      "locator": "https://longcat.chat/platform/docs/zh/APIDocs.html",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-100",
+      "authority": "docs.venice.ai",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.venice.ai/api-reference/endpoint/models",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-101",
+      "authority": "docs.poolside.ai",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.poolside.ai/models",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-102",
+      "authority": "docs.anthropic.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.anthropic.com/en/docs/claude-code/overview",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-103",
+      "authority": "docs.github.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.github.com/en/copilot",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-104",
+      "authority": "ai.google.dev",
+      "source_kind": "provider-documentation",
+      "locator": "https://ai.google.dev/gemini-api/docs/oauth",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-105",
+      "authority": "help.aliyun.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://help.aliyun.com/en/model-studio/oauth",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-106",
+      "authority": "platform.minimax.io",
+      "source_kind": "provider-documentation",
+      "locator": "https://platform.minimax.io/docs/api-reference/api-overview",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-107",
+      "authority": "openrouter.ai",
+      "source_kind": "provider-documentation",
+      "locator": "https://openrouter.ai/docs/api-reference/authentication",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-108",
+      "authority": "docs.ollama.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.ollama.com/cloud",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-109",
+      "authority": "docs.together.ai",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.together.ai/reference/models",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-110",
+      "authority": "inference-docs.cerebras.ai",
+      "source_kind": "provider-documentation",
+      "locator": "https://inference-docs.cerebras.ai/api-reference/models",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-111",
+      "authority": "featherless.ai",
+      "source_kind": "provider-documentation",
+      "locator": "https://featherless.ai/docs",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-112",
+      "authority": "docs.chutes.ai",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.chutes.ai/",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-113",
+      "authority": "deepinfra.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://deepinfra.com/docs/api/get-models",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-114",
+      "authority": "novita.ai",
+      "source_kind": "provider-documentation",
+      "locator": "https://novita.ai/docs/api-reference/model-apis-llm-list-models",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-115",
+      "authority": "docs.byteplus.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.byteplus.com/en/docs/ModelArk/ListModels",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-116",
+      "authority": "huggingface.co",
+      "source_kind": "provider-documentation",
+      "locator": "https://huggingface.co/docs/inference-providers/index",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-117",
+      "authority": "docs.baseten.co",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.baseten.co/inference/model-apis/overview",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-118",
+      "authority": "docs.fireworks.ai",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.fireworks.ai/api-reference/list-models",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-119",
+      "authority": "docs.gmicloud.ai",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.gmicloud.ai/",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-120",
+      "authority": "kilocode.ai",
+      "source_kind": "provider-documentation",
+      "locator": "https://kilocode.ai/docs",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-121",
+      "authority": "opencode.ai",
+      "source_kind": "provider-documentation",
+      "locator": "https://opencode.ai/docs/zen",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-122",
+      "authority": "docs.arcee.ai",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.arcee.ai/",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-123",
+      "authority": "docs.nebius.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://docs.nebius.com/studio/inference/api",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    },
+    {
+      "source_key": "source-124",
+      "authority": "vercel.com",
+      "source_kind": "provider-documentation",
+      "locator": "https://vercel.com/docs/ai-gateway",
+      "collected_on": "2026-09-13",
+      "bytes_digest": null,
+      "digest_state": "not-captured"
+    }
+  ],
+  "record_additions": [
+    {
+      "model_record_key": "hermes-agent/openai-codex/codex-auto-review",
+      "provider_record_key": "hermes-agent/openai-codex",
+      "upstream_model_id": "codex-auto-review",
+      "display_name": "Codex Auto Review",
+      "context_tokens": {
+        "state": "runtime-required",
+        "value": null
+      },
+      "max_output_tokens": {
+        "state": "runtime-required",
+        "value": null
+      },
+      "input_modalities": [
+        "text"
+      ],
+      "capability_hints": {
+        "reasoning": "not-applicable",
+        "streaming": "not-applicable",
+        "tool": "not-applicable",
+        "vision": "not-applicable"
+      },
+      "reasoning_rendering_hints": {
+        "reasoning_effort_maps": [],
+        "supported_reasoning_efforts": [],
+        "thinking_level_maps": []
+      },
+      "lifecycle": "active",
+      "provenance_refs": [
+        {
+          "kind": "evidence-source",
+          "source_key": "source-080"
+        }
+      ],
+      "source_locations": [
+        {
+          "source_key": "source-080"
+        }
+      ],
+      "execution_fit": {
+        "state": "unsupported",
+        "reason": "Codex internal auto-review reviewer agent; it is not a user-selectable text model and exposes no first-party chat/Responses contract"
+      },
+      "normalized_model_matches": [],
+      "metadata_completeness": {
+        "capabilities": "complete",
+        "cost": "missing",
+        "identity": "complete",
+        "lifecycle": "complete",
+        "limits": "partial",
+        "modalities": "complete",
+        "reasoning_rendering": "not-applicable"
+      },
+      "usable_for": []
+    },
+    {
+      "model_record_key": "hermes-agent/openai-codex/gpt-5.3-codex-spark",
+      "provider_record_key": "hermes-agent/openai-codex",
+      "upstream_model_id": "gpt-5.3-codex-spark",
+      "display_name": "GPT-5.3 Codex Spark",
+      "context_tokens": {
+        "state": "known",
+        "value": 128000
+      },
+      "max_output_tokens": {
+        "state": "known",
+        "value": 8192
+      },
+      "input_modalities": [
+        "text"
+      ],
+      "capability_hints": {
+        "reasoning": "supported",
+        "streaming": "supported",
+        "tool": "supported",
+        "vision": "unsupported"
+      },
+      "reasoning_rendering_hints": {
+        "reasoning_effort_maps": [],
+        "supported_reasoning_efforts": [
+          "xhigh"
+        ],
+        "thinking_level_maps": []
+      },
+      "lifecycle": "active",
+      "provenance_refs": [
+        {
+          "kind": "evidence-source",
+          "source_key": "source-079"
+        }
+      ],
+      "source_locations": [
+        {
+          "source_key": "source-079"
+        }
+      ],
+      "execution_fit": {
+        "state": "native-text-representable"
+      },
+      "normalized_model_matches": [
+        "gpt-5-3-codex"
+      ],
+      "metadata_completeness": {
+        "capabilities": "complete",
+        "cost": "missing",
+        "identity": "complete",
+        "lifecycle": "complete",
+        "limits": "complete",
+        "modalities": "complete",
+        "reasoning_rendering": "complete"
+      },
+      "usable_for": []
+    },
+    {
+      "model_record_key": "hermes-agent/openai-codex/gpt-5.5",
+      "provider_record_key": "hermes-agent/openai-codex",
+      "upstream_model_id": "gpt-5.5",
+      "display_name": "GPT-5.5",
+      "context_tokens": {
+        "state": "known",
+        "value": 1050000
+      },
+      "max_output_tokens": {
+        "state": "known",
+        "value": 128000
+      },
+      "input_modalities": [
+        "image",
+        "text"
+      ],
+      "capability_hints": {
+        "reasoning": "supported",
+        "streaming": "supported",
+        "tool": "supported",
+        "vision": "supported"
+      },
+      "reasoning_rendering_hints": {
+        "reasoning_effort_maps": [],
+        "supported_reasoning_efforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh"
+        ],
+        "thinking_level_maps": []
+      },
+      "lifecycle": "active",
+      "provenance_refs": [
+        {
+          "kind": "evidence-source",
+          "source_key": "source-087"
+        }
+      ],
+      "source_locations": [
+        {
+          "source_key": "source-087"
+        }
+      ],
+      "execution_fit": {
+        "state": "native-text-representable"
+      },
+      "normalized_model_matches": [],
+      "metadata_completeness": {
+        "capabilities": "complete",
+        "cost": "missing",
+        "identity": "complete",
+        "lifecycle": "complete",
+        "limits": "complete",
+        "modalities": "complete",
+        "reasoning_rendering": "complete"
+      },
+      "usable_for": []
+    },
+    {
+      "model_record_key": "hermes-agent/openai-codex/gpt-5.6-luna",
+      "provider_record_key": "hermes-agent/openai-codex",
+      "upstream_model_id": "gpt-5.6-luna",
+      "display_name": "GPT-5.6 Luna",
+      "context_tokens": {
+        "state": "known",
+        "value": 1050000
+      },
+      "max_output_tokens": {
+        "state": "known",
+        "value": 128000
+      },
+      "input_modalities": [
+        "image",
+        "text"
+      ],
+      "capability_hints": {
+        "reasoning": "supported",
+        "streaming": "supported",
+        "tool": "supported",
+        "vision": "supported"
+      },
+      "reasoning_rendering_hints": {
+        "reasoning_effort_maps": [],
+        "supported_reasoning_efforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "thinking_level_maps": []
+      },
+      "lifecycle": "active",
+      "provenance_refs": [
+        {
+          "kind": "evidence-source",
+          "source_key": "source-084"
+        }
+      ],
+      "source_locations": [
+        {
+          "source_key": "source-084"
+        }
+      ],
+      "execution_fit": {
+        "state": "native-text-representable"
+      },
+      "normalized_model_matches": [],
+      "metadata_completeness": {
+        "capabilities": "complete",
+        "cost": "missing",
+        "identity": "complete",
+        "lifecycle": "complete",
+        "limits": "complete",
+        "modalities": "complete",
+        "reasoning_rendering": "complete"
+      },
+      "usable_for": []
+    },
+    {
+      "model_record_key": "hermes-agent/openai-codex/gpt-5.6-sol",
+      "provider_record_key": "hermes-agent/openai-codex",
+      "upstream_model_id": "gpt-5.6-sol",
+      "display_name": "GPT-5.6 Sol",
+      "context_tokens": {
+        "state": "known",
+        "value": 1050000
+      },
+      "max_output_tokens": {
+        "state": "known",
+        "value": 128000
+      },
+      "input_modalities": [
+        "image",
+        "text"
+      ],
+      "capability_hints": {
+        "reasoning": "supported",
+        "streaming": "supported",
+        "tool": "supported",
+        "vision": "supported"
+      },
+      "reasoning_rendering_hints": {
+        "reasoning_effort_maps": [],
+        "supported_reasoning_efforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "thinking_level_maps": []
+      },
+      "lifecycle": "active",
+      "provenance_refs": [
+        {
+          "kind": "evidence-source",
+          "source_key": "source-085"
+        }
+      ],
+      "source_locations": [
+        {
+          "source_key": "source-085"
+        }
+      ],
+      "execution_fit": {
+        "state": "native-text-representable"
+      },
+      "normalized_model_matches": [
+        "gpt-5-6-sol"
+      ],
+      "metadata_completeness": {
+        "capabilities": "complete",
+        "cost": "missing",
+        "identity": "complete",
+        "lifecycle": "complete",
+        "limits": "complete",
+        "modalities": "complete",
+        "reasoning_rendering": "complete"
+      },
+      "usable_for": []
+    },
+    {
+      "model_record_key": "hermes-agent/openai-codex/gpt-5.6-terra",
+      "provider_record_key": "hermes-agent/openai-codex",
+      "upstream_model_id": "gpt-5.6-terra",
+      "display_name": "GPT-5.6 Terra",
+      "context_tokens": {
+        "state": "known",
+        "value": 1050000
+      },
+      "max_output_tokens": {
+        "state": "known",
+        "value": 128000
+      },
+      "input_modalities": [
+        "image",
+        "text"
+      ],
+      "capability_hints": {
+        "reasoning": "supported",
+        "streaming": "supported",
+        "tool": "supported",
+        "vision": "supported"
+      },
+      "reasoning_rendering_hints": {
+        "reasoning_effort_maps": [],
+        "supported_reasoning_efforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "thinking_level_maps": []
+      },
+      "lifecycle": "active",
+      "provenance_refs": [
+        {
+          "kind": "evidence-source",
+          "source_key": "source-086"
+        }
+      ],
+      "source_locations": [
+        {
+          "source_key": "source-086"
+        }
+      ],
+      "execution_fit": {
+        "state": "native-text-representable"
+      },
+      "normalized_model_matches": [],
+      "metadata_completeness": {
+        "capabilities": "complete",
+        "cost": "missing",
+        "identity": "complete",
+        "lifecycle": "complete",
+        "limits": "complete",
+        "modalities": "complete",
+        "reasoning_rendering": "complete"
+      },
+      "usable_for": []
+    },
+    {
+      "model_record_key": "hermes-agent/openai-codex/gpt-6-astra",
+      "provider_record_key": "hermes-agent/openai-codex",
+      "upstream_model_id": "gpt-6-astra",
+      "display_name": "GPT-6 Astra",
+      "context_tokens": {
+        "state": "known",
+        "value": 1050000
+      },
+      "max_output_tokens": {
+        "state": "known",
+        "value": 128000
+      },
+      "input_modalities": [
+        "image",
+        "text"
+      ],
+      "capability_hints": {
+        "reasoning": "supported",
+        "streaming": "supported",
+        "tool": "supported",
+        "vision": "supported"
+      },
+      "reasoning_rendering_hints": {
+        "reasoning_effort_maps": [],
+        "supported_reasoning_efforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "thinking_level_maps": []
+      },
+      "lifecycle": "active",
+      "provenance_refs": [
+        {
+          "kind": "evidence-source",
+          "source_key": "source-088"
+        }
+      ],
+      "source_locations": [
+        {
+          "source_key": "source-088"
+        }
+      ],
+      "execution_fit": {
+        "state": "native-text-representable"
+      },
+      "normalized_model_matches": [
+        "gpt-6-astra"
+      ],
+      "metadata_completeness": {
+        "capabilities": "complete",
+        "cost": "missing",
+        "identity": "complete",
+        "lifecycle": "complete",
+        "limits": "complete",
+        "modalities": "complete",
+        "reasoning_rendering": "complete"
+      },
+      "usable_for": []
+    },
+    {
+      "model_record_key": "hermes-agent/openai-codex/gpt-image-1.5",
+      "provider_record_key": "hermes-agent/openai-codex",
+      "upstream_model_id": "gpt-image-1.5",
+      "display_name": "GPT Image 1.5",
+      "context_tokens": {
+        "state": "not-applicable",
+        "value": null
+      },
+      "max_output_tokens": {
+        "state": "not-applicable",
+        "value": null
+      },
+      "input_modalities": [
+        "image",
+        "text"
+      ],
+      "capability_hints": {
+        "reasoning": "not-applicable",
+        "streaming": "not-applicable",
+        "tool": "not-applicable",
+        "vision": "supported"
+      },
+      "reasoning_rendering_hints": {
+        "reasoning_effort_maps": [],
+        "supported_reasoning_efforts": [],
+        "thinking_level_maps": []
+      },
+      "lifecycle": "active",
+      "provenance_refs": [
+        {
+          "kind": "evidence-source",
+          "source_key": "source-081"
+        }
+      ],
+      "source_locations": [
+        {
+          "source_key": "source-081"
+        }
+      ],
+      "execution_fit": {
+        "state": "not-applicable",
+        "reason": "Image generation/editing model served by the images API; the native text Responses execution contract does not apply"
+      },
+      "normalized_model_matches": [],
+      "metadata_completeness": {
+        "capabilities": "complete",
+        "cost": "missing",
+        "identity": "complete",
+        "lifecycle": "complete",
+        "limits": "complete",
+        "modalities": "complete",
+        "reasoning_rendering": "not-applicable"
+      },
+      "usable_for": []
+    },
+    {
+      "model_record_key": "hermes-agent/openai-codex/gpt-image-2",
+      "provider_record_key": "hermes-agent/openai-codex",
+      "upstream_model_id": "gpt-image-2",
+      "display_name": "GPT Image 2",
+      "context_tokens": {
+        "state": "not-applicable",
+        "value": null
+      },
+      "max_output_tokens": {
+        "state": "not-applicable",
+        "value": null
+      },
+      "input_modalities": [
+        "image",
+        "text"
+      ],
+      "capability_hints": {
+        "reasoning": "not-applicable",
+        "streaming": "not-applicable",
+        "tool": "not-applicable",
+        "vision": "supported"
+      },
+      "reasoning_rendering_hints": {
+        "reasoning_effort_maps": [],
+        "supported_reasoning_efforts": [],
+        "thinking_level_maps": []
+      },
+      "lifecycle": "active",
+      "provenance_refs": [
+        {
+          "kind": "evidence-source",
+          "source_key": "source-082"
+        }
+      ],
+      "source_locations": [
+        {
+          "source_key": "source-082"
+        }
+      ],
+      "execution_fit": {
+        "state": "not-applicable",
+        "reason": "Image generation/editing model served by the images API; the native text Responses execution contract does not apply"
+      },
+      "normalized_model_matches": [],
+      "metadata_completeness": {
+        "capabilities": "complete",
+        "cost": "missing",
+        "identity": "complete",
+        "lifecycle": "complete",
+        "limits": "complete",
+        "modalities": "complete",
+        "reasoning_rendering": "not-applicable"
+      },
+      "usable_for": []
+    }
+  ]
+}

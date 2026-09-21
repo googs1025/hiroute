@@ -1,0 +1,25 @@
+{
+  "schema": "hiroute.pre-gateway-compute-routing-boundary/v1",
+  "process": "PROCESS-25026",
+  "production_catalog_trust": "compiled_client_bundled_manifest_only",
+  "fixture_trust_is_production_fallback": false,
+  "cli_direct_business_dependencies": [],
+  "local_control_operations": [
+    "ScanCompute",
+    "ListConnectionOptions",
+    "PreviewComputeConnectionChange",
+    "ApplyComputeConnectionChange",
+    "PreviewAgentPlanChange",
+    "ApplyAgentPlanChange"
+  ],
+  "application_entrypoints": 1,
+  "preview_database_writes": 0,
+  "compute_apply_operation_journaled": true,
+  "routing_apply_operation_writes": 0,
+  "routing_apply_plan_writes": 0,
+  "routing_apply_publication_writes": 0,
+  "routing_apply_capability_consumed": false,
+  "final_gateway_installer": "not_injected",
+  "release_artifact_generation_owner": "convergence_owner",
+  "public_command_promotion_owner": "TASK-142003"
+}

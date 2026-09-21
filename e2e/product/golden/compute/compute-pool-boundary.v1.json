@@ -1,0 +1,11 @@
+{
+  "scenario_id": "process-25003-compute-pool",
+  "formal_composition": "green",
+  "evidence": "installed-standalone-headless-management-loop",
+  "composition_owner": "TASK-142003",
+  "runtime_adapter_owner": "PROCESS-25015",
+  "runtime_state_schema": "hiroute.compute-runtime-state/v1",
+  "runtime_identity_schema": "hiroute.compute-runtime-identity/v1",
+  "runtime_lease_schema": "hiroute.compute-probe-lease/v1",
+  "runtime_authority": "single_sqlite_compare_and_set_store"
+}

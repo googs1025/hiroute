@@ -1,0 +1,27 @@
+{
+  "$id": "hiroute://contracts/cli/worker-wait-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "after_revision": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "run_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_./:-]+$",
+      "type": "string"
+    },
+    "wait_timeout_secs": {
+      "maximum": 30,
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "run_id",
+    "wait_timeout_secs"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/p0-production-readiness.schema.json",
+  "title": "HiRoute production readiness evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "child_pid", "listen_address", "probe_path", "product", "listener_owner_verifier", "listener_owner_pid_before_probe", "listener_owner_pid_after_probe", "child_alive_before_probe", "child_alive_after_probe"],
+  "properties": {
+    "schema_version": {"const": "hiroute.e2e.production-readiness/v1"},
+    "child_pid": {"type": "integer", "minimum": 1},
+    "listen_address": {"type": "string", "minLength": 10},
+    "probe_path": {"const": "/_hiroute/ready"},
+    "product": {"type": "object", "additionalProperties": false, "required": ["schema_version", "status", "publication_revision", "publication_digest", "executable_sha256"], "properties": {
+      "schema_version": {"const": "hiroute.gateway.ready/v2"}, "status": {"const": "ready"}, "publication_revision": {"const": 22012},
+      "publication_digest": {"type": "string", "minLength": 71, "maxLength": 71}, "executable_sha256": {"type": "string", "minLength": 71, "maxLength": 71}
+    }},
+    "listener_owner_verifier": {"enum": ["darwin_lsof_tcp_listener/v1", "linux_procfs_tcp_listener/v1"]},
+    "listener_owner_pid_before_probe": {"type": "integer", "minimum": 1},
+    "listener_owner_pid_after_probe": {"type": "integer", "minimum": 1},
+    "child_alive_before_probe": {"const": true},
+    "child_alive_after_probe": {"const": true}
+  }
+}

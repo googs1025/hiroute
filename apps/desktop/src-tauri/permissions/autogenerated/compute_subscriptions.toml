@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-compute-subscriptions"
+description = "Enables the compute_subscriptions command without any pre-configured scope."
+commands.allow = ["compute_subscriptions"]
+
+[[permission]]
+identifier = "deny-compute-subscriptions"
+description = "Denies the compute_subscriptions command without any pre-configured scope."
+commands.deny = ["compute_subscriptions"]

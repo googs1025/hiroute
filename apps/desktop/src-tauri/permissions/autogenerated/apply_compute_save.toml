@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-apply-compute-save"
+description = "Enables the apply_compute_save command without any pre-configured scope."
+commands.allow = ["apply_compute_save"]
+
+[[permission]]
+identifier = "deny-apply-compute-save"
+description = "Denies the apply_compute_save command without any pre-configured scope."
+commands.deny = ["apply_compute_save"]

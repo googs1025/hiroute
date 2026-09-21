@@ -1,0 +1,16 @@
+[project]
+name = "hiroute-jev-decider"
+version = "0.1.0"
+description = "HiRoute reference REST branch decider backed by OpenRouter Jev"
+requires-python = ">=3.12"
+dependencies = ["aiohttp>=3.11,<4"]
+
+[project.scripts]
+hiroute-jev-decider = "jev_decider.server:main"
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["jev_decider*"]

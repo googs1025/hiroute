@@ -1,0 +1,44 @@
+{
+  "schema": "hiroute.product-e2e.cpa-connector/v1",
+  "scenario_id": "process-25017-cpa-connector",
+  "process": "PROCESS-25017",
+  "stock_contract_version": "7.2.140",
+  "proofs": [
+    "authenticated_loopback_only",
+    "bounded_crash_restart_backoff",
+    "connector_owned_opaque_credential",
+    "exact_account_model_prefix",
+    "file_backed_oauth_metadata_only",
+    "native_api_key_bypass",
+    "no_internal_retry_fallback_cooling",
+    "owner_only_instance_state",
+    "catalog_bound_logical_source_identity",
+    "stale_owner_authenticated_adoption",
+    "trusted_binary_version_digest"
+  ],
+  "scenario_states": [
+    {
+      "scenario_id": "managed-connector-component",
+      "state": "green",
+      "evidence_owner": "PROCESS-25017"
+    },
+    {
+      "scenario_id": "gateway-exact-request-adapter",
+      "state": "expected_red",
+      "evidence_owner": "PROCESS-25008",
+      "blocker": "PROCESS-25008 owns the exact request adapter into Gateway Runtime"
+    },
+    {
+      "scenario_id": "production-hiroute-hirouted-composition",
+      "state": "expected_red",
+      "evidence_owner": "PROCESS-25009",
+      "blocker": "PROCESS-25009 owns formal hiroute/hirouted composition"
+    },
+    {
+      "scenario_id": "three-platform-artifact-packaging",
+      "state": "expected_red",
+      "evidence_owner": "PROCESS-25010",
+      "blocker": "PROCESS-25010 owns three-platform CPA artifact packaging"
+    }
+  ]
+}

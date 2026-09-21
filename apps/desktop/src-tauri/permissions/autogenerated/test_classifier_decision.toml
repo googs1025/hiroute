@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-test-classifier-decision"
+description = "Enables the test_classifier_decision command without any pre-configured scope."
+commands.allow = ["test_classifier_decision"]
+
+[[permission]]
+identifier = "deny-test-classifier-decision"
+description = "Denies the test_classifier_decision command without any pre-configured scope."
+commands.deny = ["test_classifier_decision"]

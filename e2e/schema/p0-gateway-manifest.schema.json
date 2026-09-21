@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/p0-gateway-manifest.schema.json",
+  "title": "HiRoute frozen P0 Oracle artifact manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "oracle_version", "contract_digest", "artifacts"],
+  "properties": {
+    "schema_version": {"const": "hiroute.e2e.manifest/v1"},
+    "oracle_version": {"const": "p0-gateway-oracle-v1"},
+    "contract_digest": {"type": "string", "minLength": 71, "maxLength": 71},
+    "artifacts": {
+      "type": "array",
+      "minItems": 17,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "path", "schema", "sha256"],
+        "properties": {
+          "kind": {"enum": ["scenario", "corpus", "golden", "semantic_ledger", "profile", "scenario_schema", "corpus_schema", "golden_schema", "ledger_schema", "result_schema", "profile_schema", "fixture_schema", "publication_schema", "execution_fact_schema", "conversation_content_schema", "terminal_receipt_schema", "manifest_schema"]},
+          "path": {"type": "string", "minLength": 1},
+          "schema": {},
+          "sha256": {"type": "string", "minLength": 71, "maxLength": 71}
+        }
+      }
+    }
+  }
+}

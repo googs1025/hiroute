@@ -1,0 +1,17 @@
+{
+  "scenario_id": "process-25028-gateway-exact-adapters",
+  "adapter_contract": "green",
+  "real_hirouted_smoke": "expected_red",
+  "composition_owner": "PROCESS-25009",
+  "runtime_publication_schema": "hiroute.gateway.port.runtime-publication/v1",
+  "credential_schema": "hiroute.gateway.port.credential/v1",
+  "runtime_state_schema": "hiroute.gateway.port.runtime-state/v1",
+  "lifecycle_schema": "hiroute.gateway.port.lifecycle-fact/v2",
+  "execution_schema": "hiroute.gateway.port.execution-fact/v3",
+  "content_schema": "hiroute.gateway.port.conversation-content/v2",
+  "native_credential_schema": "hiroute.native-credential-lease-request/v1",
+  "target_schema": "hiroute.gateway-operational-target/v1",
+  "adapter_time_join": false,
+  "acknowledgement_cache": false,
+  "second_content_queue": false
+}

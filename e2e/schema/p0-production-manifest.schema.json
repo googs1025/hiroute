@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/p0-production-manifest.schema.json",
+  "title": "HiRoute sealed production Oracle artifact manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "oracle_version", "contract_digest", "artifacts"],
+  "properties": {
+    "schema_version": {"const": "hiroute.e2e.production-manifest/v1"},
+    "oracle_version": {"const": "p0-gateway-production-oracle-v1"},
+    "contract_digest": {"type": "string", "minLength": 71, "maxLength": 71},
+    "artifacts": {"type": "array", "minItems": 11, "maxItems": 11, "uniqueItems": true, "items": {
+      "type": "object", "additionalProperties": false, "required": ["path", "schema", "sha256"], "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "schema": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "sha256": {"type": "string", "minLength": 71, "maxLength": 71}
+      }
+    }}
+  }
+}

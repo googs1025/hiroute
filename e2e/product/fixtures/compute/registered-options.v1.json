@@ -1,0 +1,19 @@
+{
+  "schema": "hiroute.compute-contract-fixture/v1",
+  "operational_data_owner": "PROCESS-25007",
+  "registered_option_ids": [
+    "bailian.payg.cn.v1",
+    "deepseek.official.global.v1",
+    "kimi.open-platform.cn.v1",
+    "zhipu.general.cn.v1"
+  ],
+  "arbitrary_destination_fields": [
+    "auth",
+    "connector_target",
+    "endpoint_url",
+    "host",
+    "protocol",
+    "redirect"
+  ],
+  "contains_secret_literal": false
+}

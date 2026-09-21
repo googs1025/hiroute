@@ -1,0 +1,41 @@
+{
+  "schema": "hiroute.product-e2e.compute-pool/v1",
+  "scenario_id": "process-25003-compute-pool",
+  "process": "PROCESS-25003",
+  "fixture_class": "typed_contract_fake_ports",
+  "proofs": [
+    "credential_binding_runtime_cas",
+    "exact_runtime_identity_generation_isolation",
+    "frozen_g0_lossless_runtime_mapping",
+    "gateway_owned_health_transition",
+    "atomic_restart_safe_single_probe_lease",
+    "legacy_availability_not_fabricated_as_exact_state",
+    "effective_price_freeze",
+    "inventory_cannot_expand_authority",
+    "installed-standalone-headless-management-loop",
+    "opaque_key_id_preserved",
+    "registered_option_only",
+    "registry_only_endpoint_authority",
+    "secret_and_network_zero_on_rejection",
+    "current_release_facts",
+    "two_key_homogeneous_pool"
+  ],
+  "runtime_state": {
+    "repair_owner": "PROCESS-25015",
+    "state_schema": "hiroute.compute-runtime-state/v1",
+    "identity_schema": "hiroute.compute-runtime-identity/v1",
+    "lease_schema": "hiroute.compute-probe-lease/v1",
+    "authority": "single_sqlite_compare_and_set_store",
+    "identity_source": "frozen_g0_exact_fields_no_lookup_or_hash",
+    "state_source": "gateway_exact_next_state",
+    "diagnostics": "absent_from_state_authority",
+    "persisted_clock": "unix_epoch_milliseconds",
+    "expiry_rule": "sample_greater_than_or_equal_deadline",
+    "legacy_policy": "read_only_quarantine_not_exact_state"
+  },
+  "formal_composition": {
+    "state": "green",
+    "composition_owner": "TASK-142003",
+    "evidence": "installed-standalone-headless-management-loop"
+  }
+}

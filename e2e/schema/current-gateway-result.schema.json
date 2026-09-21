@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/current-gateway-result.schema.json",
+  "title": "HiRoute production Oracle green-or-red result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "oracle_version",
+    "contract_digest",
+    "aggregate_port_digest",
+    "schema_digests",
+    "evidence_digest",
+    "result_payload_digest",
+    "process_exit",
+    "scenario_state",
+    "run_nonce",
+    "freshness_challenge",
+    "launcher",
+    "readiness",
+    "native_provider",
+    "client_output",
+    "observations",
+    "privacy",
+    "checks",
+    "checkpoints"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "hiroute.e2e.production-result/v2"
+    },
+    "oracle_version": {
+      "const": "p0-gateway-production-oracle-v1"
+    },
+    "contract_digest": {
+      "type": "string",
+      "minLength": 71,
+      "maxLength": 71
+    },
+    "aggregate_port_digest": {
+      "const": "sha256:6e7528c25321f4213443762a6b73e59422075d7134c0dbd97aabb00a315fb5b4"
+    },
+    "schema_digests": {
+      "type": "object",
+      "minProperties": 7
+    },
+    "evidence_digest": {
+      "type": "string",
+      "minLength": 71,
+      "maxLength": 71
+    },
+    "result_payload_digest": {
+      "type": "string",
+      "minLength": 71,
+      "maxLength": 71
+    },
+    "process_exit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "test_process_code",
+        "sut_termination",
+        "sut_reaped"
+      ],
+      "properties": {
+        "test_process_code": {
+          "enum": [
+            0,
+            1
+          ]
+        },
+        "sut_termination": {
+          "const": "harness_initiated_after_independent_terminals"
+        },
+        "sut_reaped": {
+          "const": true
+        }
+      }
+    },
+    "scenario_state": {
+      "enum": [
+        "green",
+        "red"
+      ]
+    },
+    "run_nonce": {
+      "type": "string",
+      "minLength": 32
+    },
+    "freshness_challenge": {
+      "type": "string",
+      "minLength": 32
+    },
+    "launcher": {
+      "type": "object",
+      "minProperties": 12
+    },
+    "readiness": {
+      "type": "object",
+      "minProperties": 7
+    },
+    "native_provider": {
+      "type": "object",
+      "minProperties": 6
+    },
+    "client_output": {
+      "type": "object",
+      "minProperties": 4
+    },
+    "observations": {
+      "type": "object",
+      "minProperties": 9
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "private_root_mode",
+        "observation_root_mode",
+        "process_root_mode",
+        "sensitive_occurrences"
+      ],
+      "properties": {
+        "private_root_mode": {
+          "const": "owner_only"
+        },
+        "observation_root_mode": {
+          "const": "owner_only"
+        },
+        "process_root_mode": {
+          "const": "owner_only"
+        },
+        "sensitive_occurrences": {
+          "const": 0
+        }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "status",
+          "expected_digest",
+          "actual_digest",
+          "detail"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "passed",
+              "failed"
+            ]
+          },
+          "expected_digest": {
+            "type": "string",
+            "minLength": 71,
+            "maxLength": 71
+          },
+          "actual_digest": {
+            "type": "string",
+            "minLength": 71,
+            "maxLength": 71
+          },
+          "detail": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "checkpoints": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "status",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "enum": [
+              "listener_client",
+              "native_provider",
+              "semantic_observation",
+              "privacy_resource"
+            ]
+          },
+          "status": {
+            "enum": [
+              "passed",
+              "failed"
+            ]
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

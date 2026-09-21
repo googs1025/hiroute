@@ -1,0 +1,53 @@
+{
+  "artifact_kind": "hiroute.model-metadata-client-source-profiles",
+  "profiles": [
+    {
+      "evidence_eligible": false,
+      "expected_repository_urls": [
+        "https://github.com/NousResearch/hermes-agent"
+      ],
+      "parsers": [
+        {
+          "excluded_aggregate_paths": [
+            "agent/models_dev.py"
+          ],
+          "kind": "hermes-python-profiles",
+          "locator_paths": [
+            "agent/model_metadata.py",
+            "agent/usage_pricing.py",
+            "hermes_cli/models_catalog_static.py",
+            "plugins/model-providers/*/__init__.py"
+          ],
+          "profile_base_paths": [
+            "providers/base.py"
+          ],
+          "profile_paths": [
+            "plugins/model-providers/*/__init__.py"
+          ],
+          "static_catalog_paths": [
+            "hermes_cli/models_catalog_static.py"
+          ]
+        }
+      ],
+      "profile_key": "hermes-agent"
+    },
+    {
+      "evidence_eligible": false,
+      "expected_repository_urls": [
+        "https://github.com/openclaw/openclaw"
+      ],
+      "parsers": [
+        {
+          "exclude_paths": [
+            "extensions/litellm/openclaw.plugin.json"
+          ],
+          "kind": "openclaw-plugin-manifests",
+          "manifest_paths": [
+            "extensions/*/openclaw.plugin.json"
+          ]
+        }
+      ],
+      "profile_key": "openclaw"
+    }
+  ]
+}

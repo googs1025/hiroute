@@ -1,0 +1,40 @@
+{
+  "$id": "hiroute://contracts/cli/worker-dependencies-select-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adapter_path": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "type": "string"
+    },
+    "cli_path": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "type": "string"
+    },
+    "expected_selection_revision": {
+      "maximum": 18446744073709551615,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "harness": {
+      "enum": [
+        "codex_cli",
+        "claude_code"
+      ]
+    },
+    "node_path": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "harness",
+    "adapter_path",
+    "cli_path",
+    "expected_selection_revision"
+  ],
+  "type": "object"
+}

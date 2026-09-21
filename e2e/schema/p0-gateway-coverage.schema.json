@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/p0-gateway-coverage.schema.json",
+  "title": "HiRoute P0 exact scenario coverage matrix",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "process", "listener_transport", "registry_digest", "receipts", "rows"],
+  "properties": {
+    "schema_version": {"const": "hiroute.e2e.p0-scenario-coverage/v2"},
+    "process": {"const": "PROCESS-22009"},
+    "listener_transport": {"const": "loopback_h1"},
+    "registry_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "receipts": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "execution", "assertion_binding", "test_target", "symbol", "source", "source_sha256", "assertion_ids"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "execution": {"const": "real_hirouted_native_provider"},
+          "assertion_binding": {"enum": ["declaration", "runtime_assertion_marks"]},
+          "test_target": {"type": "string", "minLength": 1},
+          "symbol": {"type": "string", "minLength": 1},
+          "source": {"type": "string", "minLength": 1},
+          "source_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+          "assertion_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "spec_id", "scenario", "receipt_ids"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "spec_id": {"enum": ["SPEC-20001", "SPEC-20002", "SPEC-20003", "SPEC-20004", "SPEC-20005", "SPEC-20006", "SPEC-20007", "SPEC-20008"]},
+          "scenario": {"type": "string", "minLength": 1},
+          "receipt_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    }
+  }
+}

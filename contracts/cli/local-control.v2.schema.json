@@ -1,0 +1,86 @@
+{
+  "$id": "hiroute://contracts/cli/local-control.v2.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "operation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "payload": true,
+    "protected_grant": {
+      "additionalProperties": false,
+      "else": {
+        "properties": {
+          "capability": {
+            "maxLength": 512
+          }
+        }
+      },
+      "if": {
+        "properties": {
+          "principal_kind": {
+            "const": "sealed_collaboration"
+          }
+        }
+      },
+      "properties": {
+        "capability": {
+          "description": "Protected launcher/IPC value; never argv, plain environment, output, or persistence.",
+          "minLength": 1,
+          "type": "string",
+          "writeOnly": true
+        },
+        "principal_kind": {
+          "enum": [
+            "interactive_user",
+            "desktop",
+            "skill",
+            "sealed_collaboration"
+          ]
+        }
+      },
+      "required": [
+        "principal_kind",
+        "capability"
+      ],
+      "then": {
+        "properties": {
+          "capability": {
+            "maxLength": 4096
+          }
+        }
+      },
+      "type": "object"
+    },
+    "request_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "additionalProperties": false,
+      "properties": {
+        "major": {
+          "const": 2
+        },
+        "minor": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "major",
+        "minor"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "operation_id",
+    "payload"
+  ],
+  "title": "HiRoute Local Control request v2",
+  "type": "object"
+}

@@ -1,0 +1,50 @@
+{
+  "$id": "hiroute://contracts/cli/delegation-list-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "caller": {
+      "additionalProperties": false,
+      "properties": {
+        "context_id": {
+          "maxLength": 256,
+          "minLength": 1,
+          "type": "string"
+        },
+        "grant_generation": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "grant_id": {
+          "maxLength": 256,
+          "pattern": "^collaboration-grant/",
+          "type": "string"
+        },
+        "workspace_id": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "workspace_id",
+        "context_id",
+        "grant_id",
+        "grant_generation"
+      ],
+      "type": "object"
+    },
+    "cursor": {
+      "pattern": "^sequence/[1-9][0-9]*$",
+      "type": "string"
+    },
+    "limit": {
+      "maximum": 200,
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "caller"
+  ],
+  "type": "object"
+}

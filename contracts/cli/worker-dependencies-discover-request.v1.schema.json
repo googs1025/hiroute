@@ -1,0 +1,14 @@
+{
+  "$id": "hiroute://contracts/cli/worker-dependencies-discover-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "harness": {
+      "enum": [
+        "codex_cli",
+        "claude_code"
+      ]
+    }
+  },
+  "type": "object"
+}

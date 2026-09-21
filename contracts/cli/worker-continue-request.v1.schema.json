@@ -1,0 +1,82 @@
+{
+  "$id": "hiroute://contracts/cli/worker-continue-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cwd": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "type": "string"
+    },
+    "expected_latest_run_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_./:-]+$",
+      "type": "string"
+    },
+    "input": {
+      "additionalProperties": false,
+      "description": "The final labeled prompt is limited to 256 KiB.",
+      "properties": {
+        "acceptance_criteria": {
+          "maxLength": 262144,
+          "type": "string"
+        },
+        "constraints": {
+          "maxLength": 262144,
+          "type": "string"
+        },
+        "context": {
+          "maxLength": 262144,
+          "type": "string"
+        },
+        "goal": {
+          "maxLength": 262144,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "goal"
+      ],
+      "type": "object"
+    },
+    "permission_policy": {
+      "default": "approve_all",
+      "enum": [
+        "approve_all",
+        "approve_reads",
+        "deny_all"
+      ]
+    },
+    "run_timeout_secs": {
+      "maximum": 86400,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "schema": {
+      "const": "hiroute.worker-continue-request/v1"
+    },
+    "submission_key": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_./:-]+$",
+      "type": "string"
+    },
+    "task_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_./:-]+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "task_id",
+    "expected_latest_run_id",
+    "run_timeout_secs",
+    "input",
+    "submission_key"
+  ],
+  "type": "object"
+}

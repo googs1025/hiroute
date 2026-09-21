@@ -1,0 +1,42 @@
+{
+  "$id": "hiroute://contracts/cli/session-list-query.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "agent_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "cursor": {
+      "maxLength": 512,
+      "minLength": 1,
+      "type": "string"
+    },
+    "from_ms": {
+      "type": "integer"
+    },
+    "include_unlinked": {
+      "type": "boolean"
+    },
+    "limit": {
+      "maximum": 200,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "model_switch": {
+      "enum": [
+        "any",
+        "only",
+        "exclude"
+      ]
+    },
+    "query": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "to_ms": {
+      "type": "integer"
+    }
+  },
+  "type": "object"
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/p0-gateway-profile.schema.json",
+  "title": "HiRoute green-only production Oracle profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "oracle_version", "name", "completion_policy", "launch_mode", "sut_binary", "sut_source_revision", "aggregate_port_digest"],
+  "properties": {
+    "schema_version": {"const": "hiroute.e2e.production-profile/v1"},
+    "oracle_version": {"const": "p0-gateway-production-oracle-v1"},
+    "name": {"const": "gateway-isolated"},
+    "completion_policy": {"const": "green_only"},
+    "launch_mode": {"const": "production_publication_credentials"},
+    "sut_binary": {"const": "${HIROUTE_E2E_SUT_BIN}"},
+    "sut_source_revision": {"const": "8af977300795c467894371055f7fbfc9716252fa"},
+    "aggregate_port_digest": {"const": "sha256:05755b4351c7c7bc3c33fbd2e8406c313b4231e50e28cce1b3e1f57c47f43cfa"}
+  }
+}

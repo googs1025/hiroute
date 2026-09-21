@@ -1,0 +1,27 @@
+{
+  "$id": "hiroute://contracts/cli/worker-result-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "max_bytes": {
+      "maximum": 1048576,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "offset": {
+      "maximum": 4294967295,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "run_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_./:-]+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id"
+  ],
+  "type": "object"
+}

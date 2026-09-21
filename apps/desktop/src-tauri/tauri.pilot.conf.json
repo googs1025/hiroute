@@ -1,0 +1,16 @@
+{
+  "app": {
+    "security": {
+      "capabilities": [
+        "main",
+        {
+          "identifier": "desktop-pilot",
+          "description": "Developer-only tauri-pilot callback permission for an explicitly instrumented local build.",
+          "local": true,
+          "windows": ["main"],
+          "permissions": ["pilot:default"]
+        }
+      ]
+    }
+  }
+}

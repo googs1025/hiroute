@@ -1,0 +1,9 @@
+---
+import GuidePage from '../../../components/GuidePage.astro';
+import { guidePages } from '../../../lib/user-guides.mjs';
+export function getStaticPaths() {
+  return Object.keys(guidePages).filter(guide => guide !== 'quickstart').map(guide => ({ params: { guide }, props: { guide } }));
+}
+const { guide } = Astro.props;
+---
+<GuidePage language="en" guide={guide} />

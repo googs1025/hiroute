@@ -1,0 +1,26 @@
+{
+  "schema": "hiroute.product-e2e.gateway-exact-adapters/v1",
+  "process": "PROCESS-25028",
+  "six_ports": [
+    "conversation_content",
+    "credential",
+    "execution_fact",
+    "lifecycle",
+    "runtime_publication",
+    "runtime_state"
+  ],
+  "invariant": {
+    "publication": "single_sealed_executable_aggregate",
+    "credential": "request_scoped_opaque_capability",
+    "runtime_state": "product_owned_durable_exact_cas",
+    "observation": "three_independent_lossless_event_receivers",
+    "adapter_time_join": false,
+    "acknowledgement_cache": false,
+    "second_content_queue": false
+  },
+  "composition": {
+    "state": "expected_red",
+    "owner": "PROCESS-25009",
+    "blocker": "PROCESS-25009 must compose the six adapters into hirouted before a real local smoke"
+  }
+}

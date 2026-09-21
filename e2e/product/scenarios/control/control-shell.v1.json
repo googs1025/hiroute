@@ -1,0 +1,21 @@
+{
+  "schema": "hiroute.control-shell-scenario/v1",
+  "process": "PROCESS-25016",
+  "scenario_id": "control-shell-production-subprocess",
+  "command_states": [
+    {"command_id": "system.status", "state": "green", "expected_exit": 0, "expected_status": "succeeded", "expected_error_code": null},
+    {"command_id": "agents.scan", "state": "green", "expected_exit": 0, "expected_status": "succeeded", "expected_error_code": null},
+    {"command_id": "agents.list", "state": "green", "expected_exit": 0, "expected_status": "succeeded", "expected_error_code": null},
+    {"command_id": "sessions.list", "state": "green", "expected_exit": 0, "expected_status": "succeeded", "expected_error_code": null},
+    {"command_id": "sessions.status", "state": "green", "expected_exit": 0, "expected_status": "succeeded", "expected_error_code": null},
+    {"command_id": "value.show", "state": "green", "expected_exit": 0, "expected_status": "succeeded", "expected_error_code": null},
+    {"command_id": "setup.preview", "state": "green", "expected_exit": 2, "expected_status": "usage_error", "expected_error_code": "UNKNOWN_COMMAND"},
+    {"command_id": "setup.apply", "state": "green", "expected_exit": 2, "expected_status": "usage_error", "expected_error_code": "UNKNOWN_COMMAND"},
+    {"command_id": "operations.get", "state": "green", "expected_exit": 5, "expected_status": "not_found", "expected_error_code": "RESOURCE_NOT_FOUND"},
+    {"command_id": "operations.cancel", "state": "green", "expected_exit": 2, "expected_status": "usage_error", "expected_error_code": "UNKNOWN_COMMAND"},
+    {"command_id": "sessions.show", "state": "green", "expected_exit": 5, "expected_status": "not_found", "expected_error_code": "RESOURCE_NOT_FOUND"},
+    {"command_id": "sessions.receipt", "state": "green", "expected_exit": 5, "expected_status": "not_found", "expected_error_code": "RESOURCE_NOT_FOUND"}
+  ],
+  "gateway_bound_state": "green",
+  "gateway_bound_evidence": "installed-standalone-headless-management-loop"
+}

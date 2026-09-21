@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security issue or crash report
+    url: https://security.alibaba.com/
+    about: Report security issues and HiRoute crash reports privately through ASRC.

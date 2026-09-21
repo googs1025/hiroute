@@ -1,0 +1,107 @@
+{
+  "schema_version": "hiroute.planner-complexity-corpus/v1",
+  "complex_phrases": [
+    {
+      "phrase_id": "user-production-race",
+      "phrase": "极端生产竞态"
+    }
+  ],
+  "cases": [
+    {
+      "id": "readme-responses",
+      "equivalence_key": "readme",
+      "protocol": "responses",
+      "latest_human": "把 README.md 标题改成 HiRoute"
+    },
+    {
+      "id": "readme-chat",
+      "equivalence_key": "readme",
+      "protocol": "chat_completions",
+      "latest_human": "把 README.md 标题改成 HiRoute"
+    },
+    {
+      "id": "readme-messages",
+      "equivalence_key": "readme",
+      "protocol": "messages",
+      "latest_human": "把 README.md 标题改成 HiRoute"
+    },
+    {
+      "id": "complex-zh",
+      "protocol": "responses",
+      "latest_human": "修复并发状态机，涉及 a.rs、b.rs，并补两个验收场景：1. 正常；2. 失败"
+    },
+    {
+      "id": "constraints-zh",
+      "protocol": "messages",
+      "latest_human": "两个要求：1. 分析生产竞态根因；2. 给出迁移方案"
+    },
+    {
+      "id": "complex-en",
+      "protocol": "responses",
+      "latest_human": "Implement a security audit across the entire repository with: 1. threat model; 2. rollback plan"
+    },
+    {
+      "id": "capital-token-boundary",
+      "protocol": "chat_completions",
+      "latest_human": "What is the capital of France?"
+    },
+    {
+      "id": "human-ambiguous-character",
+      "protocol": "responses",
+      "latest_human": "人类为什么需要睡眠"
+    },
+    {
+      "id": "history-tool-excluded",
+      "protocol": "messages",
+      "latest_human": "谢谢",
+      "system_text": "architecture design security audit entire repository",
+      "assistant_history": "并发状态机、迁移方案、全仓库",
+      "tool_schema_text": "root cause analysis and performance optimization"
+    },
+    {
+      "id": "user-phrase",
+      "protocol": "responses",
+      "latest_human": "请检查极端生产竞态"
+    },
+    {
+      "id": "task-root-continuation",
+      "protocol": "chat_completions",
+      "latest_human": "continue",
+      "correlation": {
+        "kind": "task_root",
+        "prior_case_id": "readme-responses"
+      }
+    },
+    {
+      "id": "unresolved-pure-continuation-en",
+      "protocol": "responses",
+      "latest_human": "continue"
+    },
+    {
+      "id": "unresolved-pure-continuation-zh",
+      "protocol": "messages",
+      "latest_human": "继续！"
+    },
+    {
+      "id": "wrong-kind-pure-continuation",
+      "protocol": "chat_completions",
+      "latest_human": "continue",
+      "correlation": {
+        "kind": "tool_continuation",
+        "prior_case_id": "readme-responses"
+      }
+    },
+    {
+      "id": "tool-continuation",
+      "protocol": "responses",
+      "correlation": {
+        "kind": "tool_continuation",
+        "prior_case_id": "complex-zh"
+      }
+    },
+    {
+      "id": "unresolved-continuation",
+      "protocol": "messages"
+    }
+  ]
+}

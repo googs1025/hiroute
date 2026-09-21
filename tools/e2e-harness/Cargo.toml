@@ -1,0 +1,28 @@
+[package]
+name = "hiroute-e2e"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "Black-box process and TCP E2E harness for the HiRoute product-path POC"
+default-run = "hiroute-e2e"
+
+[dependencies]
+base64.workspace = true
+clap.workspace = true
+getrandom.workspace = true
+hiroute-gateway = { path = "../../crates/gateway", features = ["e2e-test-control"] }
+libc = "0.2.189"
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+tempfile = "3.21.0"
+thiserror.workspace = true
+tokio = { workspace = true, features = ["process"] }
+
+[dev-dependencies]
+async-trait.workspace = true
+bytes.workspace = true
+hiroute-domain = { path = "../../crates/domain" }
+http.workspace = true
+tokio-util.workspace = true

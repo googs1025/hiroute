@@ -1,0 +1,223 @@
+use super::*;
+
+fn known<T>(value: T) -> NativeCandidateFactValueV1<T> {
+    NativeCandidateFactValueV1 {
+        value: Some(value),
+        basis: NativeCandidateFactBasisV1::UserDeclared,
+    }
+}
+
+fn complete_capabilities(
+    reasoning: NativeReasoningCapabilityV1,
+) -> NativeModelCapabilityDeclarationV1 {
+    NativeModelCapabilityDeclarationV1 {
+        tool: known(true),
+        vision: known(false),
+        streaming: known(true),
+        context_tokens: known(32_768),
+        max_output_tokens: known(4_096),
+        native_reasoning: known(reasoning),
+    }
+}
+
+fn fixed_reasoning() -> NativeReasoningCapabilityV1 {
+    NativeReasoningCapabilityV1::Fixed {
+        profile: "provider-default".into(),
+    }
+}
+
+fn model(id: &str, capabilities: NativeModelCapabilityDeclarationV1) -> NativeModelDeclarationV1 {
+    NativeModelDeclarationV1 {
+        upstream_model_id: id.into(),
+        display_name: id.into(),
+        catalog_configuration_id: None,
+        membership: ComputeModelMembershipV2::UserDeclared,
+        capabilities,
+    }
+}
+
+fn assert_unknown_preserved(capabilities: NativeModelCapabilityDeclarationV1) {
+    assert!(model_is_selectable(&capabilities));
+    let candidate = candidate_models(
+        "candidate/native/incomplete",
+        &[model("incomplete-model", capabilities)],
+        &[],
+        true,
+        false,
+        &Default::default(),
+    )
+    .unwrap()
+    .pop()
+    .unwrap();
+    assert!(candidate.selectable);
+    assert_eq!(candidate.reason, None);
+}
+
+#[test]
+fn unknown_capabilities_allow_text_selection_without_inventing_facts() {
+    let complete = complete_capabilities(fixed_reasoning());
+    assert!(model_is_selectable(&complete));
+
+    let mut missing_tool = complete.clone();
+    missing_tool.tool = NativeCandidateFactValueV1::unknown();
+    assert_unknown_preserved(missing_tool);
+
+    let mut missing_vision = complete.clone();
+    missing_vision.vision = NativeCandidateFactValueV1::unknown();
+    assert_unknown_preserved(missing_vision);
+
+    let mut missing_streaming = complete.clone();
+    missing_streaming.streaming = NativeCandidateFactValueV1::unknown();
+    assert_unknown_preserved(missing_streaming);
+
+    let mut missing_reasoning = complete;
+    missing_reasoning.native_reasoning = NativeCandidateFactValueV1::unknown();
+    assert_unknown_preserved(missing_reasoning);
+}
+
+#[test]
+fn explicit_false_capability_facts_are_complete() {
+    let mut declaration = complete_capabilities(fixed_reasoning());
+    declaration.tool = known(false);
+    declaration.vision = known(false);
+    declaration.streaming = known(false);
+    assert!(model_is_selectable(&declaration));
+}
+
+#[test]
+fn native_reasoning_shapes_are_preserved_without_effort_mapping() {
+    let native = vec![
+        NativeReasoningCapabilityV1::Fixed {
+            profile: "provider-default".into(),
+        },
+        NativeReasoningCapabilityV1::Discrete {
+            parameter: "output_config.effort".into(),
+            profiles: vec!["low".into(), "max".into()],
+        },
+        NativeReasoningCapabilityV1::Budget {
+            parameter: "thinking.budget_tokens".into(),
+            minimum_tokens: 1_024,
+            maximum_tokens: 4_096,
+            step_tokens: 1_024,
+        },
+    ];
+
+    for reasoning in native {
+        let declaration = complete_capabilities(reasoning.clone());
+        assert!(model_is_selectable(&declaration));
+        let converted = convert_capabilities(&declaration);
+        assert_eq!(converted.native_reasoning.value, Some(reasoning));
+        assert_eq!(
+            converted.native_reasoning.basis,
+            ComputeCandidateFactBasisV2::UserDeclared
+        );
+    }
+}
+
+#[test]
+fn invalid_bounds_are_rejected_but_missing_limits_remain_unknown() {
+    let complete = complete_capabilities(fixed_reasoning());
+
+    let mut missing = complete.clone();
+    missing.context_tokens = NativeCandidateFactValueV1::unknown();
+    assert!(model_is_selectable(&missing));
+
+    let mut inverted = complete;
+    inverted.context_tokens = known(4_096);
+    inverted.max_output_tokens = known(8_192);
+    assert!(!model_is_selectable(&inverted));
+
+    let mut invalid_reasoning = complete_capabilities(fixed_reasoning());
+    invalid_reasoning.native_reasoning = known(NativeReasoningCapabilityV1::Discrete {
+        parameter: "reasoning_effort".into(),
+        profiles: Vec::new(),
+    });
+    assert!(!model_is_selectable(&invalid_reasoning));
+}
+
+#[test]
+fn incomplete_model_does_not_block_complete_model_selection() {
+    let mut incomplete = complete_capabilities(fixed_reasoning());
+    incomplete.vision = NativeCandidateFactValueV1::unknown();
+    let models = candidate_models(
+        "candidate/native/mixed",
+        &[
+            model("incomplete-model", incomplete),
+            model("ready-model", complete_capabilities(fixed_reasoning())),
+        ],
+        &[],
+        true,
+        false,
+        &Default::default(),
+    )
+    .unwrap();
+
+    let incomplete = models
+        .iter()
+        .find(|model| model.upstream_model_id == "incomplete-model")
+        .unwrap();
+    assert!(incomplete.selectable);
+    assert_eq!(incomplete.capabilities.vision.value, None);
+    assert_eq!(incomplete.reason, None);
+    let ready = models
+        .iter()
+        .find(|model| model.upstream_model_id == "ready-model")
+        .unwrap();
+    assert!(ready.selectable);
+    assert_eq!(ready.reason, None);
+}
+
+#[test]
+fn unknown_observed_text_model_gets_only_the_marked_conservative_facts() {
+    let candidate = candidate_models(
+        "candidate/native/runtime-fallback",
+        &[],
+        &["provider-new-text-model".into()],
+        true,
+        true,
+        &Default::default(),
+    )
+    .unwrap()
+    .pop()
+    .unwrap();
+
+    assert!(candidate.selectable);
+    assert_eq!(candidate.catalog_configuration_id, None);
+    assert_eq!(candidate.membership, ComputeModelMembershipV2::Observed);
+    assert_eq!(candidate.capabilities.tool.value, None);
+    assert_eq!(candidate.capabilities.vision.value, None);
+    assert_eq!(candidate.capabilities.streaming.value, None);
+    assert_eq!(candidate.capabilities.context_tokens.value, None);
+    assert_eq!(candidate.capabilities.max_output_tokens.value, None);
+    assert_eq!(candidate.capabilities.native_reasoning.value, None);
+    assert_eq!(
+        candidate.capabilities.tool.basis,
+        ComputeCandidateFactBasisV2::Unknown
+    );
+}
+
+#[test]
+fn catalog_denied_unknown_model_stays_unselectable() {
+    let denied = std::collections::BTreeSet::from(["gpt-image-2".to_owned()]);
+    let candidate = candidate_models(
+        "candidate/native/non-text",
+        &[],
+        &["gpt-image-2".into()],
+        true,
+        false,
+        &denied,
+    )
+    .unwrap()
+    .pop()
+    .unwrap();
+
+    assert!(!candidate.selectable);
+    assert_eq!(
+        candidate.reason.as_deref(),
+        Some("model_connections.runtime_fallback_ineligible")
+    );
+    assert_eq!(
+        candidate.capabilities.tool.basis,
+        ComputeCandidateFactBasisV2::Unknown
+    );
+}

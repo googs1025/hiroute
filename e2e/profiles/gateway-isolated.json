@@ -1,0 +1,10 @@
+{
+  "schema_version": "hiroute.e2e.production-profile/v1",
+  "oracle_version": "p0-gateway-production-oracle-v1",
+  "name": "gateway-isolated",
+  "completion_policy": "green_only",
+  "launch_mode": "production_publication_credentials",
+  "sut_binary": "${HIROUTE_E2E_SUT_BIN}",
+  "sut_source_revision": "8af977300795c467894371055f7fbfc9716252fa",
+  "aggregate_port_digest": "sha256:05755b4351c7c7bc3c33fbd2e8406c313b4231e50e28cce1b3e1f57c47f43cfa"
+}

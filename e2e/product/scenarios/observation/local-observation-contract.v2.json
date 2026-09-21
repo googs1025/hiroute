@@ -1,0 +1,36 @@
+{
+  "schema": "hiroute.product-e2e.local-observation/v2",
+  "scenario_id": "process-25018-local-observation-v2",
+  "process": "PROCESS-25018",
+  "proofs": [
+    "accepted_response_attempt_frame_ref",
+    "authorization_search_list_detail",
+    "begin_append_finish_abort",
+    "byte_bounded_failure_isolation",
+    "delete_rollups_scope_matrix",
+    "durable_rich_ack_typed_nack_gap",
+    "exact_content_blob_transcript_identity",
+    "immutable_receipt_value",
+    "immutable_value_axes_signed_unknown",
+    "incremental_request_direction_fork",
+    "independent_cache_affinity",
+    "independent_fact_content_channels",
+    "installed-standalone-headless-management-loop",
+    "large_stream_bounded_install",
+    "retention_delete_tombstone_gc",
+    "rollup_identity_plan_day_currency",
+    "versioned_adapter_execution_fact_contract"
+  ],
+  "scenario_states": [
+    {
+      "scenario_id": "local-writer-query-contract",
+      "state": "green",
+      "evidence_owner": "PROCESS-25018"
+    },
+    {
+      "scenario_id": "production-cli-daemon-observation",
+      "state": "green",
+      "evidence_owner": "TASK-142003"
+    }
+  ]
+}

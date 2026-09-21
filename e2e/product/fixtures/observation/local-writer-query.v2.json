@@ -1,0 +1,62 @@
+{
+  "schema": "hiroute.local-observation-fixture/v2",
+  "fact_channel_capacity_bytes": 131072,
+  "content_channel_capacity_bytes": 131072,
+  "canonical_request": "hello observation",
+  "accepted_response": "accepted response",
+  "rejected_response": "unaccepted response",
+  "request_direction": "request_input",
+  "response_direction": "response_delivered",
+  "request_fork_id": "fork-request",
+  "response_fork_id": "fork-response",
+  "accepted_response_frame_id": "frame-accepted-7",
+  "canonical_response_media_type": "application/vnd.hiroute.model-stream-event+json;version=1",
+  "search_query": "OBSERVATION",
+  "value_calculation_basis": "hiroute.value-calculation/baseline-chosen-actual/v1",
+  "value_rollup_identity": [
+    "agent_plan_id",
+    "currency",
+    "day_number",
+    "workspace_id"
+  ],
+  "delete_rollups_true_creates_tombstone": false,
+  "value_cases": [
+    {
+      "agent_plan_id": "plan/a",
+      "currency": "USD",
+      "baseline_micros": 100,
+      "chosen_micros": 150,
+      "actual_micros": 175,
+      "routing_savings_micros": -50,
+      "entitlement_savings_micros": -25,
+      "estimated_total_savings_micros": -75
+    },
+    {
+      "agent_plan_id": "plan/a",
+      "currency": "CNY",
+      "baseline_micros": 1000,
+      "chosen_micros": 800,
+      "actual_micros": 500,
+      "routing_savings_micros": 200,
+      "entitlement_savings_micros": 300,
+      "estimated_total_savings_micros": 500
+    },
+    {
+      "agent_plan_id": "plan/b",
+      "currency": "USD",
+      "baseline_micros": null,
+      "chosen_micros": 200,
+      "actual_micros": 250,
+      "routing_savings_micros": null,
+      "entitlement_savings_micros": -50,
+      "estimated_total_savings_micros": null
+    }
+  ],
+  "forbidden_truth_inputs": [
+    "current_agent_plan",
+    "current_price_service",
+    "gateway_runtime_state",
+    "ordinary_log",
+    "otel_log_record"
+  ]
+}

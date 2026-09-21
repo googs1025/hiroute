@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 590 84" fill="none" role="img" aria-labelledby="title">
+  <title id="title">HiRoute — Optional routing arc for display wordmark</title>
+  <defs>
+    <linearGradient id="route" x1="223" y1="56" x2="486" y2="15" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5A6FE8"/>
+      <stop offset=".58" stop-color="#9AA7FF"/>
+      <stop offset="1" stop-color="#8B73E4"/>
+    </linearGradient>
+  </defs>
+  <path d="M223 61C288 20 398 -7 465 6C499 13 507 39 489 62C486 66 482 69 478 72L474 72C486 58 491 41 480 29C454 -3 330 15 223 61Z" fill="url(#route)"/>
+</svg>

@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "name": "local-process",
+  "cpa_binary": "${HIROUTE_E2E_CPA_BIN}",
+  "sut_binary": "${HIROUTE_E2E_SUT_BIN}"
+}

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-release-protected-model-input"
+description = "Enables the release_protected_model_input command without any pre-configured scope."
+commands.allow = ["release_protected_model_input"]
+
+[[permission]]
+identifier = "deny-release-protected-model-input"
+description = "Denies the release_protected_model_input command without any pre-configured scope."
+commands.deny = ["release_protected_model_input"]

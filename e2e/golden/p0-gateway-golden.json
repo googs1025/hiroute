@@ -1,0 +1,231 @@
+{
+  "schema_version": "hiroute.e2e.golden/v1",
+  "oracle_version": "p0-gateway-oracle-v1",
+  "assertions": [
+    {
+      "id": "r2m_native",
+      "case_id": "responses_to_messages_stream",
+      "source": "native_request",
+      "expected": {"entries": [{
+        "authorization": "exact",
+        "body_digest": "sha256:1c8fecd4e5a2d3930403cf7dbd052cc41c65294f17514bf8013dcd39b6593a2c",
+        "body_semantics": {
+          "content_digest": "sha256:56cde1371237bae269b6e2108f670334565fe6f3271ccfb5a3f1a4f063966190",
+          "instructions_digest": "sha256:7c75a6f407b6107c9bcb33f2e034ba12e05e06847f7e6ba3a03e994357a1ec80",
+          "model": "native-messages-1",
+          "reasoning_digest": "sha256:3dcb4c302c0deee7ccb22a2bec73613969d6764f89d983c7ef87569a24d87b89",
+          "stream": true,
+          "tool_choice_digest": "sha256:0c4eff9f3ccf00b34b04eb419b7f0fed21c991113f09871cc8457debe5c1ad6d",
+          "tools_digest": "sha256:a25cda95af8954250326e3f4e2cc6294c342489ddca7e7fc7f3db9571456d9cf"
+        },
+        "content_type": "application/json",
+        "method": "POST",
+        "ordinal": 1,
+        "path": "/v1/messages",
+        "protocol": "messages",
+        "provider_id": "native-messages-primary"
+      }]}
+    },
+    {
+      "id": "r2m_ledger",
+      "case_id": "responses_to_messages_stream",
+      "source": "canonical_ledger",
+      "expected": {"events": [
+        {"request_id": "${REQUEST_ID}", "sequence": 1, "kind": "request_ir", "ingress_protocol": "responses", "upstream_protocol": "messages", "semantic_digest": "sha256:1d60962119c43fcb7b2477d0cffd70ca29564d852571347b784976bb79af9191"},
+        {"request_id": "${REQUEST_ID}", "sequence": 2, "kind": "tool_call", "call_id_digest": "sha256:6b3e58da2ba50ddc97bc0d40a2da16565bfc30f2b28ab6a792b3f23fe26a5df8", "arguments_digest": "${RUN_CHALLENGE_JSON_SHA256}"},
+        {"request_id": "${REQUEST_ID}", "sequence": 3, "kind": "completed", "finish_reason": "tool_call", "input_tokens": 19, "output_tokens": 11}
+      ], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": null, "state": "acked", "ack": {"continuous_sequence": 3, "last_ordinal": 3, "root_digest": "${CANONICAL_LEDGER_ROOT_DIGEST}", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "r2m_client",
+      "case_id": "responses_to_messages_stream",
+      "source": "client_output",
+      "expected": {
+        "status": 200,
+        "content_type": "text/event-stream",
+        "transport": "http1",
+        "body": {"events": [
+          {"event": "response.created", "data": {"type": "response.created", "response": {"id": "resp_msg_native_1", "object": "response", "status": "in_progress", "model": "p0-responses-messages", "output": []}}},
+          {"event": "response.output_item.added", "data": {"type": "response.output_item.added", "output_index": 0, "item": {"id": "fc_tool_native_1", "type": "function_call", "status": "in_progress", "call_id": "tool_native_1", "name": "lookup", "arguments": ""}}},
+          {"event": "response.function_call_arguments.delta", "data": {"type": "response.function_call_arguments.delta", "item_id": "fc_tool_native_1", "output_index": 0, "delta": "${RUN_CHALLENGE_JSON}"}},
+          {"event": "response.function_call_arguments.done", "data": {"type": "response.function_call_arguments.done", "item_id": "fc_tool_native_1", "output_index": 0, "arguments": "${RUN_CHALLENGE_JSON}"}},
+          {"event": "response.output_item.done", "data": {"type": "response.output_item.done", "output_index": 0, "item": {"id": "fc_tool_native_1", "type": "function_call", "status": "completed", "call_id": "tool_native_1", "name": "lookup", "arguments": "${RUN_CHALLENGE_JSON}"}}},
+          {"event": "response.completed", "data": {"type": "response.completed", "response": {"id": "resp_msg_native_1", "object": "response", "status": "completed", "model": "p0-responses-messages", "output": [{"id": "fc_tool_native_1", "type": "function_call", "status": "completed", "call_id": "tool_native_1", "name": "lookup", "arguments": "${RUN_CHALLENGE_JSON}"}], "usage": {"input_tokens": 19, "output_tokens": 11, "total_tokens": 30}}}}
+        ]}
+      }
+    },
+    {
+      "id": "r2m_fact", "case_id": "responses_to_messages_stream", "source": "execution_fact",
+      "expected": {"schema_version": "hiroute.e2e.observation-channel-snapshot/v1", "channel": "execution_fact", "records": [{"schema_version": "hiroute.observation.execution-fact-envelope/v1", "channel": "execution_fact", "producer": {"component": "gateway-execution", "revision": "gateway-execution@1", "instance_scope": "workspace", "producer_id": "${FACT_PRODUCER_ID}", "producer_epoch": "${FACT_PRODUCER_EPOCH}"}, "event_id": "${FACT_EVENT_ID}", "stream_id": "${FACT_STREAM_ID}", "sequence": 1, "idempotency_key": "${FACT_EVENT_ID}", "request_id": "${REQUEST_ID}", "context": {"workspace_id": "workspace:p0", "publication_epoch": 7, "publication_revision": "gateway-publication@7", "agent_plan_revision": "agent-plan-1@1"}, "payload": {"outcome": "accepted", "attempts": [{"ordinal": 1, "provider_id": "native-messages-primary", "outcome": "accepted"}], "accepted_provider_id": "native-messages-primary", "commit_fence": "semantic_output", "body_parse_calls": 1, "credential_resolver_calls": 1, "dns_resolution_calls": 0, "provider_connect_calls": 1}}], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": "${FACT_STREAM_ID}", "state": "acked", "ack": {"continuous_sequence": 1, "last_ordinal": 1, "root_digest": "sha256:9580a25bd0b334628dbd16a284a0d8aa19760cf215552e788f2a32477422ba4f", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "r2m_content", "case_id": "responses_to_messages_stream", "source": "conversation_content",
+      "expected": {"schema_version": "hiroute.e2e.observation-channel-snapshot/v1", "channel": "conversation_content", "records": [
+        {"schema_version": "hiroute.observation.conversation-content-envelope/v1", "channel": "conversation_content", "producer": {"component": "gateway-content", "revision": "gateway-content@1", "instance_scope": "workspace", "producer_id": "${CONTENT_PRODUCER_ID}", "producer_epoch": "${CONTENT_PRODUCER_EPOCH}"}, "event_id": "${CONTENT_EVENT_ID_1}", "sequence": 1, "idempotency_key": "${CONTENT_EVENT_ID_1}", "request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "phase": "begin", "ordinal": 0, "payload": {"direction": "control", "acceptance": "stream_opened", "attempt_ordinal": null, "frame_id": null, "content_ref": null, "abort_reason": null}},
+        {"schema_version": "hiroute.observation.conversation-content-envelope/v1", "channel": "conversation_content", "producer": {"component": "gateway-content", "revision": "gateway-content@1", "instance_scope": "workspace", "producer_id": "${CONTENT_PRODUCER_ID}", "producer_epoch": "${CONTENT_PRODUCER_EPOCH}"}, "event_id": "${CONTENT_EVENT_ID_2}", "sequence": 2, "idempotency_key": "${CONTENT_EVENT_ID_2}", "request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "phase": "append", "ordinal": 1, "payload": {"direction": "request", "acceptance": "canonical_request", "attempt_ordinal": null, "frame_id": null, "content_ref": {"content_id": "${CONTENT_REQUEST_ID}", "digest": "sha256:1d60962119c43fcb7b2477d0cffd70ca29564d852571347b784976bb79af9191", "byte_count": 33}, "abort_reason": null}},
+        {"schema_version": "hiroute.observation.conversation-content-envelope/v1", "channel": "conversation_content", "producer": {"component": "gateway-content", "revision": "gateway-content@1", "instance_scope": "workspace", "producer_id": "${CONTENT_PRODUCER_ID}", "producer_epoch": "${CONTENT_PRODUCER_EPOCH}"}, "event_id": "${CONTENT_EVENT_ID_3}", "sequence": 3, "idempotency_key": "${CONTENT_EVENT_ID_3}", "request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "phase": "append", "ordinal": 2, "payload": {"direction": "response", "acceptance": "downstream_transport", "attempt_ordinal": 1, "frame_id": "${CONTENT_FRAME_ID}", "content_ref": {"content_id": "${CONTENT_RESPONSE_ID}", "digest": "${RUN_CHALLENGE_JSON_SHA256}", "byte_count": 89}, "abort_reason": null}},
+        {"schema_version": "hiroute.observation.conversation-content-envelope/v1", "channel": "conversation_content", "producer": {"component": "gateway-content", "revision": "gateway-content@1", "instance_scope": "workspace", "producer_id": "${CONTENT_PRODUCER_ID}", "producer_epoch": "${CONTENT_PRODUCER_EPOCH}"}, "event_id": "${CONTENT_EVENT_ID_4}", "sequence": 4, "idempotency_key": "${CONTENT_EVENT_ID_4}", "request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "phase": "finish", "ordinal": 3, "payload": {"direction": "control", "acceptance": "terminal", "attempt_ordinal": 1, "frame_id": null, "content_ref": null, "abort_reason": null}}
+      ], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "state": "acked", "ack": {"continuous_sequence": 4, "last_ordinal": 3, "root_digest": "sha256:d2cf6e7a7d0f90c4b20bb44fa7c4737c64f7d748ea806f2d5ece89b8a56cd477", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "r2m_otel", "case_id": "responses_to_messages_stream", "source": "otel",
+      "expected": {"records": [{"request_id": "${REQUEST_ID}", "sequence": 1, "operation": "chat", "provider": "anthropic", "request_model": "native-messages-1", "response_model": "native-messages-1", "content_attribute_count": 0}], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": null, "state": "acked", "ack": {"continuous_sequence": 1, "last_ordinal": 1, "root_digest": "${OTEL_ROOT_DIGEST}", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "r2m_resource", "case_id": "responses_to_messages_stream", "source": "resource",
+      "expected": {"facts": {"listener_allocation": "pingora_reserved_exact_address", "native_provider_aborted": 0, "native_provider_accepted": 1, "native_provider_active": 0, "native_provider_internal_failures": 0, "native_provider_parse_failed": 0, "private_root_mode": "owner_only", "secret_bearing_file_mode": "owner_read_write", "readiness_file_mode": "owner_read_write", "process_artifacts_mode": "owner_only", "evidence_artifacts_mode": "owner_only", "path_identity_preserved": true, "runtime_privacy_revalidated": true, "publication_snapshot": "typed_digest_verified", "readiness": "child_pid_nonce_digest_verified", "secret_scan_occurrences": 0, "sut_boundary": "reviewed_external_hirouted", "workdir_isolation": "distinct_private"}}
+    },
+
+    {
+      "id": "c2r_native",
+      "case_id": "chat_to_responses_nonstream",
+      "source": "native_request",
+      "expected": {"entries": [{
+        "authorization": "exact",
+        "body_digest": "sha256:bcd477c16ed7d03286862913924956d87f9f9bda52119a74eb3a9a77d24e33e2",
+        "body_semantics": {
+          "content_digest": "sha256:c61a47bd6e14904881d0a407442264a1280084855729966a64f27b242b70848a",
+          "instructions_digest": "sha256:8d3aa8ebf86073f0d7c1f328fb143dd131681332dcff1d6330cc3677c15ffb45",
+          "model": "native-responses-1",
+          "reasoning_digest": "sha256:1450e0b1f50c56ac3c83d60ff41f209994e0a69d269e89427dc2051e31662448",
+          "stream": false,
+          "tool_choice_digest": null,
+          "tools_digest": null
+        },
+        "content_type": "application/json",
+        "method": "POST",
+        "ordinal": 1,
+        "path": "/v1/responses",
+        "protocol": "responses",
+        "provider_id": "native-responses-primary"
+      }]}
+    },
+    {
+      "id": "c2r_ledger", "case_id": "chat_to_responses_nonstream", "source": "canonical_ledger",
+      "expected": {"events": [
+        {"request_id": "${REQUEST_ID}", "sequence": 1, "kind": "request_ir", "ingress_protocol": "chat_completions", "upstream_protocol": "responses", "semantic_digest": "sha256:b6e4b709e19d94eb9cbc78204da989efb0ba8f9631974a7c0c1e29cf975f1d21"},
+        {"request_id": "${REQUEST_ID}", "sequence": 2, "kind": "text_delta", "text_digest": "${RUN_CHALLENGE_SHA256}"},
+        {"request_id": "${REQUEST_ID}", "sequence": 3, "kind": "completed", "finish_reason": "stop", "input_tokens": 23, "output_tokens": 4}
+      ], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": null, "state": "acked", "ack": {"continuous_sequence": 3, "last_ordinal": 3, "root_digest": "${CANONICAL_LEDGER_ROOT_DIGEST}", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "c2r_client", "case_id": "chat_to_responses_nonstream", "source": "client_output",
+      "expected": {"status": 200, "content_type": "application/json", "transport": "http1", "body": {"id": "chatcmpl_resp_native_1", "object": "chat.completion", "created": 1700000000, "model": "p0-chat-responses", "choices": [{"index": 0, "message": {"role": "assistant", "content": "${RUN_CHALLENGE}"}, "finish_reason": "stop"}], "usage": {"prompt_tokens": 23, "completion_tokens": 4, "total_tokens": 27}}}
+    },
+    {
+      "id": "c2r_fact", "case_id": "chat_to_responses_nonstream", "source": "execution_fact",
+      "expected": {"schema_version": "hiroute.e2e.observation-channel-snapshot/v1", "channel": "execution_fact", "records": [{"schema_version": "hiroute.observation.execution-fact-envelope/v1", "channel": "execution_fact", "producer": {"component": "gateway-execution", "revision": "gateway-execution@1", "instance_scope": "workspace", "producer_id": "${FACT_PRODUCER_ID}", "producer_epoch": "${FACT_PRODUCER_EPOCH}"}, "event_id": "${FACT_EVENT_ID}", "stream_id": "${FACT_STREAM_ID}", "sequence": 1, "idempotency_key": "${FACT_EVENT_ID}", "request_id": "${REQUEST_ID}", "context": {"workspace_id": "workspace:p0", "publication_epoch": 7, "publication_revision": "gateway-publication@7", "agent_plan_revision": "agent-plan-2@1"}, "payload": {"outcome": "accepted", "attempts": [{"ordinal": 1, "provider_id": "native-responses-primary", "outcome": "accepted"}], "accepted_provider_id": "native-responses-primary", "commit_fence": "response_body", "body_parse_calls": 1, "credential_resolver_calls": 1, "dns_resolution_calls": 0, "provider_connect_calls": 1}}], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": "${FACT_STREAM_ID}", "state": "acked", "ack": {"continuous_sequence": 1, "last_ordinal": 1, "root_digest": "sha256:4baaca3b6db2613e9f5373b1cd74d6fc95b9094c55df1243d85d584f6f9ec35f", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "c2r_content", "case_id": "chat_to_responses_nonstream", "source": "conversation_content",
+      "expected": {"schema_version": "hiroute.e2e.observation-channel-snapshot/v1", "channel": "conversation_content", "records": [
+        {"schema_version": "hiroute.observation.conversation-content-envelope/v1", "channel": "conversation_content", "producer": {"component": "gateway-content", "revision": "gateway-content@1", "instance_scope": "workspace", "producer_id": "${CONTENT_PRODUCER_ID}", "producer_epoch": "${CONTENT_PRODUCER_EPOCH}"}, "event_id": "${CONTENT_EVENT_ID_1}", "sequence": 1, "idempotency_key": "${CONTENT_EVENT_ID_1}", "request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "phase": "begin", "ordinal": 0, "payload": {"direction": "control", "acceptance": "stream_opened", "attempt_ordinal": null, "frame_id": null, "content_ref": null, "abort_reason": null}},
+        {"schema_version": "hiroute.observation.conversation-content-envelope/v1", "channel": "conversation_content", "producer": {"component": "gateway-content", "revision": "gateway-content@1", "instance_scope": "workspace", "producer_id": "${CONTENT_PRODUCER_ID}", "producer_epoch": "${CONTENT_PRODUCER_EPOCH}"}, "event_id": "${CONTENT_EVENT_ID_2}", "sequence": 2, "idempotency_key": "${CONTENT_EVENT_ID_2}", "request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "phase": "append", "ordinal": 1, "payload": {"direction": "request", "acceptance": "canonical_request", "attempt_ordinal": null, "frame_id": null, "content_ref": {"content_id": "${CONTENT_REQUEST_ID}", "digest": "sha256:b6e4b709e19d94eb9cbc78204da989efb0ba8f9631974a7c0c1e29cf975f1d21", "byte_count": 52}, "abort_reason": null}},
+        {"schema_version": "hiroute.observation.conversation-content-envelope/v1", "channel": "conversation_content", "producer": {"component": "gateway-content", "revision": "gateway-content@1", "instance_scope": "workspace", "producer_id": "${CONTENT_PRODUCER_ID}", "producer_epoch": "${CONTENT_PRODUCER_EPOCH}"}, "event_id": "${CONTENT_EVENT_ID_3}", "sequence": 3, "idempotency_key": "${CONTENT_EVENT_ID_3}", "request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "phase": "append", "ordinal": 2, "payload": {"direction": "response", "acceptance": "downstream_transport", "attempt_ordinal": 1, "frame_id": "${CONTENT_FRAME_ID}", "content_ref": {"content_id": "${CONTENT_RESPONSE_ID}", "digest": "${RUN_CHALLENGE_SHA256}", "byte_count": 77}, "abort_reason": null}},
+        {"schema_version": "hiroute.observation.conversation-content-envelope/v1", "channel": "conversation_content", "producer": {"component": "gateway-content", "revision": "gateway-content@1", "instance_scope": "workspace", "producer_id": "${CONTENT_PRODUCER_ID}", "producer_epoch": "${CONTENT_PRODUCER_EPOCH}"}, "event_id": "${CONTENT_EVENT_ID_4}", "sequence": 4, "idempotency_key": "${CONTENT_EVENT_ID_4}", "request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "phase": "finish", "ordinal": 3, "payload": {"direction": "control", "acceptance": "terminal", "attempt_ordinal": 1, "frame_id": null, "content_ref": null, "abort_reason": null}}
+      ], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "state": "acked", "ack": {"continuous_sequence": 4, "last_ordinal": 3, "root_digest": "sha256:431ac821956a29adccf2dd8a09ac9a98bcf61f4bbaf1937c4e3d64e1426123b4", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "c2r_otel", "case_id": "chat_to_responses_nonstream", "source": "otel",
+      "expected": {"records": [{"request_id": "${REQUEST_ID}", "sequence": 1, "operation": "chat", "provider": "openai", "request_model": "native-responses-1", "response_model": "native-responses-1", "content_attribute_count": 0}], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": null, "state": "acked", "ack": {"continuous_sequence": 1, "last_ordinal": 1, "root_digest": "${OTEL_ROOT_DIGEST}", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "c2r_resource", "case_id": "chat_to_responses_nonstream", "source": "resource",
+      "expected": {"facts": {"listener_allocation": "pingora_reserved_exact_address", "native_provider_aborted": 0, "native_provider_accepted": 1, "native_provider_active": 0, "native_provider_internal_failures": 0, "native_provider_parse_failed": 0, "private_root_mode": "owner_only", "secret_bearing_file_mode": "owner_read_write", "readiness_file_mode": "owner_read_write", "process_artifacts_mode": "owner_only", "evidence_artifacts_mode": "owner_only", "path_identity_preserved": true, "runtime_privacy_revalidated": true, "publication_snapshot": "typed_digest_verified", "readiness": "child_pid_nonce_digest_verified", "secret_scan_occurrences": 0, "sut_boundary": "reviewed_external_hirouted", "workdir_isolation": "distinct_private"}}
+    },
+
+    {
+      "id": "m2c_native",
+      "case_id": "messages_to_chat_stream",
+      "source": "native_request",
+      "expected": {"entries": [{
+        "authorization": "exact",
+        "body_digest": "sha256:d168823bef6d108e3b44b176aa24ba6f544feb805339783984ed8df6fa82d1cd",
+        "body_semantics": {
+          "content_digest": "sha256:d94dba72f8b9ba3dcd2ee0e58a90c69fd279d46677ed52a0d4a50a6e1e0c3f57",
+          "instructions_digest": null,
+          "model": "native-chat-1",
+          "reasoning_digest": "sha256:60d4c90eee5e731df8d3ef2891de541d2e755ff8ee9db358e26bdec49f6e0db9",
+          "stream": true,
+          "tool_choice_digest": "sha256:634635a2166efa2ae765abd31d4ae807082287e329a8a7fff42b1fb30f65087e",
+          "tools_digest": "sha256:cc164453b3ccbb2f506fd99b6b09f74efc20269eed3311009886f08b6b7e2800"
+        },
+        "content_type": "application/json",
+        "method": "POST",
+        "ordinal": 1,
+        "path": "/v1/chat/completions",
+        "protocol": "chat_completions",
+        "provider_id": "native-chat-primary"
+      }]}
+    },
+    {
+      "id": "m2c_ledger", "case_id": "messages_to_chat_stream", "source": "canonical_ledger",
+      "expected": {"events": [
+        {"request_id": "${REQUEST_ID}", "sequence": 1, "kind": "request_ir", "ingress_protocol": "messages", "upstream_protocol": "chat_completions", "semantic_digest": "sha256:8a29de5074cfc559e349223d6521f8967e025718ce56fdc8b78f96e764e56784"},
+        {"request_id": "${REQUEST_ID}", "sequence": 2, "kind": "text_delta", "text_digest": "${RUN_CHALLENGE_SHA256}"},
+        {"request_id": "${REQUEST_ID}", "sequence": 3, "kind": "completed", "finish_reason": "end_turn", "input_tokens": 12, "output_tokens": 1}
+      ], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": null, "state": "acked", "ack": {"continuous_sequence": 3, "last_ordinal": 3, "root_digest": "${CANONICAL_LEDGER_ROOT_DIGEST}", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "m2c_client", "case_id": "messages_to_chat_stream", "source": "client_output",
+      "expected": {"status": 200, "content_type": "text/event-stream", "transport": "http1", "body": {"events": [
+        {"event": "message_start", "data": {"type": "message_start", "message": {"id": "msg_chatcmpl_native_1", "type": "message", "role": "assistant", "model": "p0-messages-chat", "content": [], "stop_reason": null, "usage": {"input_tokens": 12, "output_tokens": 0}}}},
+        {"event": "content_block_start", "data": {"type": "content_block_start", "index": 0, "content_block": {"type": "text", "text": ""}}},
+        {"event": "content_block_delta", "data": {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "${RUN_CHALLENGE}"}}},
+        {"event": "content_block_stop", "data": {"type": "content_block_stop", "index": 0}},
+        {"event": "message_delta", "data": {"type": "message_delta", "delta": {"stop_reason": "end_turn", "stop_sequence": null}, "usage": {"output_tokens": 1}}},
+        {"event": "message_stop", "data": {"type": "message_stop"}}
+      ]}}
+    },
+    {
+      "id": "m2c_fact", "case_id": "messages_to_chat_stream", "source": "execution_fact",
+      "expected": {"schema_version": "hiroute.e2e.observation-channel-snapshot/v1", "channel": "execution_fact", "records": [{"schema_version": "hiroute.observation.execution-fact-envelope/v1", "channel": "execution_fact", "producer": {"component": "gateway-execution", "revision": "gateway-execution@1", "instance_scope": "workspace", "producer_id": "${FACT_PRODUCER_ID}", "producer_epoch": "${FACT_PRODUCER_EPOCH}"}, "event_id": "${FACT_EVENT_ID}", "stream_id": "${FACT_STREAM_ID}", "sequence": 1, "idempotency_key": "${FACT_EVENT_ID}", "request_id": "${REQUEST_ID}", "context": {"workspace_id": "workspace:p0", "publication_epoch": 7, "publication_revision": "gateway-publication@7", "agent_plan_revision": "agent-plan-3@1"}, "payload": {"outcome": "accepted", "attempts": [{"ordinal": 1, "provider_id": "native-chat-primary", "outcome": "accepted"}], "accepted_provider_id": "native-chat-primary", "commit_fence": "semantic_output", "body_parse_calls": 1, "credential_resolver_calls": 1, "dns_resolution_calls": 0, "provider_connect_calls": 1}}], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": "${FACT_STREAM_ID}", "state": "acked", "ack": {"continuous_sequence": 1, "last_ordinal": 1, "root_digest": "sha256:772f3df70bb68e1311da8f404649148040e454f7a5cc88c67ad76388c88f91d7", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "m2c_content", "case_id": "messages_to_chat_stream", "source": "conversation_content",
+      "expected": {"schema_version": "hiroute.e2e.observation-channel-snapshot/v1", "channel": "conversation_content", "records": [
+        {"schema_version": "hiroute.observation.conversation-content-envelope/v1", "channel": "conversation_content", "producer": {"component": "gateway-content", "revision": "gateway-content@1", "instance_scope": "workspace", "producer_id": "${CONTENT_PRODUCER_ID}", "producer_epoch": "${CONTENT_PRODUCER_EPOCH}"}, "event_id": "${CONTENT_EVENT_ID_1}", "sequence": 1, "idempotency_key": "${CONTENT_EVENT_ID_1}", "request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "phase": "begin", "ordinal": 0, "payload": {"direction": "control", "acceptance": "stream_opened", "attempt_ordinal": null, "frame_id": null, "content_ref": null, "abort_reason": null}},
+        {"schema_version": "hiroute.observation.conversation-content-envelope/v1", "channel": "conversation_content", "producer": {"component": "gateway-content", "revision": "gateway-content@1", "instance_scope": "workspace", "producer_id": "${CONTENT_PRODUCER_ID}", "producer_epoch": "${CONTENT_PRODUCER_EPOCH}"}, "event_id": "${CONTENT_EVENT_ID_2}", "sequence": 2, "idempotency_key": "${CONTENT_EVENT_ID_2}", "request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "phase": "append", "ordinal": 1, "payload": {"direction": "request", "acceptance": "canonical_request", "attempt_ordinal": null, "frame_id": null, "content_ref": {"content_id": "${CONTENT_REQUEST_ID}", "digest": "sha256:8a29de5074cfc559e349223d6521f8967e025718ce56fdc8b78f96e764e56784", "byte_count": 32}, "abort_reason": null}},
+        {"schema_version": "hiroute.observation.conversation-content-envelope/v1", "channel": "conversation_content", "producer": {"component": "gateway-content", "revision": "gateway-content@1", "instance_scope": "workspace", "producer_id": "${CONTENT_PRODUCER_ID}", "producer_epoch": "${CONTENT_PRODUCER_EPOCH}"}, "event_id": "${CONTENT_EVENT_ID_3}", "sequence": 3, "idempotency_key": "${CONTENT_EVENT_ID_3}", "request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "phase": "append", "ordinal": 2, "payload": {"direction": "response", "acceptance": "downstream_transport", "attempt_ordinal": 1, "frame_id": "${CONTENT_FRAME_ID}", "content_ref": {"content_id": "${CONTENT_RESPONSE_ID}", "digest": "${RUN_CHALLENGE_SHA256}", "byte_count": 77}, "abort_reason": null}},
+        {"schema_version": "hiroute.observation.conversation-content-envelope/v1", "channel": "conversation_content", "producer": {"component": "gateway-content", "revision": "gateway-content@1", "instance_scope": "workspace", "producer_id": "${CONTENT_PRODUCER_ID}", "producer_epoch": "${CONTENT_PRODUCER_EPOCH}"}, "event_id": "${CONTENT_EVENT_ID_4}", "sequence": 4, "idempotency_key": "${CONTENT_EVENT_ID_4}", "request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "phase": "finish", "ordinal": 3, "payload": {"direction": "control", "acceptance": "terminal", "attempt_ordinal": 1, "frame_id": null, "content_ref": null, "abort_reason": null}}
+      ], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "state": "acked", "ack": {"continuous_sequence": 4, "last_ordinal": 3, "root_digest": "sha256:ac19258559de613d8d389e6cf3672f6a834fd3f94b26ad74e5fa6389b16541fb", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "m2c_otel", "case_id": "messages_to_chat_stream", "source": "otel",
+      "expected": {"records": [{"request_id": "${REQUEST_ID}", "sequence": 1, "operation": "chat", "provider": "openai", "request_model": "native-chat-1", "response_model": "native-chat-1", "content_attribute_count": 0}], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": null, "state": "acked", "ack": {"continuous_sequence": 1, "last_ordinal": 1, "root_digest": "${OTEL_ROOT_DIGEST}", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "m2c_resource", "case_id": "messages_to_chat_stream", "source": "resource",
+      "expected": {"facts": {"listener_allocation": "pingora_reserved_exact_address", "native_provider_aborted": 0, "native_provider_accepted": 1, "native_provider_active": 0, "native_provider_internal_failures": 0, "native_provider_parse_failed": 0, "private_root_mode": "owner_only", "secret_bearing_file_mode": "owner_read_write", "readiness_file_mode": "owner_read_write", "process_artifacts_mode": "owner_only", "evidence_artifacts_mode": "owner_only", "path_identity_preserved": true, "runtime_privacy_revalidated": true, "publication_snapshot": "typed_digest_verified", "readiness": "child_pid_nonce_digest_verified", "secret_scan_occurrences": 0, "sut_boundary": "reviewed_external_hirouted", "workdir_isolation": "distinct_private"}}
+    },
+
+    {
+      "id": "grant_native", "case_id": "grant_first_denied_alias", "source": "native_request",
+      "expected": {"entries": []}
+    },
+    {
+      "id": "grant_ledger", "case_id": "grant_first_denied_alias", "source": "canonical_ledger",
+      "expected": {"events": [{"request_id": "${REQUEST_ID}", "sequence": 1, "kind": "admission_rejected", "code": "AGENT_PLAN_NOT_AVAILABLE", "alias_visibility": "uniform", "provider_connect_count": 0}], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": null, "state": "acked", "ack": {"continuous_sequence": 1, "last_ordinal": 1, "root_digest": "${CANONICAL_LEDGER_ROOT_DIGEST}", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "grant_client", "case_id": "grant_first_denied_alias", "source": "client_output",
+      "expected": {"status": 404, "content_type": "application/json", "transport": "http1", "body": {"schema_version": "hiroute.gateway.error/v1", "code": "AGENT_PLAN_NOT_AVAILABLE", "phase": "request_admission"}}
+    },
+    {
+      "id": "grant_fact", "case_id": "grant_first_denied_alias", "source": "execution_fact",
+      "expected": {"schema_version": "hiroute.e2e.observation-channel-snapshot/v1", "channel": "execution_fact", "records": [{"schema_version": "hiroute.observation.execution-fact-envelope/v1", "channel": "execution_fact", "producer": {"component": "gateway-execution", "revision": "gateway-execution@1", "instance_scope": "workspace", "producer_id": "${FACT_PRODUCER_ID}", "producer_epoch": "${FACT_PRODUCER_EPOCH}"}, "event_id": "${FACT_EVENT_ID}", "stream_id": "${FACT_STREAM_ID}", "sequence": 1, "idempotency_key": "${FACT_EVENT_ID}", "request_id": "${REQUEST_ID}", "context": {"workspace_id": "workspace:p0", "publication_epoch": 7, "publication_revision": "gateway-publication@7", "agent_plan_revision": "agent-plan-4@1"}, "payload": {"outcome": "admission_rejected", "attempts": [], "accepted_provider_id": null, "commit_fence": "none", "body_parse_calls": 0, "credential_resolver_calls": 0, "dns_resolution_calls": 0, "provider_connect_calls": 0}}], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": "${FACT_STREAM_ID}", "state": "acked", "ack": {"continuous_sequence": 1, "last_ordinal": 1, "root_digest": "sha256:2d7f7f0f529641351385209c03345f938b136c2aa18c4c3229c77f082648fc2b", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "grant_content", "case_id": "grant_first_denied_alias", "source": "conversation_content",
+      "expected": {"schema_version": "hiroute.e2e.observation-channel-snapshot/v1", "channel": "conversation_content", "records": [], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": "${CONTENT_STREAM_ID}", "state": "acked", "ack": {"continuous_sequence": 0, "last_ordinal": 0, "root_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "grant_otel", "case_id": "grant_first_denied_alias", "source": "otel",
+      "expected": {"records": [{"request_id": "${REQUEST_ID}", "sequence": 1, "operation": "chat", "error_type": "AGENT_PLAN_NOT_AVAILABLE", "content_attribute_count": 0}], "terminal": {"request_id": "${REQUEST_ID}", "stream_id": null, "state": "acked", "ack": {"continuous_sequence": 1, "last_ordinal": 1, "root_digest": "${OTEL_ROOT_DIGEST}", "delta_parent": null}, "nack": null, "gap": null}}
+    },
+    {
+      "id": "grant_resource", "case_id": "grant_first_denied_alias", "source": "resource",
+      "expected": {"facts": {"listener_allocation": "pingora_reserved_exact_address", "native_provider_aborted": 0, "native_provider_accepted": 0, "native_provider_active": 0, "native_provider_internal_failures": 0, "native_provider_parse_failed": 0, "private_root_mode": "owner_only", "secret_bearing_file_mode": "owner_read_write", "readiness_file_mode": "owner_read_write", "process_artifacts_mode": "owner_only", "evidence_artifacts_mode": "owner_only", "path_identity_preserved": true, "runtime_privacy_revalidated": true, "publication_snapshot": "typed_digest_verified", "readiness": "child_pid_nonce_digest_verified", "secret_scan_occurrences": 0, "sut_boundary": "reviewed_external_hirouted", "workdir_isolation": "distinct_private"}}
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "schema_version": "hiroute.e2e.production-smoke/v1",
+  "oracle_version": "p0-gateway-production-oracle-v1",
+  "case": {
+    "id": "production_responses_smoke",
+    "grant_access": "allowed",
+    "ingress": {
+      "protocol": "responses",
+      "path": "/v1/responses",
+      "authorization": "valid",
+      "body": {
+        "model": "oracle-smoke",
+        "input": "${RUN_CHALLENGE}",
+        "stream": false
+      }
+    },
+    "providers": [
+      {
+        "id": "oracle-native-provider",
+        "protocol": "responses",
+        "expected_calls": 1,
+        "expected_request": {
+          "path": "/v1/responses",
+          "body": {
+            "model": "oracle-native-provider",
+            "input": [
+              {
+                "type": "message",
+                "role": "user",
+                "content": [
+                  {"type": "input_text", "text": "${RUN_CHALLENGE}"}
+                ]
+              }
+            ],
+            "max_output_tokens": 256,
+            "stream": false
+          }
+        },
+        "response": {
+          "status": 200,
+          "content_type": "application/json",
+          "body": {
+            "kind": "json",
+            "value": {
+              "id": "oracle-native-response",
+              "model": "oracle-native-provider",
+              "status": "completed",
+              "output": [
+                {
+                  "type": "message",
+                  "role": "assistant",
+                  "content": [
+                    {"type": "output_text", "text": "${RUN_CHALLENGE}"}
+                  ]
+                }
+              ],
+              "usage": {
+                "input_tokens": 3,
+                "output_tokens": 2,
+                "total_tokens": 5
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected_client": {
+    "body": {
+      "created_at": 0,
+      "error": null,
+      "id": "oracle-native-response",
+      "incomplete_details": null,
+      "model": "oracle-smoke",
+      "object": "response",
+      "status": "completed",
+      "output": [
+        {
+          "id": "msg_0",
+          "type": "message",
+          "role": "assistant",
+          "status": "completed",
+          "content": [
+            {"type": "output_text", "text": "${RUN_CHALLENGE}", "annotations": []}
+          ]
+        }
+      ],
+      "usage": {
+        "input_tokens": 3,
+        "output_tokens": 2,
+        "total_tokens": 5
+      }
+    },
+    "content_type": "application/json",
+    "status": 200,
+    "transport": "http1"
+  },
+  "expected_observation": {
+    "lifecycle_terminal": "request_finished",
+    "execution_terminal": "request_finished",
+    "content_terminals": [
+      {"direction": "request_input", "phase": "finish"},
+      {"direction": "response_delivered", "phase": "finish"}
+    ],
+    "required_execution_facts": [
+      "route_decision",
+      "attempt_started",
+      "semantic_commit",
+      "attempt_finished",
+      "request_finished",
+      "usage_and_cache"
+    ],
+    "required_otel_signal": "span",
+    "freshness_binding": "request_and_response_content"
+  }
+}

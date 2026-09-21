@@ -1,0 +1,49 @@
+{
+  "schema_version": { "major": 1, "minor": 0 },
+  "scenario_id": "transaction.recovery.contract",
+  "boundary": "black_box_contract_scenario_ledger_oracle",
+  "formal_composition": {
+    "expected_red": true,
+    "reason": "formal composition not yet available",
+    "composition_owner": "PROCESS-25009"
+  },
+  "operation_states": [
+    "accepted",
+    "preparing",
+    "applying_secrets",
+    "materializing_sources",
+    "compiling_publication",
+    "applying_agent_artifacts",
+    "activating",
+    "succeeded",
+    "rolling_back",
+    "rolled_back",
+    "needs_attention"
+  ],
+  "fault_ledger": {
+    "injected": [
+      "prepare",
+      "apply_secrets",
+      "materialize_sources",
+      "compile_publication",
+      "apply_agent_artifacts",
+      "activate"
+    ],
+    "observed": [
+      "prepare",
+      "apply_secrets",
+      "materialize_sources",
+      "compile_publication",
+      "apply_agent_artifacts",
+      "activate"
+    ]
+  },
+  "required_assertions": [
+    "apply_checks_idempotency_before_revision",
+    "digest_and_revision_rejections_have_zero_side_effects",
+    "operation_terminal_state_is_unique",
+    "owned_effect_compensation_is_conditional",
+    "preview_has_zero_writes",
+    "secret_plaintext_absent_from_durable_evidence"
+  ]
+}

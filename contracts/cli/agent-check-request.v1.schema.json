@@ -1,0 +1,36 @@
+{
+  "$id": "hiroute://contracts/cli/agent-check-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "agent_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "allow_model_call": {
+      "type": "boolean"
+    },
+    "scope": {
+      "enum": [
+        "configuration",
+        "native_authentication",
+        "collaboration",
+        "live"
+      ]
+    },
+    "suite": {
+      "enum": [
+        "quick",
+        "tool",
+        "conformance"
+      ]
+    }
+  },
+  "required": [
+    "agent_id",
+    "scope",
+    "suite",
+    "allow_model_call"
+  ],
+  "type": "object"
+}

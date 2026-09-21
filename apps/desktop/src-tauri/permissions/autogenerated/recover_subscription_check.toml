@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-recover-subscription-check"
+description = "Enables the recover_subscription_check command without any pre-configured scope."
+commands.allow = ["recover_subscription_check"]
+
+[[permission]]
+identifier = "deny-recover-subscription-check"
+description = "Denies the recover_subscription_check command without any pre-configured scope."
+commands.deny = ["recover_subscription_check"]

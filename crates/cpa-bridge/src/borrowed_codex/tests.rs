@@ -1,0 +1,293 @@
+use serde_json::{Value, json};
+
+use super::*;
+
+const ACCESS_ONE: &str = "fixture-access-lease-one";
+const ACCESS_TWO: &str = "fixture-access-lease-two";
+const ID_ONE: &str = "fixture.id.lease-one";
+const ID_TWO: &str = "fixture.id.lease-two";
+const REFRESH_SENTINEL: &str = "fixture-refresh-must-never-be-copied";
+
+fn setup() -> (tempfile::TempDir, PathBuf, PathBuf) {
+    let temp = tempfile::tempdir().unwrap();
+    ensure_private_dir(temp.path()).unwrap();
+    let auth_dir = ensure_private_dir(&temp.path().join("cpa-auth")).unwrap();
+    let source = temp.path().join("codex-auth.json");
+    write_source(&source, "account-one", ACCESS_ONE, ID_ONE, "first");
+    (temp, auth_dir, source)
+}
+
+fn write_source(
+    path: &Path,
+    account_id: &str,
+    access_token: &str,
+    id_token: &str,
+    last_refresh: &str,
+) {
+    let bytes = serde_json::to_vec(&json!({
+        "OPENAI_API_KEY": null,
+        "auth_mode": "chatgpt",
+        "last_refresh": last_refresh,
+        "tokens": {
+            "access_token": access_token,
+            "id_token": id_token,
+            "refresh_token": REFRESH_SENTINEL,
+            "account_id": account_id
+        }
+    }))
+    .unwrap();
+    private_atomic_write(path, &bytes).unwrap();
+}
+
+fn flat_value(auth_dir: &Path) -> Value {
+    serde_json::from_slice(&fs::read(auth_dir.join(MANAGED_FILE_NAME)).unwrap()).unwrap()
+}
+
+#[test]
+fn evidence_scan_is_read_only_and_redacts_the_source() {
+    let temp = tempfile::tempdir().unwrap();
+    ensure_private_dir(temp.path()).unwrap();
+    let source = temp.path().join("codex-auth.json");
+    let untouched_auth_dir = temp.path().join("must-not-exist");
+    write_source(&source, "account-one", ACCESS_ONE, ID_ONE, "first");
+
+    let evidence = BorrowedCodexAuthSpec::new(&source).inspect().unwrap();
+
+    assert_eq!(
+        evidence.account_ref(),
+        format!("account/cpa/{}", account_digest("account-one"))
+    );
+    assert!(!untouched_auth_dir.exists());
+    let debug = format!("{evidence:?}");
+    assert!(!debug.contains(source.to_string_lossy().as_ref()));
+    assert!(!debug.contains("account-one"));
+    assert!(!debug.contains(ACCESS_ONE));
+}
+
+#[test]
+fn expected_evidence_rejects_account_replacement_before_access_materialization() {
+    let (_temp, auth_dir, source) = setup();
+    let spec = BorrowedCodexAuthSpec::new(&source);
+    let expected = spec.inspect().unwrap();
+    write_source(&source, "account-two", ACCESS_TWO, ID_TWO, "second");
+
+    assert!(matches!(
+        ManagedAuthLease::acquire_expected(&auth_dir, Some(&spec), Some(&expected)),
+        Err(CpaLifecycleError::BorrowedCodexAuthSourceChanged)
+    ));
+    assert!(!auth_dir.join(MANAGED_FILE_NAME).exists());
+    assert!(!auth_dir.join(STATE_FILE_NAME).exists());
+}
+
+#[test]
+fn bounded_reader_rejects_a_source_that_changes_during_every_attempt() {
+    let (_temp, _auth_dir, source) = setup();
+    let mut revision = 0_u64;
+    let result = read_nested_source_after_read(&source, || {
+        revision += 1;
+        write_source(
+            &source,
+            &format!("account-changing-{revision}"),
+            ACCESS_TWO,
+            ID_TWO,
+            &format!("refresh-{revision}"),
+        );
+    });
+
+    assert!(matches!(
+        result,
+        Err(CpaLifecycleError::BorrowedCodexAuthSourceChanged)
+    ));
+}
+
+#[test]
+fn missing_source_has_a_distinct_local_failure() {
+    let temp = tempfile::tempdir().unwrap();
+    let result = BorrowedCodexAuthSpec::new(temp.path().join("missing.json")).inspect();
+    assert!(matches!(
+        result,
+        Err(CpaLifecycleError::BorrowedCodexAuthMissing)
+    ));
+}
+
+#[test]
+fn nested_auth_is_imported_as_an_owner_only_access_lease() {
+    let (_temp, auth_dir, source) = setup();
+    let mut lease =
+        ManagedAuthLease::acquire(&auth_dir, Some(&BorrowedCodexAuthSpec::new(source.clone())))
+            .unwrap();
+    let identity = lease.refresh().unwrap().pop().unwrap();
+    let flat = flat_value(&auth_dir);
+
+    assert_eq!(flat["type"], "codex");
+    assert_eq!(flat["request_retry"], 0);
+    assert_eq!(flat["disable_cooling"], true);
+    assert_eq!(flat["prefix"], identity.prefix().unwrap());
+    assert!(flat.get("refresh_token").is_none());
+    assert_eq!(identity.account_digest, account_digest("account-one"));
+    assert!(!identity.account_digest.contains("codex-auth.json"));
+    validate_private_file(&auth_dir.join(MANAGED_FILE_NAME)).unwrap();
+    validate_private_file(&auth_dir.join(STATE_FILE_NAME)).unwrap();
+
+    let flat_bytes = fs::read(auth_dir.join(MANAGED_FILE_NAME)).unwrap();
+    assert!(
+        !flat_bytes
+            .windows(REFRESH_SENTINEL.len())
+            .any(|window| window == REFRESH_SENTINEL.as_bytes())
+    );
+}
+
+#[test]
+fn access_rotation_advances_generation_but_account_replacement_is_rejected() {
+    let (_temp, auth_dir, source) = setup();
+    let spec = BorrowedCodexAuthSpec::new(source.clone());
+    let first_evidence = spec.inspect().unwrap();
+    let mut lease = ManagedAuthLease::acquire(&auth_dir, Some(&spec)).unwrap();
+    let first = lease.refresh().unwrap().pop().unwrap();
+
+    write_source(&source, "account-one", ACCESS_TWO, ID_TWO, "second");
+    let rotated_evidence = spec.inspect().unwrap();
+    assert_ne!(
+        rotated_evidence.evidence_digest(),
+        first_evidence.evidence_digest()
+    );
+    assert_eq!(
+        rotated_evidence.binding_evidence_digest(),
+        first_evidence.binding_evidence_digest()
+    );
+    let rotated = lease.refresh().unwrap().pop().unwrap();
+    assert_eq!(rotated.account_digest, first.account_digest);
+    assert_eq!(rotated.generation, first.generation + 1);
+
+    let managed_before = fs::read(auth_dir.join(MANAGED_FILE_NAME)).unwrap();
+    let state_before = fs::read(auth_dir.join(STATE_FILE_NAME)).unwrap();
+    write_source(&source, "account-two", ACCESS_ONE, ID_ONE, "third");
+    let replacement_evidence = spec.inspect().unwrap();
+    assert_ne!(
+        replacement_evidence.binding_evidence_digest(),
+        first_evidence.binding_evidence_digest()
+    );
+    assert!(matches!(
+        lease.refresh(),
+        Err(CpaLifecycleError::BorrowedCodexAuthSourceChanged)
+    ));
+    assert_eq!(
+        fs::read(auth_dir.join(MANAGED_FILE_NAME)).unwrap(),
+        managed_before
+    );
+    assert_eq!(
+        fs::read(auth_dir.join(STATE_FILE_NAME)).unwrap(),
+        state_before
+    );
+}
+
+#[test]
+fn canonical_source_and_auth_directory_are_exclusive_across_instances() {
+    // Closing one descriptor cannot release copies inherited by concurrently forked
+    // process tests. Keep this exact lifetime assertion in its own test process.
+    const CASE: &str =
+        "borrowed_codex::tests::canonical_source_and_auth_directory_are_exclusive_across_instances";
+    const CHILD: &str = "HIROUTE_ISOLATED_LOCK_TEST";
+    if std::env::var(CHILD).as_deref() != Ok(CASE) {
+        let output = std::process::Command::new(std::env::current_exe().unwrap())
+            .args(["--exact", CASE])
+            .env(CHILD, CASE)
+            .output()
+            .unwrap();
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        assert!(
+            output.status.success()
+                && stdout
+                    .lines()
+                    .any(|line| line == format!("test {CASE} ... ok")),
+            "isolated lease test must execute its exact case: {stdout} {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        return;
+    }
+    let (temp, auth_dir, source) = setup();
+    let first =
+        ManagedAuthLease::acquire(&auth_dir, Some(&BorrowedCodexAuthSpec::new(source.clone())))
+            .unwrap();
+    assert!(matches!(
+        ManagedAuthLease::acquire(&auth_dir, Some(&BorrowedCodexAuthSpec::new(source.clone()))),
+        Err(CpaLifecycleError::BorrowedCodexAuthAlreadyLeased)
+    ));
+
+    let second_auth = ensure_private_dir(&temp.path().join("second-cpa-auth")).unwrap();
+    assert!(matches!(
+        ManagedAuthLease::acquire(
+            &second_auth,
+            Some(&BorrowedCodexAuthSpec::new(source.clone()))
+        ),
+        Err(CpaLifecycleError::BorrowedCodexAuthAlreadyLeased)
+    ));
+    let inherited_source = first
+        .codex
+        .as_ref()
+        .unwrap()
+        ._source_lock
+        .try_clone()
+        .unwrap();
+    drop(first);
+    assert!(matches!(
+        ManagedAuthLease::acquire(
+            &second_auth,
+            Some(&BorrowedCodexAuthSpec::new(source.clone()))
+        ),
+        Err(CpaLifecycleError::BorrowedCodexAuthAlreadyLeased)
+    ));
+    drop(inherited_source);
+    ManagedAuthLease::acquire(&second_auth, Some(&BorrowedCodexAuthSpec::new(source))).unwrap();
+}
+
+#[test]
+fn access_only_file_cannot_enter_stock_unauthorized_refresh_replay() {
+    let (_temp, auth_dir, source) = setup();
+    let _lease =
+        ManagedAuthLease::acquire(&auth_dir, Some(&BorrowedCodexAuthSpec::new(source))).unwrap();
+    let flat = flat_value(&auth_dir);
+
+    // Mirrors CLIProxyAPI v7.2.140 authHasRefreshCredential: a local 401 is replayed only when
+    // one of these two metadata keys contains a non-empty string.
+    let stock_has_refresh_credential = ["refresh_token", "refreshToken"].iter().any(|key| {
+        flat.get(*key)
+            .and_then(Value::as_str)
+            .is_some_and(|value| !value.trim().is_empty())
+    });
+    assert!(!stock_has_refresh_credential);
+    assert_eq!(flat["request_retry"], 0);
+}
+
+#[cfg(unix)]
+#[test]
+fn symlink_hardlink_and_non_owner_only_sources_fail_closed() {
+    use std::os::unix::fs::{PermissionsExt as _, symlink};
+
+    let (temp, auth_dir, source) = setup();
+    let symlink_path = temp.path().join("symlink-auth.json");
+    symlink(&source, &symlink_path).unwrap();
+    assert!(matches!(
+        ManagedAuthLease::acquire(&auth_dir, Some(&BorrowedCodexAuthSpec::new(symlink_path))),
+        Err(CpaLifecycleError::InvalidBorrowedCodexAuth)
+    ));
+
+    let hardlink_path = temp.path().join("hardlink-auth.json");
+    fs::hard_link(&source, &hardlink_path).unwrap();
+    let other_auth = ensure_private_dir(&temp.path().join("hardlink-cpa-auth")).unwrap();
+    assert!(matches!(
+        ManagedAuthLease::acquire(
+            &other_auth,
+            Some(&BorrowedCodexAuthSpec::new(&hardlink_path))
+        ),
+        Err(CpaLifecycleError::InvalidBorrowedCodexAuth)
+    ));
+    fs::remove_file(hardlink_path).unwrap();
+
+    fs::set_permissions(&source, fs::Permissions::from_mode(0o640)).unwrap();
+    let third_auth = ensure_private_dir(&temp.path().join("mode-cpa-auth")).unwrap();
+    assert!(matches!(
+        ManagedAuthLease::acquire(&third_auth, Some(&BorrowedCodexAuthSpec::new(source))),
+        Err(CpaLifecycleError::InvalidBorrowedCodexAuth)
+    ));
+}

@@ -1,0 +1,19 @@
+{
+  "$id": "hiroute://contracts/cli/operation-lookup.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "after_sequence": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "operation_id": {
+      "pattern": "^op_[0-9a-f]{32}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "operation_id"
+  ],
+  "type": "object"
+}

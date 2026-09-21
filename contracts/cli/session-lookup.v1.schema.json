@@ -1,0 +1,23 @@
+{
+  "$id": "hiroute://contracts/cli/session-lookup.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "content": {
+      "enum": [
+        "none",
+        "messages",
+        "messages-and-tools"
+      ]
+    },
+    "id": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "title": "HiRoute session or receipt lookup v1",
+  "type": "object"
+}

@@ -1,0 +1,39 @@
+{
+  "schema": "hiroute.product-e2e.routing-plans/v1",
+  "scenario_id": "process-25004-routing-plans",
+  "process": "PROCESS-25004",
+  "proofs": [
+    "alias_tombstone",
+    "authority_catalog_grant_digest",
+    "closed_secret_free_publication",
+    "custom_explicit_order",
+    "deterministic_compiler_digest",
+    "exact_candidate_endpoint_adapter_credential_ref",
+    "exact_native_reasoning",
+    "free_first_two_policies",
+    "g0_direct_projection",
+    "grant_generation_and_verifier",
+    "installed-standalone-headless-management-loop",
+    "multi_connection_shared_plan_grant",
+    "prepared_activate_lkg",
+    "request_attempt_scope",
+    "smart_saving_two_branches"
+  ],
+  "scenario_states": [
+    {
+      "scenario_id": "compiler-contract",
+      "state": "green",
+      "evidence_owner": "PROCESS-25004"
+    },
+    {
+      "scenario_id": "publication-closure-repair",
+      "state": "green",
+      "evidence_owner": "PROCESS-25012"
+    },
+    {
+      "scenario_id": "production-cli-daemon-routing",
+      "state": "green",
+      "evidence_owner": "TASK-142003"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/p0-conversation-content.schema.json",
+  "title": "Versioned conversation content envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "channel", "producer", "event_id", "sequence", "idempotency_key", "request_id", "stream_id", "phase", "ordinal", "payload"],
+  "properties": {
+    "schema_version": {"const": "hiroute.observation.conversation-content-envelope/v1"},
+    "channel": {"const": "conversation_content"},
+    "producer": {"type": "object", "additionalProperties": false, "required": ["component", "revision", "instance_scope", "producer_id", "producer_epoch"], "properties": {"component": {"const": "gateway-content"}, "revision": {"type": "string", "minLength": 1}, "instance_scope": {"const": "workspace"}, "producer_id": {"type": "string", "pattern": "^content-producer-[0-9a-f]{64}$"}, "producer_epoch": {"type": "string", "pattern": "^content-epoch-[0-9a-f]{64}$"}}},
+    "event_id": {"type": "string", "pattern": "^content-event-[1-4]-[0-9a-f]{64}$"},
+    "sequence": {"type": "integer", "minimum": 1},
+    "idempotency_key": {"type": "string", "pattern": "^content-event-[1-4]-[0-9a-f]{64}$"},
+    "request_id": {"type": "string", "minLength": 1},
+    "stream_id": {"type": "string", "pattern": "^content-stream-[0-9a-f]{64}$"},
+    "phase": {"enum": ["begin", "append", "finish", "abort"]},
+    "ordinal": {"type": "integer", "minimum": 0},
+    "payload": {"type": "object", "additionalProperties": false, "required": ["direction", "acceptance", "attempt_ordinal", "frame_id", "content_ref", "abort_reason"], "properties": {"direction": {"enum": ["control", "request", "response"]}, "acceptance": {"enum": ["stream_opened", "canonical_request", "downstream_transport", "terminal"]}, "attempt_ordinal": {"anyOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]}, "frame_id": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]}, "content_ref": {"anyOf": [{"type": "object", "additionalProperties": false, "required": ["content_id", "digest", "byte_count"], "properties": {"content_id": {"type": "string", "minLength": 1}, "digest": {"anyOf": [{"type": "string", "minLength": 71, "maxLength": 71}, {"enum": ["${RUN_CHALLENGE_SHA256}", "${RUN_CHALLENGE_JSON_SHA256}"]}]}, "byte_count": {"type": "integer", "minimum": 0}}}, {"type": "null"}]}, "abort_reason": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]}}}
+  }
+}

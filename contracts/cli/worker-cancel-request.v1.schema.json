@@ -1,0 +1,30 @@
+{
+  "$id": "hiroute://contracts/cli/worker-cancel-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "idempotency_key": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_./:-]+$",
+      "type": "string"
+    },
+    "reason": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_./:-]+$",
+      "type": "string"
+    },
+    "run_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_./:-]+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "idempotency_key"
+  ],
+  "type": "object"
+}

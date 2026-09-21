@@ -1,0 +1,88 @@
+fn main() {
+    println!("cargo:rerun-if-env-changed=HIROUTE_CPA_MANIFEST");
+    let manifest = match std::env::var_os("HIROUTE_CPA_MANIFEST") {
+        Some(path) => std::path::PathBuf::from(path),
+        None if std::env::var("PROFILE").as_deref() == Ok("debug") => {
+            std::path::PathBuf::from("development-cpa-artifacts.v1.json")
+        }
+        None => panic!("release Desktop requires HIROUTE_CPA_MANIFEST from package-desktop.py"),
+    };
+    println!("cargo:rerun-if-changed={}", manifest.display());
+    let output = std::path::PathBuf::from(std::env::var_os("OUT_DIR").unwrap());
+    std::fs::copy(&manifest, output.join("cpa-artifacts.json"))
+        .expect("read selected Desktop CPA manifest");
+    #[cfg(feature = "desktop-runtime")]
+    tauri_build::try_build(tauri_build::Attributes::new().app_manifest(
+        tauri_build::AppManifest::new().commands(&[
+            "desktop_snapshot",
+            "observation_read",
+            "observation_delete",
+            "test_classifier_decision",
+            "save_classifier_header_secret",
+            "save_classifier_openapi",
+            "preview_rename",
+            "preview_plan_editor",
+            "plan_editor_options",
+            "preview_restore_name",
+            "preview_price_change",
+            "model_reference_query",
+            "effective_price_query",
+            "compute_management_snapshot",
+            "compute_scan",
+            "prepare_discovered_model_connection",
+            "compute_connection_options",
+            "register_protected_model_input",
+            "release_protected_model_input",
+            "check_model_connection",
+            "check_registered_model_connection",
+            "check_saved_model_connection",
+            "cancel_model_connection_check",
+            "preview_compute_save",
+            "apply_compute_save",
+            "get_compute_save_result",
+            "compute_subscriptions",
+            "check_subscription",
+            "get_subscription_check_result",
+            "recover_subscription_check",
+            "close_subscription_check",
+            "release_subscription_check",
+            "web_confirmation_snapshot",
+            "resolve_web_confirmation",
+            "agent_snapshot",
+            "preview_agent_settings",
+            "check_agent_authentication",
+            "worker_settings_get",
+            "worker_settings_set",
+            "worker_task_plans",
+            "worker_executor_availability",
+            "worker_dependencies_discover",
+            "worker_dependencies_select_prepare",
+            "worker_dependencies_select_confirm",
+            "worker_dependencies_select_cancel",
+            "worker_task_list",
+            "worker_task_status",
+            "worker_task_result",
+            "worker_task_read",
+            "worker_task_wait",
+            "worker_task_cancel",
+            "worker_task_continue",
+            "observe_operation",
+            "stop_observing",
+            "quit_desktop",
+            "diagnostic_status",
+            "startup_status",
+            "open_startup_recovery_directory",
+            "set_diagnostic_level",
+            "open_diagnostic_directory",
+            "open_external_url",
+            "perform_titlebar_double_click",
+            "cli_entry_status",
+            "cli_entry_install",
+            "cli_entry_remove",
+            "gateway_listener_status",
+            "gateway_listener_apply",
+            "gateway_listener_recover",
+        ]),
+    ))
+    .expect("build restricted Desktop command manifest");
+}

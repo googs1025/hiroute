@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/p0-observation-terminal.schema.json",
+  "title": "Flushed observation terminal receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_nonce", "producer", "flush_state", "channels"],
+  "properties": {
+    "schema_version": {"const": "hiroute.e2e.observation-terminal/v1"},
+    "run_nonce": {"type": "string", "minLength": 32},
+    "flush_state": {"const": "channels_synced"},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["component", "instance_id", "process_id"],
+      "properties": {
+        "component": {"const": "hirouted"},
+        "instance_id": {"type": "string", "minLength": 32},
+        "process_id": {"type": "integer", "minimum": 1}
+      }
+    },
+    "channels": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["channel", "file_size", "file_sha256", "terminals"],
+        "properties": {
+          "channel": {"enum": ["canonical_ledger", "execution_fact", "conversation_content", "otel"]},
+          "file_size": {"type": "integer", "minimum": 0},
+          "file_sha256": {"type": "string", "minLength": 71, "maxLength": 71},
+          "terminals": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["request_id", "stream_id", "state", "ack", "nack", "gap"],
+              "properties": {
+                "request_id": {"type": "string", "minLength": 1},
+                "stream_id": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+                "state": {"enum": ["acked", "nacked", "gap", "aborted"]},
+                "ack": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["continuous_sequence", "last_ordinal", "root_digest", "delta_parent"],
+                      "properties": {
+                        "continuous_sequence": {"type": "integer", "minimum": 0},
+                        "last_ordinal": {"type": "integer", "minimum": 0},
+                        "root_digest": {"type": "string", "minLength": 71, "maxLength": 71},
+                        "delta_parent": {"anyOf": [{"type": "string", "minLength": 71, "maxLength": 71}, {"type": "null"}]}
+                      }
+                    },
+                    {"type": "null"}
+                  ]
+                },
+                "nack": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["expected_sequence", "expected_ordinal", "retryable"],
+                      "properties": {
+                        "expected_sequence": {"type": "integer", "minimum": 1},
+                        "expected_ordinal": {"type": "integer", "minimum": 0},
+                        "retryable": {"type": "boolean"}
+                      }
+                    },
+                    {"type": "null"}
+                  ]
+                },
+                "gap": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["expected_root", "observed_parent"],
+                      "properties": {
+                        "expected_root": {"type": "string", "minLength": 71, "maxLength": 71},
+                        "observed_parent": {"type": "string", "minLength": 71, "maxLength": 71}
+                      }
+                    },
+                    {"type": "null"}
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

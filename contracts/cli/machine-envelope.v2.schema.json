@@ -1,0 +1,185 @@
+{
+  "$defs": {
+    "error": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "enum": [
+            "usage",
+            "conflict",
+            "authorization",
+            "not_found",
+            "unavailable",
+            "action_required",
+            "recovery",
+            "internal"
+          ]
+        },
+        "code": {
+          "pattern": "^[A-Z][A-Z0-9_]+$",
+          "type": "string"
+        },
+        "details_schema": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "message_key": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "operation_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "category",
+        "message_key",
+        "retryable",
+        "details_schema"
+      ],
+      "type": "object"
+    },
+    "next_action": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "input": {
+          "type": "object"
+        },
+        "reason_code": {
+          "pattern": "^[A-Z][A-Z0-9_]+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command_id",
+        "input",
+        "reason_code"
+      ],
+      "type": "object"
+    },
+    "operation": {
+      "additionalProperties": false,
+      "properties": {
+        "cancellable": {
+          "type": "boolean"
+        },
+        "operation_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sequence": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "state": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation_id",
+        "state",
+        "sequence",
+        "cancellable"
+      ],
+      "type": "object"
+    },
+    "schema_version": {
+      "additionalProperties": false,
+      "properties": {
+        "major": {
+          "const": 2
+        },
+        "minor": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "major",
+        "minor"
+      ],
+      "type": "object"
+    },
+    "warning": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "details_schema": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "details_schema"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "hiroute://contracts/cli/machine-envelope.v2.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "data": true,
+    "error": {
+      "$ref": "#/$defs/error"
+    },
+    "next_actions": {
+      "items": {
+        "$ref": "#/$defs/next_action"
+      },
+      "type": "array"
+    },
+    "operation": {
+      "$ref": "#/$defs/operation"
+    },
+    "request_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "$ref": "#/$defs/schema_version"
+    },
+    "status": {
+      "enum": [
+        "succeeded",
+        "accepted",
+        "usage_error",
+        "conflict",
+        "denied",
+        "not_found",
+        "unavailable",
+        "action_required",
+        "needs_attention",
+        "internal_error"
+      ]
+    },
+    "warnings": {
+      "items": {
+        "$ref": "#/$defs/warning"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "status",
+    "warnings",
+    "next_actions"
+  ],
+  "title": "HiRoute machine envelope v2",
+  "type": "object"
+}

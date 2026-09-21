@@ -1,0 +1,24 @@
+[package]
+name = "hiroute-integrations"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+getrandom.workspace = true
+hiroute-domain = { path = "../domain" }
+hiroute-application = { path = "../application" }
+hiroute-application-api = { path = "../application-api" }
+hiroute-gateway = { path = "../gateway" }
+http.workspace = true
+reqwest = { version = "=0.13.4", features = ["blocking"] }
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+toml_edit = "=0.25.13"
+zeroize.workspace = true
+tempfile.workspace = true
+
+[target.'cfg(unix)'.dependencies]
+nix = { workspace = true, features = ["process", "signal"] }

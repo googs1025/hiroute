@@ -1,0 +1,22 @@
+{
+  "name": "hiroute-website",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare:content": "node scripts/prepare-content.mjs",
+    "dev": "npm run prepare:content && astro dev",
+    "build": "npm run prepare:content && astro build && node scripts/validate-build.mjs",
+    "preview": "astro preview",
+    "pretest": "npm run prepare:content",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.7.0",
+    "astro": "5.16.6",
+    "marked": "16.3.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

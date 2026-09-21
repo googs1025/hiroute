@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-observe-operation"
+description = "Enables the observe_operation command without any pre-configured scope."
+commands.allow = ["observe_operation"]
+
+[[permission]]
+identifier = "deny-observe-operation"
+description = "Denies the observe_operation command without any pre-configured scope."
+commands.deny = ["observe_operation"]

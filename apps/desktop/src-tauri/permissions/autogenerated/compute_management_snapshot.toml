@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-compute-management-snapshot"
+description = "Enables the compute_management_snapshot command without any pre-configured scope."
+commands.allow = ["compute_management_snapshot"]
+
+[[permission]]
+identifier = "deny-compute-management-snapshot"
+description = "Denies the compute_management_snapshot command without any pre-configured scope."
+commands.deny = ["compute_management_snapshot"]

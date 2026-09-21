@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-worker-task-continue"
+description = "Enables the worker_task_continue command without any pre-configured scope."
+commands.allow = ["worker_task_continue"]
+
+[[permission]]
+identifier = "deny-worker-task-continue"
+description = "Denies the worker_task_continue command without any pre-configured scope."
+commands.deny = ["worker_task_continue"]

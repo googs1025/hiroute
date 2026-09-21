@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-worker-task-read"
+description = "Enables the worker_task_read command without any pre-configured scope."
+commands.allow = ["worker_task_read"]
+
+[[permission]]
+identifier = "deny-worker-task-read"
+description = "Denies the worker_task_read command without any pre-configured scope."
+commands.deny = ["worker_task_read"]

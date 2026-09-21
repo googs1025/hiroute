@@ -1,0 +1,22 @@
+---
+const { language = 'zh', active } = Astro.props;
+const en = language === 'en';
+const prefix = en ? '/en' : '';
+---
+<aside class="docs-nav" aria-label={en ? 'HiRoute documentation' : 'HiRoute 文档'}>
+  <span>{en ? 'GET STARTED' : '开始使用'}</span>
+  <a class:list={{active:active === 'quickstart'}} href={`${prefix}/docs/`}>Quickstart</a>
+  <a class:list={{active:active === 'install-macos'}} href={`${prefix}/docs/install-macos/`}>{en ? 'Install on macOS' : 'macOS 安装与首次启动'}</a>
+  <a class:list={{active:active === 'install-linux'}} href={`${prefix}/docs/install-linux/`}>{en ? 'Linux headless' : 'Linux headless 安装'}</a>
+
+  <span>{en ? 'USE HIROUTE' : '使用 HIROUTE'}</span>
+  <a class:list={{active:active === 'model-routing'}} href={`${prefix}/docs/model-routing/`}>{en ? 'Smart model routing' : '智能模型路由'}</a>
+  <a class:list={{active:active === 'task-routing'}} href={`${prefix}/docs/task-routing/`}>{en ? 'Smart task routing' : '智能任务路由'}</a>
+  <a class:list={{active:active === 'cli'}} href={`${prefix}/docs/cli/`}>HiRoute CLI</a>
+
+  <span>{en ? 'DECISION EXTENSIONS' : '决策扩展'}</span>
+  <a class:list={{active:active === 'mechanism'}} href={`${prefix}/docs/decision-extensions/`}>{en ? 'Mechanism and usage' : '机制与使用'}</a>
+  <a class:list={{active:active === 'api'}} href={`${prefix}/docs/decision-api/`}>{en ? 'Decision API' : '决策 API'}</a>
+  <a class:list={{active:active === 'jev'}} href={`${prefix}/docs/jev-decider/`}>{en ? 'Official Jev decider' : '官方 Jev 决策器'}</a>
+  <a href="/api/decision.openapi.json" download>{en ? 'Download OpenAPI' : '下载 OpenAPI'}</a>
+</aside>

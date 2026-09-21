@@ -1,0 +1,82 @@
+{
+  "$id": "hiroute://e2e/product/schema/product-result.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "additionalProperties": false,
+      "properties": {
+        "descriptor_digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "scenario_id": {
+          "type": "string"
+        },
+        "schema_version": {
+          "type": "object"
+        },
+        "scope": {
+          "enum": [
+            "product_evaluation",
+            "oracle_self_test_only"
+          ]
+        },
+        "verified_assertions": {
+          "items": {
+            "enum": [
+              "formal_daemon_started",
+              "real_cli_used",
+              "local_control_boundary_used",
+              "descriptor_digest_exact",
+              "version_mismatch_fails_closed",
+              "preview_has_zero_side_effects",
+              "apply_rejection_has_zero_side_effects",
+              "reserved_operation_fails_closed",
+              "native_payload_exact",
+              "golden_exact"
+            ]
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "scope",
+        "scenario_id",
+        "descriptor_digest",
+        "verified_assertions"
+      ],
+      "type": "object"
+    },
+    {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "anchor": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "code": {
+            "pattern": "^[A-Z][A-Z0-9_]+$",
+            "type": "string"
+          },
+          "details": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "anchor",
+          "details"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  ],
+  "title": "HiRoute Product Oracle result v1"
+}

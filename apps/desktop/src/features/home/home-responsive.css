@@ -1,0 +1,212 @@
+@media (max-width: 1040px) {
+  .hr-daily-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hr-daily-stack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 832px) {
+  .hr-app-frame {
+    grid-template-columns: 1fr;
+  }
+
+  .hr-navigation {
+    position: relative;
+    z-index: 30;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--hr-border);
+    padding: 0.7em;
+  }
+
+  .hr-navigation__brand {
+    padding: 0.2em 0.35em 0.65em;
+  }
+
+  .hr-navigation nav {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .hr-navigation nav button {
+    justify-content: center;
+    padding: 0.55em 0.4em;
+    text-align: center;
+  }
+
+  .hr-navigation nav button span {
+    font-size: 0.68em;
+  }
+
+  .hr-navigation__foot {
+    display: none;
+  }
+
+  .hr-app-bar {
+    position: relative;
+  }
+
+  .hr-home-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hr-home-hero__status {
+    align-items: flex-start;
+  }
+
+  .hr-setup-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hr-setup-actions > :last-child {
+    grid-column: 1 / -1;
+  }
+
+  .hr-agent-row {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .hr-agent-facets {
+    grid-column: 1 / -1;
+    padding-left: 3em;
+  }
+}
+
+@media (max-width: 680px) {
+  .hr-navigation nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hr-setup-actions,
+  .hr-config-overview,
+  .hr-daily-stack {
+    grid-template-columns: 1fr;
+  }
+
+  .hr-config-card--agents {
+    grid-column: auto;
+  }
+
+  .hr-record-list > button {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .hr-record-tag {
+    grid-column: 2;
+    width: fit-content;
+  }
+
+  .hr-config-row__facts {
+    grid-column: 2 / -1;
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+@media (max-width: 1280px) {
+  .hr-ui:is([data-text-scale='1.5'], [data-text-scale='2']) .hr-app-frame {
+    grid-template-columns: 1fr;
+  }
+
+  .hr-ui:is([data-text-scale='1.5'], [data-text-scale='2']) .hr-navigation {
+    position: relative;
+    z-index: 30;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--hr-border);
+    padding: 0.7em;
+  }
+
+  .hr-ui:is([data-text-scale='1.5'], [data-text-scale='2']) .hr-navigation__brand {
+    padding: 0.2em 0.35em 0.65em;
+  }
+
+  .hr-ui[data-text-scale='1.5'] .hr-navigation nav {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .hr-ui[data-text-scale='2'] .hr-navigation nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hr-ui:is([data-text-scale='1.5'], [data-text-scale='2']) .hr-navigation nav button {
+    justify-content: center;
+    padding: 0.55em 0.4em;
+    text-align: center;
+  }
+
+  .hr-ui:is([data-text-scale='1.5'], [data-text-scale='2']) .hr-navigation nav button span {
+    font-size: 0.68em;
+  }
+
+  .hr-ui:is([data-text-scale='1.5'], [data-text-scale='2']) .hr-navigation__foot {
+    display: none;
+  }
+
+  .hr-ui:is([data-text-scale='1.5'], [data-text-scale='2']) .hr-app-bar {
+    position: relative;
+  }
+
+  .hr-ui[data-text-scale='1.5'] .hr-setup-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hr-ui[data-text-scale='1.5'] .hr-setup-actions > :last-child {
+    grid-column: 1 / -1;
+  }
+
+  .hr-ui[data-text-scale='2'] .hr-setup-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 440px) {
+  .hr-navigation nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hr-agent-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .hr-agent-row > .hr-icon-button {
+    grid-column: 2;
+    justify-self: end;
+  }
+
+  .hr-agent-facets {
+    padding-left: 0;
+  }
+
+  .hr-agent-facets > span {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 680px) {
+  .hr-ui:is([data-text-scale='1.5'], [data-text-scale='2']) .hr-navigation nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 440px) {
+  .hr-ui:is([data-text-scale='1.5'], [data-text-scale='2']) .hr-navigation nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 832px) {
+  .hr-navigation__brand { display: none; }
+  .hr-navigation nav { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .hr-navigation nav button { flex-direction: column; gap: .2em; }
+}
+.hr-daily-grid:not(:has(.hr-daily-stack article)) { grid-template-columns: minmax(0, 1fr); }
+.hr-business-page select, .agent-access select, .full-editor select { min-width: min(20em, 100%); max-width: 100%; }
+
+.hr-business-page select, .agent-access select, .full-editor select { min-height: 2.4em; padding: .35em .5em; }
+
+
+.hr-app-frame input[type="checkbox"], .hr-app-frame input[type="radio"] { width: auto; min-width: 0; flex: 0 0 auto; }

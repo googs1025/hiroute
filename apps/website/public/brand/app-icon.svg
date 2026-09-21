@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none" role="img" aria-labelledby="title">
+  <title id="title">HiRoute — Desktop app icon concept</title>
+  <defs>
+    <linearGradient id="brand" x1="20" y1="8" x2="108" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#697CFF"/>
+      <stop offset="1" stop-color="#7658D9"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#brand)"/>
+  <rect x="8.5" y="8.5" width="111" height="111" rx="27.5" stroke="white" stroke-opacity=".2"/>
+  <path transform="translate(12 14)" d="M20 16Q20 14 22 14H35Q37 14 37 16V50L67 32V16Q67 14 69 14H82Q84 14 84 16V84Q84 86 82 86H69Q67 86 67 84V52L37 70V84Q37 86 35 86H22Q20 86 20 84Z" fill="white"/>
+</svg>

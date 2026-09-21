@@ -1,0 +1,28 @@
+{
+  "$id": "hiroute://contracts/cli/local-control-hello.v2.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "api_version": {
+      "$ref": "local-control.v2.schema.json#/properties/schema_version"
+    },
+    "client_name": {
+      "maxLength": 128,
+      "minLength": 1,
+      "type": "string"
+    },
+    "client_version": {
+      "const": "0.1.0"
+    },
+    "machine_schema_version": {
+      "$ref": "local-control.v2.schema.json#/properties/schema_version"
+    }
+  },
+  "required": [
+    "api_version",
+    "machine_schema_version",
+    "client_name",
+    "client_version"
+  ],
+  "type": "object"
+}

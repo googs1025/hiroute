@@ -1,0 +1,694 @@
+{
+  "listener_transport": "loopback_h1",
+  "process": "PROCESS-22009",
+  "receipts": [
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "publication.incompatible_or_gap",
+        "publication.inflight_old_revision",
+        "publication.lkg_restart"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "authority.live_publication",
+      "source": "tools/e2e-harness/tests/p0_gateway_request_authority.rs",
+      "source_sha256": "sha256:8cfc3436d586c8bc274efd80d6f018455ce5d3ed31f9e0665c8573c62b8c9cb6",
+      "symbol": "production_hirouted_live_publication_control_pins_cutover_and_preserves_lkg_on_nack",
+      "test_target": "p0_gateway_request_authority"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "gateway.isolated_native_listener",
+        "authority.shared_entry_selects_alias_plan",
+        "authority.unknown_or_unauthorized_alias",
+        "authority.catalog_and_etag",
+        "authority.alias_budget",
+        "gateway.loopback_h1"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "authority.wire_listener",
+      "source": "tools/e2e-harness/tests/p0_gateway_request_authority.rs",
+      "source_sha256": "sha256:8cfc3436d586c8bc274efd80d6f018455ce5d3ed31f9e0665c8573c62b8c9cb6",
+      "symbol": "production_hirouted_wire_authority_catalog_deadline_and_actual_restart",
+      "test_target": "p0_gateway_request_authority"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "protocol.responses_to_responses",
+        "protocol.responses_to_chat_completions",
+        "protocol.responses_to_messages",
+        "protocol.chat_completions_to_responses",
+        "protocol.chat_completions_to_chat_completions",
+        "protocol.chat_completions_to_messages",
+        "protocol.messages_to_responses",
+        "protocol.messages_to_chat_completions",
+        "protocol.messages_to_messages",
+        "protocol.exact_native_request",
+        "protocol.exact_client_projection",
+        "protocol.fragmented_ingress",
+        "protocol.preconnect_rejection"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "protocol.nine_native_pairs",
+      "source": "tools/e2e-harness/tests/p0_gateway_protocol/production_matrix.rs",
+      "source_sha256": "sha256:a9ec681781bc52347e3df3a14f0916a557c43323ca1cca812e1e68ffe57b3f92",
+      "symbol": "production_matrix::protocol_real_hirouted_executes_every_native_protocol_pair_and_rejects_before_provider",
+      "test_target": "p0_gateway_protocol"
+    },
+    {
+      "assertion_binding": "runtime_assertion_marks",
+      "assertion_ids": [
+        "protocol.tool_round_trip",
+        "protocol.sse_fragmented_semantics",
+        "protocol.native_tool_identity",
+        "protocol.stream_usage_terminal",
+        "protocol.namespace_native_acceptance",
+        "protocol.namespace_upstream_rejection",
+        "protocol.continuation_owner_affinity",
+        "protocol.continuation_preconnect_refusal"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "protocol.tool_and_sse",
+      "source": "tools/e2e-harness/tests/p0_gateway_protocol/continuation.rs",
+      "source_sha256": "sha256:7e420079c22a789cdb2340fa4aef638728fe48b8550cf9a39d47cbd01050aebd",
+      "symbol": "continuation::production_tool_continuation_restores_native_id_and_fails_closed_outside_scope",
+      "test_target": "p0_gateway_protocol"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "planner.frozen_order_consumed",
+        "planner.reason_ledger_identity"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "planner.runtime_consumption",
+      "source": "tools/e2e-harness/tests/p0_gateway_runtime.rs",
+      "source_sha256": "sha256:bd377611bc6bc162f7eb207488a0c06271f0bb7a7a40f18a50894cc41c433ee2",
+      "symbol": "real_listener_consumes_planner_order_and_binds_reason_ledger_identity",
+      "test_target": "p0_gateway_runtime"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "runtime.binding_fault",
+        "runtime.frozen_budget",
+        "runtime.precommit_fallback"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "runtime.fallback",
+      "source": "tools/e2e-harness/tests/p0_gateway_runtime.rs",
+      "source_sha256": "sha256:bd377611bc6bc162f7eb207488a0c06271f0bb7a7a40f18a50894cc41c433ee2",
+      "symbol": "real_hirouted_reaches_native_provider_and_falls_back_before_commit",
+      "test_target": "p0_gateway_runtime"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "runtime.context_hold.simple_to_complex",
+        "runtime.context_hold.complex_to_simple",
+        "runtime.context_hold.rebuild",
+        "runtime.context_hold.responses_search_append"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "runtime.context_hold.classified",
+      "source": "tools/e2e-harness/tests/p0_gateway_context_hold.rs",
+      "source_sha256": "sha256:9a299142be261057edceba9ab16d0242705e86f0da0d83585999836e929c8511",
+      "symbol": "real_hirouted_holds_only_inside_each_classified_branch",
+      "test_target": "p0_gateway_context_hold"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "runtime.context_hold.success_only",
+        "runtime.context_hold.fallback_origin"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "runtime.context_hold.fallback",
+      "source": "tools/e2e-harness/tests/p0_gateway_context_hold.rs",
+      "source_sha256": "sha256:9a299142be261057edceba9ab16d0242705e86f0da0d83585999836e929c8511",
+      "symbol": "real_hirouted_holds_the_successful_fallback_and_releases_it_on_rebuild",
+      "test_target": "p0_gateway_context_hold"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "protocol.previous_response_id_preconnect_rejection"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "protocol.previous_response_id",
+      "source": "tools/e2e-harness/tests/p0_gateway_context_hold.rs",
+      "source_sha256": "sha256:9a299142be261057edceba9ab16d0242705e86f0da0d83585999836e929c8511",
+      "symbol": "real_hirouted_rejects_opaque_previous_response_id_before_provider_io",
+      "test_target": "p0_gateway_context_hold"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "runtime.multiple_keys",
+        "runtime.quota_key_handoff",
+        "runtime.binding_overload"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "runtime.key_handoff",
+      "source": "tools/e2e-harness/tests/p0_gateway_runtime.rs",
+      "source_sha256": "sha256:bd377611bc6bc162f7eb207488a0c06271f0bb7a7a40f18a50894cc41c433ee2",
+      "symbol": "real_listener_distinguishes_quota_key_scope_from_overload_binding_scope",
+      "test_target": "p0_gateway_runtime"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "runtime.cas_write_fault",
+        "runtime.fail_closed_503",
+        "runtime.zero_fallback_after_fault",
+        "runtime.zero_bad_state_persist"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "runtime.cas_write_fault",
+      "source": "tools/e2e-harness/tests/p0_gateway_runtime.rs",
+      "source_sha256": "sha256:bd377611bc6bc162f7eb207488a0c06271f0bb7a7a40f18a50894cc41c433ee2",
+      "symbol": "real_listener_runtime_state_cas_write_failure_is_fail_closed_and_one_shot",
+      "test_target": "p0_gateway_runtime"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "runtime.probe_write_fault",
+        "runtime.probe_zero_attempt",
+        "runtime.probe_one_shot_recovery"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "runtime.probe_write_fault",
+      "source": "tools/e2e-harness/tests/p0_gateway_runtime.rs",
+      "source_sha256": "sha256:bd377611bc6bc162f7eb207488a0c06271f0bb7a7a40f18a50894cc41c433ee2",
+      "symbol": "real_listener_probe_write_failure_creates_no_attempt_and_recovers_once",
+      "test_target": "p0_gateway_runtime"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "runtime.postcommit_no_retry",
+        "runtime.postcommit_provider_count"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "runtime.postcommit",
+      "source": "tools/e2e-harness/tests/p0_gateway_commit_boundary.rs",
+      "source_sha256": "sha256:89ec48e8dbaaa9f0af21de62978b7258ddf23031743785807209e4941818c6b3",
+      "symbol": "real_listener_postcommit_disconnect_never_creates_another_attempt",
+      "test_target": "p0_gateway_commit_boundary"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "replay.threshold",
+        "replay.two_attempts",
+        "replay.bounded_memory"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "replay.threshold",
+      "source": "tools/e2e-harness/tests/p0_gateway_replay.rs",
+      "source_sha256": "sha256:96ec0214d8119074e3f488375a6fca51883de648b69531e92a47e6fb247a0a2c",
+      "symbol": "real_hirouted_replays_threshold_below_and_above_for_two_fallbacks",
+      "test_target": "p0_gateway_replay"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "replay.owner_only_permission",
+        "replay.zero_provider_on_permission"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "replay.owner_only_permission",
+      "source": "tools/e2e-harness/tests/p0_gateway_replay.rs",
+      "source_sha256": "sha256:96ec0214d8119074e3f488375a6fca51883de648b69531e92a47e6fb247a0a2c",
+      "symbol": "real_hirouted_rejects_non_owner_only_replay_root",
+      "test_target": "p0_gateway_replay"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "replay.request_capacity_limit",
+        "replay.zero_provider_on_capacity"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "replay.request_capacity",
+      "source": "tools/e2e-harness/tests/p0_gateway_replay.rs",
+      "source_sha256": "sha256:96ec0214d8119074e3f488375a6fca51883de648b69531e92a47e6fb247a0a2c",
+      "symbol": "real_hirouted_rejects_request_body_plan_capacity_before_provider_call",
+      "test_target": "p0_gateway_replay"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "replay.owner_only_plaintext",
+        "replay.single_backing"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "replay.local_plaintext",
+      "source": "tools/e2e-harness/tests/p0_gateway_replay.rs",
+      "source_sha256": "sha256:96ec0214d8119074e3f488375a6fca51883de648b69531e92a47e6fb247a0a2c",
+      "symbol": "real_hirouted_uses_one_owner_only_plaintext_replay_backing",
+      "test_target": "p0_gateway_replay"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "replay.cancel_cleanup",
+        "replay.orphan_cleanup"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "replay.cancel_orphan",
+      "source": "tools/e2e-harness/tests/p0_gateway_replay.rs",
+      "source_sha256": "sha256:96ec0214d8119074e3f488375a6fca51883de648b69531e92a47e6fb247a0a2c",
+      "symbol": "real_hirouted_cleans_exhaustion_deadline_disconnect_and_restart_orphan",
+      "test_target": "p0_gateway_replay"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "replay.long_prompt",
+        "replay.long_sse",
+        "replay.rss_bound",
+        "replay.release"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "replay.long_sse",
+      "source": "tools/e2e-harness/tests/p0_gateway_replay.rs",
+      "source_sha256": "sha256:96ec0214d8119074e3f488375a6fca51883de648b69531e92a47e6fb247a0a2c",
+      "symbol": "real_hirouted_releases_large_namespace_replay_before_long_sse_completion",
+      "test_target": "p0_gateway_replay"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "observation.execution_sequence",
+        "observation.accepted_only_content",
+        "observation.content_commit_boundary",
+        "observation.otel_zero_body"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "observation.accepted_content",
+      "source": "tools/e2e-harness/tests/p0_gateway_observation.rs",
+      "source_sha256": "sha256:4e68c22745ae0f3b99fed99ded34e23bfb66e337a4d226d305bc18d822d7f34a",
+      "symbol": "real_hirouted_emits_request_route_attempt_commit_usage_and_accepted_only_content",
+      "test_target": "p0_gateway_observation"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "observation.slow_sink",
+        "observation.fact_gap",
+        "observation.content_gap"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "observation.slow_sink",
+      "source": "tools/e2e-harness/tests/p0_gateway_observation.rs",
+      "source_sha256": "sha256:4e68c22745ae0f3b99fed99ded34e23bfb66e337a4d226d305bc18d822d7f34a",
+      "symbol": "real_hirouted_isolates_slow_fail_and_panic_sinks_and_reports_each_gap",
+      "test_target": "p0_gateway_observation"
+    },
+    {
+      "assertion_binding": "declaration",
+      "assertion_ids": [
+        "privacy.otel_zero_content",
+        "privacy.rejected_auth_zero_content"
+      ],
+      "execution": "real_hirouted_native_provider",
+      "id": "privacy.secret_scan",
+      "source": "tools/e2e-harness/tests/p0_gateway_privacy.rs",
+      "source_sha256": "sha256:019b8f2b0c4866420108b2d41064aa335759d3798b87a50e0dbe91815e0c8dfa",
+      "symbol": "lifecycle_facts_and_default_otel_are_zero_content_and_rejected_auth_has_no_content",
+      "test_target": "p0_gateway_privacy"
+    }
+  ],
+  "registry_digest": "sha256:18d61f7bcfb384691785faeacd39161ce634afe87a435195d2bc878f049714ae",
+  "rows": [
+    {
+      "id": "publication.incompatible_or_gap",
+      "receipt_ids": [
+        "authority.live_publication"
+      ],
+      "scenario": "incompatible or gap publication is rejected before replacement",
+      "spec_id": "SPEC-20001"
+    },
+    {
+      "id": "publication.inflight_old_revision",
+      "receipt_ids": [
+        "authority.live_publication"
+      ],
+      "scenario": "in-flight request remains pinned to its old revision",
+      "spec_id": "SPEC-20001"
+    },
+    {
+      "id": "gateway.isolated_native_listener",
+      "receipt_ids": [
+        "authority.wire_listener"
+      ],
+      "scenario": "isolated hirouted completes a native request",
+      "spec_id": "SPEC-20001"
+    },
+    {
+      "id": "authority.shared_entry_selects_alias_plan",
+      "receipt_ids": [
+        "authority.wire_listener"
+      ],
+      "scenario": "shared entry selects the granted alias-owned plan",
+      "spec_id": "SPEC-20002"
+    },
+    {
+      "id": "authority.unknown_or_unauthorized_alias",
+      "receipt_ids": [
+        "authority.wire_listener"
+      ],
+      "scenario": "unknown and unauthorized aliases fail uniformly",
+      "spec_id": "SPEC-20002"
+    },
+    {
+      "id": "authority.catalog_and_etag",
+      "receipt_ids": [
+        "authority.wire_listener"
+      ],
+      "scenario": "catalog and ETag are grant-scoped",
+      "spec_id": "SPEC-20002"
+    },
+    {
+      "id": "authority.alias_budget_and_effort_override",
+      "receipt_ids": [
+        "authority.wire_listener"
+      ],
+      "scenario": "alias budget remains request-owned",
+      "spec_id": "SPEC-20002"
+    },
+    {
+      "id": "protocol.tool_id_and_continuation",
+      "receipt_ids": [
+        "protocol.tool_and_sse"
+      ],
+      "scenario": "tool identity and continuation are native-provider exact",
+      "spec_id": "SPEC-20003"
+    },
+    {
+      "id": "protocol.responses_to_responses",
+      "receipt_ids": [
+        "protocol.nine_native_pairs"
+      ],
+      "scenario": "Responses ingress to Responses provider is exact",
+      "spec_id": "SPEC-20003"
+    },
+    {
+      "id": "protocol.responses_to_chat_completions",
+      "receipt_ids": [
+        "protocol.nine_native_pairs"
+      ],
+      "scenario": "Responses ingress to Chat Completions provider is exact",
+      "spec_id": "SPEC-20003"
+    },
+    {
+      "id": "protocol.responses_to_messages",
+      "receipt_ids": [
+        "protocol.nine_native_pairs"
+      ],
+      "scenario": "Responses ingress to Messages provider is exact",
+      "spec_id": "SPEC-20003"
+    },
+    {
+      "id": "protocol.chat_completions_to_responses",
+      "receipt_ids": [
+        "protocol.nine_native_pairs"
+      ],
+      "scenario": "Chat Completions ingress to Responses provider is exact",
+      "spec_id": "SPEC-20003"
+    },
+    {
+      "id": "protocol.chat_completions_to_chat_completions",
+      "receipt_ids": [
+        "protocol.nine_native_pairs"
+      ],
+      "scenario": "Chat Completions ingress to Chat Completions provider is exact",
+      "spec_id": "SPEC-20003"
+    },
+    {
+      "id": "protocol.chat_completions_to_messages",
+      "receipt_ids": [
+        "protocol.nine_native_pairs"
+      ],
+      "scenario": "Chat Completions ingress to Messages provider is exact",
+      "spec_id": "SPEC-20003"
+    },
+    {
+      "id": "protocol.messages_to_responses",
+      "receipt_ids": [
+        "protocol.nine_native_pairs"
+      ],
+      "scenario": "Messages ingress to Responses provider is exact",
+      "spec_id": "SPEC-20003"
+    },
+    {
+      "id": "protocol.messages_to_chat_completions",
+      "receipt_ids": [
+        "protocol.nine_native_pairs"
+      ],
+      "scenario": "Messages ingress to Chat Completions provider is exact",
+      "spec_id": "SPEC-20003"
+    },
+    {
+      "id": "protocol.messages_to_messages",
+      "receipt_ids": [
+        "protocol.nine_native_pairs"
+      ],
+      "scenario": "Messages ingress to Messages provider is exact",
+      "spec_id": "SPEC-20003"
+    },
+    {
+      "id": "protocol.capability_fail_closed",
+      "receipt_ids": [
+        "protocol.nine_native_pairs"
+      ],
+      "scenario": "unsupported semantics reject before native connect",
+      "spec_id": "SPEC-20003"
+    },
+    {
+      "id": "protocol.sse_arbitrary_fragmentation",
+      "receipt_ids": [
+        "protocol.tool_and_sse"
+      ],
+      "scenario": "fragmented native SSE preserves semantic events",
+      "spec_id": "SPEC-20003"
+    },
+    {
+      "id": "planner.bilingual_complexity_and_keyword",
+      "receipt_ids": [
+        "planner.runtime_consumption"
+      ],
+      "scenario": "frozen planner choice is consumed by the real listener",
+      "spec_id": "SPEC-20004"
+    },
+    {
+      "id": "planner.free_first_no_classification",
+      "receipt_ids": [
+        "planner.runtime_consumption"
+      ],
+      "scenario": "materialized planner order is consumed unchanged",
+      "spec_id": "SPEC-20004"
+    },
+    {
+      "id": "planner.custom_order_and_determinism",
+      "receipt_ids": [
+        "planner.runtime_consumption"
+      ],
+      "scenario": "custom planner order reaches native provider unchanged",
+      "spec_id": "SPEC-20004"
+    },
+    {
+      "id": "planner.capability_n_and_n_plus_one",
+      "receipt_ids": [
+        "planner.runtime_consumption"
+      ],
+      "scenario": "eligible planner candidate is the only native attempt",
+      "spec_id": "SPEC-20004"
+    },
+    {
+      "id": "planner.context_hold_classified_continuation",
+      "receipt_ids": [
+        "runtime.context_hold.classified"
+      ],
+      "scenario": "same-turn continuation freezes its branch while a new turn selects independently",
+      "spec_id": "SPEC-20004"
+    },
+    {
+      "id": "runtime.binding_fault_and_total_budget",
+      "receipt_ids": [
+        "runtime.fallback"
+      ],
+      "scenario": "binding fault falls back inside frozen budget",
+      "spec_id": "SPEC-20005"
+    },
+    {
+      "id": "runtime.multiple_keys_quota_handoff",
+      "receipt_ids": [
+        "runtime.key_handoff"
+      ],
+      "scenario": "quota handoff remains scoped to the exact key",
+      "spec_id": "SPEC-20005"
+    },
+    {
+      "id": "runtime.cas_write_failure",
+      "receipt_ids": [
+        "runtime.cas_write_fault"
+      ],
+      "scenario": "CAS state write failure is fail-closed with no persisted error",
+      "spec_id": "SPEC-20005"
+    },
+    {
+      "id": "runtime.probe_write_failure",
+      "receipt_ids": [
+        "runtime.probe_write_fault"
+      ],
+      "scenario": "probe state write failure creates no native attempt",
+      "spec_id": "SPEC-20005"
+    },
+    {
+      "id": "runtime.postcommit_no_retry",
+      "receipt_ids": [
+        "runtime.postcommit"
+      ],
+      "scenario": "postcommit disconnect does not create another attempt",
+      "spec_id": "SPEC-20005"
+    },
+    {
+      "id": "runtime.context_hold_successful_fallback",
+      "receipt_ids": [
+        "runtime.context_hold.fallback"
+      ],
+      "scenario": "only the successful fallback is held until visible history rebuilds",
+      "spec_id": "SPEC-20005"
+    },
+    {
+      "id": "protocol.previous_response_id_preconnect_rejection",
+      "receipt_ids": [
+        "protocol.previous_response_id"
+      ],
+      "scenario": "opaque Responses continuation is rejected before provider I/O",
+      "spec_id": "SPEC-20003"
+    },
+    {
+      "id": "replay.storage_and_capacity",
+      "receipt_ids": [
+        "replay.owner_only_permission",
+        "replay.request_capacity",
+        "replay.local_plaintext"
+      ],
+      "scenario": "replay uses one owner-only plaintext backing and preserves request capacity gates",
+      "spec_id": "SPEC-20006"
+    },
+    {
+      "id": "replay.cancel_and_restart_orphan",
+      "receipt_ids": [
+        "replay.cancel_orphan"
+      ],
+      "scenario": "cancellation and restart remove replay backing",
+      "spec_id": "SPEC-20006"
+    },
+    {
+      "id": "replay.long_prompt_multiple_attempts",
+      "receipt_ids": [
+        "replay.threshold"
+      ],
+      "scenario": "large prompt bytes are replayed across attempts",
+      "spec_id": "SPEC-20006"
+    },
+    {
+      "id": "replay.long_sse_bounded",
+      "receipt_ids": [
+        "replay.long_sse"
+      ],
+      "scenario": "long SSE keeps replay bounded until cleanup",
+      "spec_id": "SPEC-20006"
+    },
+    {
+      "id": "observation.otel_default_zero_content",
+      "receipt_ids": [
+        "privacy.secret_scan",
+        "observation.accepted_content"
+      ],
+      "scenario": "default OTel has no request or response content",
+      "spec_id": "SPEC-20007"
+    },
+    {
+      "id": "observation.fact_sink_gap",
+      "receipt_ids": [
+        "observation.slow_sink"
+      ],
+      "scenario": "fact sink failure reports only its own gap",
+      "spec_id": "SPEC-20007"
+    },
+    {
+      "id": "observation.accepted_only_content",
+      "receipt_ids": [
+        "observation.accepted_content"
+      ],
+      "scenario": "content contains only transport-accepted response",
+      "spec_id": "SPEC-20007"
+    },
+    {
+      "id": "observation.content_sink_gap",
+      "receipt_ids": [
+        "observation.slow_sink"
+      ],
+      "scenario": "content sink failure reports only its own gap",
+      "spec_id": "SPEC-20007"
+    },
+    {
+      "id": "gateway.builtin_agent_emulator",
+      "receipt_ids": [
+        "protocol.nine_native_pairs"
+      ],
+      "scenario": "native provider emulator is reached through hirouted",
+      "spec_id": "SPEC-20008"
+    },
+    {
+      "id": "gateway.contract_green_only",
+      "receipt_ids": [
+        "authority.wire_listener"
+      ],
+      "scenario": "all registered rows require a real execution receipt",
+      "spec_id": "SPEC-20008"
+    },
+    {
+      "id": "gateway.four_automatic_checkpoints",
+      "receipt_ids": [
+        "observation.accepted_content"
+      ],
+      "scenario": "production listener evidence remains ordered",
+      "spec_id": "SPEC-20008"
+    },
+    {
+      "id": "gateway.resource_privacy_secret_scan",
+      "receipt_ids": [
+        "privacy.secret_scan"
+      ],
+      "scenario": "privacy and secret scan evidence is zero-leak",
+      "spec_id": "SPEC-20008"
+    },
+    {
+      "id": "gateway.loopback_h1",
+      "receipt_ids": [
+        "authority.wire_listener",
+        "protocol.nine_native_pairs"
+      ],
+      "scenario": "personal P0 listener is loopback HTTP/1",
+      "spec_id": "SPEC-20008"
+    },
+    {
+      "id": "gateway.slow_sink",
+      "receipt_ids": [
+        "observation.slow_sink"
+      ],
+      "scenario": "slow sink cannot backpressure a production response",
+      "spec_id": "SPEC-20008"
+    }
+  ],
+  "schema_version": "hiroute.e2e.p0-scenario-coverage/v2"
+}

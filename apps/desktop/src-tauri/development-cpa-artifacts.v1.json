@@ -1,0 +1,28 @@
+{
+  "schema": "hiroute.desktop.cpa-artifacts/v1",
+  "development_only": true,
+  "artifacts": [
+    {
+      "target": "aarch64-apple-darwin",
+      "os": "macos",
+      "arch": "aarch64",
+      "binary_name": "cliproxyapi",
+      "version": "7.2.140-hiroute.2",
+      "commit": "c76dfd4e0edabab9000628b1560ab8ab379eadb8",
+      "built_at": "2026-09-18T00:00:00Z",
+      "size": 84827682,
+      "sha256": "5a51825066357c7d8b0bda23e852ac0f9df57139d7ef39348d0d741c4f8d8cb1",
+      "file_description": "Mach-O 64-bit executable arm64",
+      "dynamic_dependencies": [
+        "/usr/lib/libSystem.B.dylib",
+        "/usr/lib/libresolv.9.dylib",
+        "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+        "/System/Library/Frameworks/Security.framework/Versions/A/Security"
+      ],
+      "signature": {
+        "kind": "adhoc",
+        "team_identifier": null
+      }
+    }
+  ]
+}

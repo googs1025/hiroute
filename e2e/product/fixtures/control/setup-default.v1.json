@@ -1,0 +1,9 @@
+{
+  "schema": "hiroute.setup-request/v1",
+  "agent_ids": [],
+  "routing_mode": "smart_saving",
+  "free_pool_mode": "automatic_all_available",
+  "fallback_policy": "primary_fallback",
+  "native_subagent_routing": "automatic",
+  "codex_catalog": "automatic"
+}

@@ -1,0 +1,5 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": { "noEmit": true },
+  "include": ["../../../src/env.d.ts", "./*.ts", "./*.tsx", "../../mvp16/browser/fixtures.ts"]
+}

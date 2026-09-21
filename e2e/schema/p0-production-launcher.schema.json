@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/p0-production-launcher.schema.json",
+  "title": "HiRoute production hirouted launcher evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "mode", "executable_path", "executable_sha256", "sut_source_revision", "build_attestation", "child_pid", "listen_address", "arguments", "environment", "publication_digest", "credential_manifest_digest", "credential_lease_digest"],
+  "properties": {
+    "schema_version": {"const": "hiroute.e2e.production-launcher/v1"},
+    "mode": {"const": "production_publication_credentials"},
+    "executable_path": {"type": "string", "minLength": 1},
+    "executable_sha256": {"type": "string", "minLength": 71, "maxLength": 71},
+    "sut_source_revision": {"const": "8af977300795c467894371055f7fbfc9716252fa"},
+    "build_attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "source_revision", "sealed_source_tree", "build_input_digest", "source_checkout", "cargo_package", "cargo_binary", "cargo_profile", "enabled_features", "target_triple", "cargo_version", "rustc_version", "rustc_wrapper", "rustc_wrapper_version", "toolchain_digest", "build_nonce", "build_command", "executable_path", "executable_sha256"],
+      "properties": {
+        "schema_version": {"const": "hiroute.e2e.sut-build-attestation/v1"},
+        "source_revision": {"const": "8af977300795c467894371055f7fbfc9716252fa"},
+        "sealed_source_tree": {"const": "5ed527f53fa4e8ba9395b5a89b155a1b67228e6e"},
+        "build_input_digest": {"const": "sha256:203d9b4b4024b458673c8a1f5573e202476d6b69f03902ed160c0737b4f689b4"},
+        "source_checkout": {"type": "string", "minLength": 1},
+        "cargo_package": {"const": "hiroute-gateway"},
+        "cargo_binary": {"const": "hirouted"},
+        "cargo_profile": {"const": "dev"},
+        "enabled_features": {"const": ["all"]},
+        "target_triple": {"type": "string", "minLength": 1},
+        "cargo_version": {"type": "string", "minLength": 1},
+        "rustc_version": {"type": "string", "minLength": 1},
+        "rustc_wrapper": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "rustc_wrapper_version": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "toolchain_digest": {"type": "string", "minLength": 71, "maxLength": 71},
+        "build_nonce": {"type": "string", "minLength": 64, "maxLength": 64},
+        "build_command": {
+          "type": "array",
+          "minItems": 14,
+          "maxItems": 14,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "executable_path": {"type": "string", "minLength": 1},
+        "executable_sha256": {"type": "string", "minLength": 71, "maxLength": 71}
+      }
+    },
+    "child_pid": {"type": "integer", "minimum": 1},
+    "listen_address": {"type": "string", "minLength": 10},
+    "arguments": {"type": "array", "minItems": 10, "maxItems": 10, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "environment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["HIROUTE_E2E_OBSERVATION_CAPTURE", "HIROUTE_OBSERVATION_DIRECTORY", "HIROUTE_OBSERVATION_QUEUE_BYTES", "HIROUTE_OBSERVATION_LIFECYCLE_SINK", "HIROUTE_OBSERVATION_EXECUTION_SINK", "HIROUTE_OBSERVATION_CONTENT_SINK", "HIROUTE_OBSERVATION_OTEL_SINK"],
+      "properties": {
+        "HIROUTE_E2E_OBSERVATION_CAPTURE": {"const": "1"},
+        "HIROUTE_OBSERVATION_DIRECTORY": {"type": "string", "minLength": 1},
+        "HIROUTE_OBSERVATION_QUEUE_BYTES": {"const": "4194304"},
+        "HIROUTE_OBSERVATION_LIFECYCLE_SINK": {"const": "healthy"},
+        "HIROUTE_OBSERVATION_EXECUTION_SINK": {"const": "healthy"},
+        "HIROUTE_OBSERVATION_CONTENT_SINK": {"const": "healthy"},
+        "HIROUTE_OBSERVATION_OTEL_SINK": {"const": "healthy"}
+      }
+    },
+    "publication_digest": {"type": "string", "minLength": 71, "maxLength": 71},
+    "credential_manifest_digest": {"type": "string", "minLength": 71, "maxLength": 71},
+    "credential_lease_digest": {"type": "string", "minLength": 71, "maxLength": 71}
+  }
+}

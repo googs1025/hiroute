@@ -1,0 +1,174 @@
+{
+  "schema": "hiroute.product-e2e.model-connections/v1",
+  "scenario_id": "task-57003-model-connections",
+  "task": "TASK-57003",
+  "fixture_class": "controlled_http_typed_contract_and_native_macos_ui",
+  "proofs": [
+    "api_root_and_native_base_paths_are_distinct",
+    "bearer_named_header_and_none_are_distinct",
+    "candidate_revision_is_backend_owned",
+    "producer_registers_through_injected_compute_candidate_port",
+    "directory_check_is_bounded_and_cancellable",
+    "producer_surfaces_test_port_rejection_for_late_check",
+    "manual_models_keep_user_declared_capability_basis",
+    "missing_credential_can_only_enter_disabled_save",
+    "native_none_auth_bypasses_credential_resolution_and_records_attempt",
+    "native_request_records_exact_model_in_session",
+    "native_saved_source_compiles_into_gateway_publication",
+    "redirect_does_not_receive_credentials",
+    "response_body_and_protected_input_are_absent_from_public_views",
+    "trusted_candidate_revision_resolves_through_production_registry",
+    "production_desktop_entry_uses_mvp16_shell_and_navigation",
+    "native_macos_desktop_check_preview_confirm_save_journey",
+    "native_save_operation_identity_survives_graceful_restart",
+    "mvp16_home_first_and_returning_states_use_only_backend_facts"
+  ],
+  "check_bounds": {
+    "total_seconds": 15,
+    "response_bytes": 2097152,
+    "pages": 3,
+    "models": 1000,
+    "automatic_inference": false,
+    "automatic_save": false,
+    "automatic_key_rotation": false
+  },
+  "central_candidate_registry_regressions": {
+    "state": "green",
+    "owner": "mvp-11-central-registry-and-save",
+    "cases": [
+      "older_candidate_revision_is_rejected_without_replacing_current_trusted_facts",
+      "same_candidate_revision_with_changed_facts_is_rejected",
+      "late_native_check_cannot_replace_a_newer_registered_candidate",
+      "exact_public_candidate_revision_resolves_to_the_corresponding_trusted_facts",
+      "native_pending_input_allows_save_disabled_but_rejects_save_ready",
+      "complete_facts_without_a_checked_selectable_model_reject_save_ready",
+      "complete_candidate_facts_do_not_claim_runtime_authorization"
+    ],
+    "note": "The production registry, save transaction, source-local compiler, and exact revision resolution are composed on codex/native-desktop-vertical; producer-local fakes remain test-target-only"
+  },
+  "shared_composition": {
+    "state": "green",
+    "owner": "native-desktop-vertical",
+    "missing": [],
+    "reason": "The exact frontend candidate completed the native macOS Tauri form, bounded check, preview, system confirmation, succeeded save, My Models/Home projection, and same-root graceful restart against the real Client Core and daemon path",
+    "code_candidate": "0dbcc82bc02e536e50ed7cd71431c42cf055a05c",
+    "source_candidate": "4049f383744e57ea38751cd4172f02ae33888492",
+    "evidence": [
+      {
+        "run_id": "20260908-040917-766a935b",
+        "sha": "2c9cbbf1381970c28b32ad619ec2c096e61515e6",
+        "process_exit": 0,
+        "scenario": "native-model-desktop-contract-to-gateway",
+        "runner_scenario_state": "not_assessed",
+        "emitted_scenario_state": "green",
+        "test_count": {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        }
+      },
+      {
+        "run_id": "20260908-032324-44be946d",
+        "sha": "27249cd58f909ee7e66d39188f85497a622f721a",
+        "process_exit": 0,
+        "test_count": {
+          "passed": 680,
+          "failed": 0,
+          "ignored": 7
+        }
+      },
+      {
+        "run_id": "20260908-033012-63688942",
+        "sha": "27249cd58f909ee7e66d39188f85497a622f721a",
+        "process_exit": 0,
+        "test_count": {
+          "passed": 260,
+          "failed": 0,
+          "ignored": 0
+        }
+      },
+      {
+        "run_id": "188ac5eca90f4b2da245eb52a3f4ee4b",
+        "sha": "2c9cbbf1381970c28b32ad619ec2c096e61515e6",
+        "platform": "macos",
+        "process_exit": 0,
+        "runner_verdict": "green",
+        "product_scenario_state": "not_assessed",
+        "scope": "native_hiroute_desktop_and_hirouted_build"
+      },
+      {
+        "run_id": "20260908-035756-c4cc29dd",
+        "sha": "2c9cbbf1381970c28b32ad619ec2c096e61515e6",
+        "platform": "linux",
+        "process_exit": 0,
+        "product_scenario_state": "not_assessed",
+        "scope": "hiroute_desktop_all_targets_check"
+      },
+      {
+        "run_id": "20260908-094323-68c17529",
+        "sha": "7c2fde4e81c1c7beb02a2e2a43b9fef7f5af0769",
+        "platform": "linux",
+        "process_exit": 0,
+        "product_scenario_state": "not_assessed",
+        "scope": "hiroute_desktop_all_targets_check",
+        "inputs_unchanged_through": "0dbcc82bc02e536e50ed7cd71431c42cf055a05c"
+      },
+      {
+        "run_id": "579c329da31d4c9382dbb93fd6b07708",
+        "sha": "7c2fde4e81c1c7beb02a2e2a43b9fef7f5af0769",
+        "platform": "macos",
+        "process_exit": 0,
+        "runner_verdict": "green",
+        "product_scenario_state": "not_assessed",
+        "scope": "native_hiroute_desktop_and_hirouted_build",
+        "inputs_unchanged_through": "0dbcc82bc02e536e50ed7cd71431c42cf055a05c",
+        "binary_sha256": {
+          "hiroute-desktop": "12bba0489525303b4087fddd14b4998a8a20a2c077d13a4004e666bdc2301092",
+          "hirouted": "dfae2822c599622b5ea40beb37701d53a3b9930370250128566d8e50f0545dce"
+        }
+      },
+      {
+        "run_id": "frontend-0dbcc82bc02e",
+        "sha": "0dbcc82bc02e536e50ed7cd71431c42cf055a05c",
+        "platform": "macos",
+        "process_exit": 0,
+        "scope": "desktop_frontend_build_and_contracts",
+        "test_count": {
+          "model_connections_passed": 6,
+          "mvp16_projections_passed": 5,
+          "session_correlation_passed": 2,
+          "failed": 0
+        },
+        "asset_sha256": {
+          "index-C66NVZaV.js": "c36c74cd492f21da6695f6adff4799836f2675eda51381d8d6c4bd287d698407",
+          "index-9psv_vXk.css": "76139a12848351c5fcd85bd7ad084b2c7698004985210e8081cd15ae93012bdb"
+        }
+      },
+      {
+        "run_id": "native-gui-0dbcc82bc02e",
+        "sha": "0dbcc82bc02e536e50ed7cd71431c42cf055a05c",
+        "native_binary_sha": "7c2fde4e81c1c7beb02a2e2a43b9fef7f5af0769",
+        "platform": "macos",
+        "process_exit": 0,
+        "scenario": "native-macos-desktop-model-save-and-restart",
+        "runner_scenario_state": "not_assessed",
+        "emitted_scenario_state": "green",
+        "operation_id": "op_af4b5f007a448b64b3a51fce532600c8",
+        "operation_state": "succeeded",
+        "idempotency_key_length": 64,
+        "saved_source": {
+          "display_name": "Desktop Native API",
+          "revision": 1,
+          "state": "ready",
+          "model_id": "manual-native-model",
+          "target_port": 51026
+        },
+        "restart": "same source and operation recovered without recovery_error"
+      }
+    ],
+    "external_provider_sample": {
+      "state": "not_run",
+      "reason": "No authorized external provider credential was available"
+    }
+  }
+}

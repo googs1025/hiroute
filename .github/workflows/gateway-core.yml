@@ -1,0 +1,105 @@
+name: backend-ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  workflow_call:
+permissions:
+  contents: read
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+jobs:
+  selection:
+    runs-on: ubuntu-latest
+    outputs:
+      rust: ${{ steps.plan.outputs.rust }}
+      frontend: ${{ steps.plan.outputs.frontend }}
+      native_required: ${{ steps.plan.outputs.native_required }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Validate selection rules
+        run: python3 scripts/test-test-plan.py
+      - id: plan
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          args=(--full)
+          if [[ -n "$BASE_SHA" ]]; then args=(--base "$BASE_SHA"); fi
+          python3 scripts/test-plan.py "${args[@]}" --github-output
+      - if: steps.plan.outputs.native_required == 'true'
+        run: echo 'Native Desktop changed. Hosted backend/frontend checks do not replace macOS platform validation.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Selected tooling checks when no backend job is needed
+        if: steps.plan.outputs.rust == 'false'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          args=(--full)
+          if [[ -n "$BASE_SHA" ]]; then args=(--base "$BASE_SHA"); fi
+          python3 scripts/test-plan.py "${args[@]}" --run-ci
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.plan.outputs.rust == 'false'
+        with:
+          name: tooling-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/ci
+          if-no-files-found: ignore
+  backend:
+    needs: selection
+    if: needs.selection.outputs.rust == 'true'
+    runs-on:
+      group: Default Larger Runners
+      labels: ubuntu-latest-8-cores
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: ./.github/actions/ci-setup
+      - name: CI adapter tests
+        run: python3 scripts/test-ci-run.py
+      - name: Rust size boundary
+        run: python3 scripts/ci-run.py --name structure -- bash scripts/check-rust-file-size.sh
+      - name: Selected Rust checks (full short set on main)
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          args=(--full)
+          if [[ -n "$BASE_SHA" ]]; then args=(--base "$BASE_SHA"); fi
+          python3 scripts/test-plan.py "${args[@]}" --run-ci
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backend-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/ci
+          if-no-files-found: warn
+  frontend:
+    needs: selection
+    if: needs.selection.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: apps/desktop/package-lock.json
+      - run: npm ci --ignore-scripts
+        working-directory: apps/desktop
+      - run: npm run build && npm test
+        working-directory: apps/desktop
+      - name: Current metadata generation
+        run: |
+          python3 tools/model-metadata/close_model_metadata.py --check
+          python3 tools/model-metadata/validate_catalog.py
+          python3 assets/model-data/current/generate.py
+          python3 assets/model-data/current/generate.py --check
+          python3 assets/release-facts/current/prepare-bundle.py
+          python3 assets/release-facts/current/prepare-bundle.py --check
+          git diff --exit-code

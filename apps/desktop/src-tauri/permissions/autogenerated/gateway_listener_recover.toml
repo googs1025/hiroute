@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-gateway-listener-recover"
+description = "Enables the gateway_listener_recover command without any pre-configured scope."
+commands.allow = ["gateway_listener_recover"]
+
+[[permission]]
+identifier = "deny-gateway-listener-recover"
+description = "Denies the gateway_listener_recover command without any pre-configured scope."
+commands.deny = ["gateway_listener_recover"]

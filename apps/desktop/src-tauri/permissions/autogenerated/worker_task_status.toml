@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-worker-task-status"
+description = "Enables the worker_task_status command without any pre-configured scope."
+commands.allow = ["worker_task_status"]
+
+[[permission]]
+identifier = "deny-worker-task-status"
+description = "Denies the worker_task_status command without any pre-configured scope."
+commands.deny = ["worker_task_status"]

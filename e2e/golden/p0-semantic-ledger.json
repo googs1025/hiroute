@@ -1,0 +1,16 @@
+{
+  "schema_version": "hiroute.e2e.semantic-ledger/v1",
+  "oracle_version": "p0-gateway-oracle-v1",
+  "events": [
+    {"request_id": "${REQUEST_ID}", "sequence": 1, "kind": "request_ir", "ingress_protocol": "responses", "upstream_protocol": "messages", "semantic_digest": "sha256:1d60962119c43fcb7b2477d0cffd70ca29564d852571347b784976bb79af9191"},
+    {"request_id": "${REQUEST_ID}", "sequence": 2, "kind": "tool_call", "call_id_digest": "sha256:6b3e58da2ba50ddc97bc0d40a2da16565bfc30f2b28ab6a792b3f23fe26a5df8", "arguments_digest": "${RUN_CHALLENGE_JSON_SHA256}"},
+    {"request_id": "${REQUEST_ID}", "sequence": 3, "kind": "completed", "finish_reason": "tool_call", "input_tokens": 19, "output_tokens": 11},
+    {"request_id": "${REQUEST_ID}", "sequence": 1, "kind": "request_ir", "ingress_protocol": "chat_completions", "upstream_protocol": "responses", "semantic_digest": "sha256:b6e4b709e19d94eb9cbc78204da989efb0ba8f9631974a7c0c1e29cf975f1d21"},
+    {"request_id": "${REQUEST_ID}", "sequence": 2, "kind": "text_delta", "text_digest": "${RUN_CHALLENGE_SHA256}"},
+    {"request_id": "${REQUEST_ID}", "sequence": 3, "kind": "completed", "finish_reason": "stop", "input_tokens": 23, "output_tokens": 4},
+    {"request_id": "${REQUEST_ID}", "sequence": 1, "kind": "request_ir", "ingress_protocol": "messages", "upstream_protocol": "chat_completions", "semantic_digest": "sha256:8a29de5074cfc559e349223d6521f8967e025718ce56fdc8b78f96e764e56784"},
+    {"request_id": "${REQUEST_ID}", "sequence": 2, "kind": "text_delta", "text_digest": "${RUN_CHALLENGE_SHA256}"},
+    {"request_id": "${REQUEST_ID}", "sequence": 3, "kind": "completed", "finish_reason": "end_turn", "input_tokens": 12, "output_tokens": 1},
+    {"request_id": "${REQUEST_ID}", "sequence": 1, "kind": "admission_rejected", "code": "AGENT_PLAN_NOT_AVAILABLE", "alias_visibility": "uniform", "provider_connect_count": 0}
+  ]
+}

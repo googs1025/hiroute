@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-worker-executor-availability"
+description = "Enables the worker_executor_availability command without any pre-configured scope."
+commands.allow = ["worker_executor_availability"]
+
+[[permission]]
+identifier = "deny-worker-executor-availability"
+description = "Denies the worker_executor_availability command without any pre-configured scope."
+commands.deny = ["worker_executor_availability"]

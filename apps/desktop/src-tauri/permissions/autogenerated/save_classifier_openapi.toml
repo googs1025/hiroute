@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-save-classifier-openapi"
+description = "Enables the save_classifier_openapi command without any pre-configured scope."
+commands.allow = ["save_classifier_openapi"]
+
+[[permission]]
+identifier = "deny-save-classifier-openapi"
+description = "Denies the save_classifier_openapi command without any pre-configured scope."
+commands.deny = ["save_classifier_openapi"]

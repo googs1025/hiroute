@@ -1,0 +1,62 @@
+{
+  "schema_version": "hiroute.e2e.production-manifest/v1",
+  "oracle_version": "p0-gateway-production-oracle-v1",
+  "contract_digest": "sha256:67999b197cffdfd40a1567044b3618636d98223ea503094aa9f367c646a35b42",
+  "artifacts": [
+    {
+      "path": "fixtures/p0-oracle/production-smoke.json",
+      "schema": "schema/p0-production-fixture.schema.json",
+      "sha256": "sha256:fea4295b1924829ab6b4804f03352d48f588f26dcdd5a774f54ff496d64c7324"
+    },
+    {
+      "path": "profiles/gateway-isolated.json",
+      "schema": "schema/p0-gateway-profile.schema.json",
+      "sha256": "sha256:0ebd3b506ae58c1b70accfc16b7a86d6ec28e97adaadc4e6e528ce429d55d8c3"
+    },
+    {
+      "path": "scenarios/p0-gateway.json",
+      "schema": "schema/p0-gateway-scenario.schema.json",
+      "sha256": "sha256:7316dc758511794de87fdb080a16c57dfdd6c77dc2fdba2e94d3c39485dfd513"
+    },
+    {
+      "path": "schema/p0-gateway-profile.schema.json",
+      "schema": null,
+      "sha256": "sha256:10edfc0a652b4fad580d5eb87f283b531e592cf23982ee2a59e1451e56a3297d"
+    },
+    {
+      "path": "schema/p0-gateway-result.schema.json",
+      "schema": null,
+      "sha256": "sha256:6f79da1bbf8a9eefa646e8aa865173044f4e3c66c1bc7c0175e608b76e4bb48e"
+    },
+    {
+      "path": "schema/p0-gateway-scenario.schema.json",
+      "schema": null,
+      "sha256": "sha256:9777fff340e6ae55bba845325d1df9d63823f621b471c71a022f6311f0d677b1"
+    },
+    {
+      "path": "schema/p0-production-collector.schema.json",
+      "schema": null,
+      "sha256": "sha256:15853fd863f435f83b18049c5fcc6db917c1670e512a5f3a5c9a85729c62630a"
+    },
+    {
+      "path": "schema/p0-production-fixture.schema.json",
+      "schema": null,
+      "sha256": "sha256:c7941d4cfcd2d6a63cbebe5d0a9624d950b936ee1cf9e4000be35549d13ed20b"
+    },
+    {
+      "path": "schema/p0-production-launcher.schema.json",
+      "schema": null,
+      "sha256": "sha256:7350889dbac337558793694f1f56ad839c9c7eee9cb419246edcef333050a692"
+    },
+    {
+      "path": "schema/p0-production-manifest.schema.json",
+      "schema": null,
+      "sha256": "sha256:44e36ae49e032c5abcc281849eef299ad7d1dd9dee2fabff5ad3e80f81636805"
+    },
+    {
+      "path": "schema/p0-production-readiness.schema.json",
+      "schema": null,
+      "sha256": "sha256:0b7e4a20b92f8a6928f3c73a0c76f308ca482756fdd5aebb72935b3e1d77c3b8"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Brand SVGs from [Lobe Icons](https://github.com/lobehub/lobe-icons), retrieved 2026-09-17. MIT license included. Brand names and marks belong to their respective owners. Packaged locally; no runtime image requests.

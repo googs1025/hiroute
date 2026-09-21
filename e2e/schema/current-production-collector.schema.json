@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/current-production-collector.schema.json",
+  "title": "HiRoute current production observation collection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "request_id", "lifecycle", "execution_fact", "conversation_content", "otel", "independent_streams", "no_gap_or_loss", "content_terminal_independent"],
+  "properties": {
+    "schema_version": {"const": "hiroute.e2e.production-collector/v1"},
+    "request_id": {"type": "string", "minLength": 1},
+    "lifecycle": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "file_sha256", "records_digest", "producer_id", "producer_epoch", "stream_id", "first_sequence", "last_sequence", "record_count", "terminal", "records"],
+      "properties": {
+        "name": {"const": "lifecycle"},
+        "file_sha256": {"type": "string", "minLength": 71, "maxLength": 71},
+        "records_digest": {"type": "string", "minLength": 71, "maxLength": 71},
+        "producer_id": {"type": "string", "minLength": 1},
+        "producer_epoch": {"type": "string", "minLength": 1},
+        "stream_id": {"type": "string", "minLength": 1},
+        "first_sequence": {"const": 1}, "last_sequence": {"const": 6},
+        "record_count": {"const": 6}, "terminal": {"const": "request_finished"},
+        "records": {
+          "type": "array", "minItems": 6, "maxItems": 6,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["schema_version", "schema_digest", "channel", "producer", "sequence", "event_id", "correlation", "occurred_at_unix_nanos", "fact", "loss_watermark", "completeness_delta"],
+            "properties": {
+              "schema_version": {"const": "hiroute.gateway.lifecycle-fact-envelope/v2"},
+              "schema_digest": {"const": "sha256:762143e3ab3121bf40cb7039a73ea0b47a5724c38837ba4152f75fc54e09e316"},
+              "channel": {"const": "lifecycle"}, "producer": {"type": "object"},
+              "sequence": {"type": "integer", "minimum": 1}, "event_id": {"type": "string", "minLength": 1},
+              "correlation": {"type": "object"}, "occurred_at_unix_nanos": {"type": "integer", "minimum": 0},
+              "fact": {
+                "type": "object", "additionalProperties": false, "required": ["kind"],
+                "properties": {
+                  "kind": {"enum": ["request_accepted", "canonical_request_accepted", "attempt_started", "attempt_finished", "response_frame_accepted", "request_finished"]},
+                  "ingress_protocol": {"type": "string"}, "canonicalization_version": {"type": "string"},
+                  "ordinal": {"type": "integer"}, "outcome": {"type": "string"},
+                  "frame_id": {"type": "string"}, "byte_count": {"type": "integer"},
+                  "downstream_delivery": {"type": "string"}
+                }
+              },
+              "loss_watermark": {"const": null},
+              "completeness_delta": {"anyOf": [{"type": "null"}, {"type": "string"}]}
+            }
+          }
+        }
+      }
+    },
+    "execution_fact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "file_sha256", "records_digest", "producer_id", "producer_epoch", "stream_id", "first_sequence", "last_sequence", "record_count", "terminal", "records"],
+      "properties": {
+        "name": {"const": "execution_fact"},
+        "file_sha256": {"type": "string", "minLength": 71, "maxLength": 71},
+        "records_digest": {"type": "string", "minLength": 71, "maxLength": 71},
+        "producer_id": {"type": "string", "minLength": 1}, "producer_epoch": {"type": "string", "minLength": 1},
+        "stream_id": {"type": "string", "minLength": 1}, "first_sequence": {"const": 1},
+        "last_sequence": {"const": 14}, "record_count": {"const": 14}, "terminal": {"const": "request_finished"},
+        "records": {
+          "type": "array", "minItems": 14, "maxItems": 14,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["schema_version", "schema_digest", "channel", "producer", "sequence", "event_id", "correlation", "attempt_id", "authority_id", "authority_epoch", "served_model_id", "selector_source", "agent_plan_id", "route", "gateway_publication_revision", "gateway_publication_digest", "grant_id", "grant_generation", "ingress_protocol", "occurred_at_unix_nanos", "fact", "loss_watermark", "completeness_delta"],
+            "properties": {
+              "schema_version": {"const": "hiroute.observation.execution-fact-envelope/v3"},
+              "schema_digest": {"const": "sha256:c2581fe4ad41e36d9f11db454ca09bfd721fbe7a7e9990f379ad7b0270bac733"},
+              "pricing": {"type": "object"},
+              "channel": {"const": "execution_fact"}, "producer": {"type": "object"},
+              "sequence": {"type": "integer", "minimum": 1}, "event_id": {"type": "string", "minLength": 1},
+              "correlation": {"type": "object"}, "attempt_id": {"anyOf": [{"type": "null"}, {"type": "string"}]},
+              "authority_id": {"type": "string"}, "authority_epoch": {"type": "integer"},
+              "served_model_id": {"type": "string"}, "selector_source": {"type": "string"},
+              "agent_plan_id": {"type": "string", "minLength": 1},
+              "route": {
+                "type": "object", "additionalProperties": false,
+                "required": ["kind", "revision", "semantic_digest"],
+                "properties": {
+                  "kind": {"const": "plan"},
+                  "revision": {"type": "integer", "minimum": 1},
+                  "semantic_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+                }
+              },
+              "plan_display_name": {"type": "string", "minLength": 1, "maxLength": 128},
+              "gateway_publication_revision": {"type": "string"},
+              "gateway_publication_digest": {"type": "string"}, "grant_id": {"type": "string"},
+              "grant_generation": {"type": "integer"}, "ingress_protocol": {"const": "responses"},
+              "occurred_at_unix_nanos": {"type": "integer", "minimum": 0}, "fact": {"type": "object", "minProperties": 2},
+              "loss_watermark": {"const": null}, "completeness_delta": {"anyOf": [{"type": "null"}, {"type": "string"}]}
+            }
+          }
+        }
+      }
+    },
+    "conversation_content": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "file_sha256", "records_digest", "producer_id", "producer_epoch", "stream_id", "first_sequence", "last_sequence", "record_count", "terminal", "records"],
+      "properties": {
+        "name": {"const": "conversation_content"},
+        "file_sha256": {"type": "string", "minLength": 71, "maxLength": 71},
+        "records_digest": {"type": "string", "minLength": 71, "maxLength": 71},
+        "producer_id": {"type": "string", "minLength": 1}, "producer_epoch": {"type": "string", "minLength": 1},
+        "stream_id": {"type": "string", "minLength": 1}, "first_sequence": {"const": 1},
+        "last_sequence": {"const": 8}, "record_count": {"const": 8},
+        "terminal": {"const": "request_input:finish,response_delivered:finish"},
+        "records": {
+          "type": "array", "minItems": 8, "maxItems": 8,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["schema_version", "schema_digest", "channel", "producer", "sequence", "event_id", "correlation", "direction", "phase", "attempt_id", "fork_id", "parent_transcript_root", "result_transcript_root", "message_instance_id", "message_role", "content_kind", "content_id", "content_blob_digest", "message_ordinal", "part_ordinal", "chunk_ordinal", "transport_frame_id", "canonical_media_type", "canonical_bytes_base64", "content_ref", "downstream_delivery", "abort_reason", "occurred_at_unix_nanos", "loss_watermark", "completeness_delta"],
+            "properties": {
+              "schema_version": {"const": "hiroute.observation.conversation-content-envelope/v2"},
+              "schema_digest": {"const": "sha256:6f17cd772a0fb322d25dd31dc95e34325cbabbd68912b32f5bb9bed526adfe44"},
+              "channel": {"const": "conversation_content"}, "producer": {"type": "object"},
+              "sequence": {"type": "integer", "minimum": 1}, "event_id": {"type": "string", "minLength": 1},
+              "correlation": {"type": "object"}, "direction": {"enum": ["request_input", "response_delivered"]},
+              "phase": {"enum": ["begin", "append", "finish", "abort"]},
+              "attempt_id": {"anyOf": [{"type": "null"}, {"type": "string"}]}, "fork_id": {"type": "string"},
+              "parent_transcript_root": {"anyOf": [{"type": "null"}, {"type": "string"}]},
+              "result_transcript_root": {"anyOf": [{"type": "null"}, {"type": "string"}]},
+              "message_instance_id": {"anyOf": [{"type": "null"}, {"type": "string"}]},
+              "message_role": {"anyOf": [{"type": "null"}, {"type": "string"}]},
+              "content_kind": {"anyOf": [{"type": "null"}, {"type": "string"}]},
+              "content_id": {"anyOf": [{"type": "null"}, {"type": "string"}]},
+              "content_blob_digest": {"anyOf": [{"type": "null"}, {"type": "string"}]},
+              "message_ordinal": {"anyOf": [{"type": "null"}, {"type": "integer"}]},
+              "part_ordinal": {"anyOf": [{"type": "null"}, {"type": "integer"}]},
+              "chunk_ordinal": {"anyOf": [{"type": "null"}, {"type": "integer"}]},
+              "transport_frame_id": {"anyOf": [{"type": "null"}, {"type": "string"}]},
+              "canonical_media_type": {"anyOf": [{"type": "null"}, {"type": "string"}]},
+              "canonical_bytes_base64": {"anyOf": [{"type": "null"}, {"type": "string"}]},
+              "content_ref": {"anyOf": [{"type": "null"}, {"type": "object"}]},
+              "downstream_delivery": {"anyOf": [{"type": "null"}, {"type": "string"}]},
+              "abort_reason": {"anyOf": [{"type": "null"}, {"type": "string"}]},
+              "occurred_at_unix_nanos": {"type": "integer", "minimum": 0}, "loss_watermark": {"const": null},
+              "completeness_delta": {"anyOf": [{"type": "null"}, {"type": "string"}]}
+            }
+          }
+        }
+      }
+    },
+    "otel": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "file_sha256", "records_digest", "producer_id", "producer_epoch", "stream_id", "first_sequence", "last_sequence", "record_count", "terminal", "records"],
+      "properties": {
+        "name": {"const": "otel"},
+        "file_sha256": {"type": "string", "minLength": 71, "maxLength": 71},
+        "records_digest": {"type": "string", "minLength": 71, "maxLength": 71},
+        "producer_id": {"type": "string", "minLength": 1}, "producer_epoch": {"type": "string", "minLength": 1},
+        "stream_id": {"type": "string", "minLength": 1}, "first_sequence": {"const": 1},
+        "last_sequence": {"const": 2}, "record_count": {"const": 2}, "terminal": {"const": "span"},
+        "records": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["schema_version", "schema_digest", "mapper_version", "semantic_conventions_version", "production_exporter", "producer", "sequence", "event_id", "correlation", "signal", "loss_watermark"],
+            "properties": {
+              "schema_version": {"const": "hiroute.otel.gen-ai-mapping/v1"},
+              "schema_digest": {"const": "sha256:d730badfd13c19d1c464c5a0c871a35a3e72a0f9c662d13d1997f066bf762e33"},
+              "mapper_version": {"const": "hiroute.otel-gen-ai-mapper/1"}, "semantic_conventions_version": {"const": "1.37.0"},
+              "production_exporter": {"const": "not_installed"}, "producer": {"type": "object"},
+              "sequence": {"type": "integer", "minimum": 1}, "event_id": {"type": "string", "minLength": 1},
+              "correlation": {"type": "object"}, "signal": {"type": "object", "minProperties": 5}, "loss_watermark": {"const": null}
+            }
+          }
+        }
+      }
+    },
+    "independent_streams": {"const": true}, "no_gap_or_loss": {"const": true},
+    "content_terminal_independent": {"const": true}
+  }
+}

@@ -1,0 +1,21 @@
+[package]
+name = "hiroute-release-facts"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+clap.workspace = true
+hiroute-domain = { path = "../../crates/domain" }
+hiroute-integrations = { path = "../../crates/integrations" }
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[[bin]]
+name = "hiroute-release-facts"
+path = "src/main.rs"

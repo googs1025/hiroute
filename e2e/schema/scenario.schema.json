@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/scenario.schema.json",
+  "title": "HiRoute black-box E2E scenario",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "name", "steps"],
+  "properties": {
+    "schema_version": { "const": 2 },
+    "name": { "type": "string", "minLength": 1 },
+    "case_shards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "steps"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "steps": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "protocol",
+          "request",
+          "attempts"
+        ],
+        "oneOf": [
+          {
+            "required": ["expected_source", "expected_class", "expected_affinity"],
+            "properties": {
+              "expected_http_status": { "const": 200 },
+              "attempts": { "minItems": 1 }
+            },
+            "not": { "required": ["expected_error_code"] }
+          },
+          {
+            "required": ["expected_http_status", "expected_error_code"],
+            "properties": {
+              "expected_http_status": { "const": 400 },
+              "attempts": { "maxItems": 0 }
+            },
+            "not": {
+              "anyOf": [
+                { "required": ["expected_source"] },
+                { "required": ["expected_class"] },
+                { "required": ["expected_affinity"] }
+              ]
+            }
+          }
+        ],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "protocol": { "enum": ["responses", "messages"] },
+          "request_headers": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "session-id": { "type": "string", "minLength": 1, "maxLength": 128 },
+              "thread-id": { "type": "string", "minLength": 1, "maxLength": 128 }
+            }
+          },
+          "request": { "type": "object" },
+          "attempts": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 2,
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["source", "response_head_status"],
+              "properties": {
+                "source": { "enum": ["claude-compatible", "codex-chatgpt"] },
+                "response_head_status": {
+                  "enum": [200, 429, 500, 502, 503, 504, 529]
+                }
+              }
+            }
+          },
+          "expected_http_status": { "enum": [200, 400] },
+          "expected_error_code": {
+            "type": "string",
+            "pattern": "^[A-Z0-9_]{1,96}$"
+          },
+          "expected_source": { "enum": ["claude-compatible", "codex-chatgpt"] },
+          "expected_class": { "enum": ["simple", "complex"] },
+          "expected_affinity": {
+            "enum": ["new_turn", "continuation_hit", "continuation_miss"]
+          }
+        }
+      }
+    }
+  }
+}

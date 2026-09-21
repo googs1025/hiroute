@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-check-agent-authentication"
+description = "Enables the check_agent_authentication command without any pre-configured scope."
+commands.allow = ["check_agent_authentication"]
+
+[[permission]]
+identifier = "deny-check-agent-authentication"
+description = "Denies the check_agent_authentication command without any pre-configured scope."
+commands.deny = ["check_agent_authentication"]

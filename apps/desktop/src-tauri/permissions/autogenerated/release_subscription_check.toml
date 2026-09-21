@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-release-subscription-check"
+description = "Enables the release_subscription_check command without any pre-configured scope."
+commands.allow = ["release_subscription_check"]
+
+[[permission]]
+identifier = "deny-release-subscription-check"
+description = "Denies the release_subscription_check command without any pre-configured scope."
+commands.deny = ["release_subscription_check"]

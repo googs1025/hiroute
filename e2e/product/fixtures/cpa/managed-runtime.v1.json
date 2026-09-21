@@ -1,0 +1,49 @@
+{
+  "schema": "hiroute.cpa-managed-runtime-fixture/v1",
+  "stock_contract_version": "7.2.140",
+  "launch_arguments": ["--config", "owner-only-config-path", "--local-model"],
+  "ordinary_environment_forwarded": false,
+  "transport_identity": "authenticated_loopback_only",
+  "logical_identity_source": "catalog_bound_connection_option_and_endpoint_profile",
+  "credential_materialization": "connector_owned_opaque_reference_only",
+  "native_api_key_route": "builtin_native_only",
+  "stock_binary_verification": "environment_gated",
+  "account_protocols": {
+    "codex": "responses",
+    "claude": "messages"
+  },
+  "config_keys": [
+    "api-keys",
+    "auth-dir",
+    "commercial-mode",
+    "debug",
+    "disable-claude-cloak-mode",
+    "disable-cooling",
+    "force-model-prefix",
+    "host",
+    "logging-to-file",
+    "max-retry-credentials",
+    "max-retry-interval",
+    "plugins",
+    "port",
+    "quota-exceeded",
+    "remote-management",
+    "request-log",
+    "request-retry",
+    "routing",
+    "save-cooldown-status",
+    "streaming",
+    "tls",
+    "transient-error-cooldown-seconds",
+    "usage-statistics-enabled",
+    "ws-auth"
+  ],
+  "forbidden_material_fields": [
+    "api_key",
+    "authorization",
+    "client_secret",
+    "cookie",
+    "oauth_access_material",
+    "oauth_refresh_material"
+  ]
+}

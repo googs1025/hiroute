@@ -1,0 +1,40 @@
+name: gateway-diagnostics
+on:
+  workflow_dispatch:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  gateway:
+    runs-on:
+      group: Default Larger Runners
+      labels: ubuntu-latest-8-cores
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/ci-setup
+      - name: Production listener
+        run: python3 scripts/ci-run.py --name listener -- cargo build --locked -p hiroute-gateway --bin hirouted --all-features
+      - name: Provider-neutral loopback
+        run: python3 scripts/ci-run.py --name neutral --require-tests -- cargo test --locked -p hiroute-gateway-core --no-default-features --test transport_loopback loopback_plain_http_smoke_reuses_h1_connection_and_joins_server -- --exact
+      - name: H1 H2 and custom-CA lifecycle
+        run: python3 scripts/ci-run.py --name lifecycle --require-tests -- cargo test --locked -p hiroute-gateway-core --all-features --test gateway_lifecycle
+      - name: Replay observation and privacy
+        run: python3 scripts/ci-run.py --name oracle --require-tests -- cargo test --locked -p hiroute-e2e --test p0_gateway_replay --test p0_gateway_observation --test p0_gateway_privacy
+      - name: P0 oracle contract
+        run: python3 scripts/ci-run.py --name p0-contract -- cargo run --locked -p hiroute-e2e -- validate --schema e2e/schema --scenario e2e/scenarios/p0-gateway.json
+      - name: Benchmark harness smoke (not fixed-machine performance evidence)
+        env:
+          HIROUTE_BENCH_ITERATIONS: '100'
+          HIROUTE_RESOURCE_BENCH_ITERATIONS: '10'
+        run: |
+          python3 scripts/ci-run.py --name benchmark -- cargo bench --locked -p hiroute-gateway-core --bench gateway_core_baseline --features pingora-transport
+          python3 scripts/ci-run.py --name resources -- cargo bench --locked -p hiroute-gateway-core --bench resource_paths
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gateway-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/ci
+          if-no-files-found: warn

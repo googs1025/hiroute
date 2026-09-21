@@ -1,0 +1,27 @@
+{
+  "$id": "hiroute://contracts/cli/worker-read-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cursor": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "type": "string"
+    },
+    "max_bytes": {
+      "maximum": 32768,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "run_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_./:-]+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id"
+  ],
+  "type": "object"
+}

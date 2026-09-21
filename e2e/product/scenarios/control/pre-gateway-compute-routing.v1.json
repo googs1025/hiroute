@@ -1,0 +1,24 @@
+{
+  "schema": "hiroute.pre-gateway-compute-routing-scenario/v1",
+  "process": "PROCESS-25026",
+  "scenario_id": "pre-gateway-compute-routing-production-boundary",
+  "command_lifecycle": "released",
+  "released_commands": [
+    "compute.scan",
+    "compute.connection.options",
+    "compute.connection.preview",
+    "compute.connection.apply",
+    "routing.preview",
+    "routing.apply"
+  ],
+  "compute_focused_state": "green",
+  "routing_preview_focused_state": "green",
+  "routing_apply_focused_state": "expected_red",
+  "routing_apply_error": "GATEWAY_UNAVAILABLE",
+  "production_subprocess_state": "green",
+  "production_catalog_source": "daemon_embedded_current",
+  "storage_catalog_tampering": "ignored",
+  "daemon_stop": "owned_finite_stop",
+  "test_process_expected_exit": 0,
+  "cli_process_expected_exit": 0
+}

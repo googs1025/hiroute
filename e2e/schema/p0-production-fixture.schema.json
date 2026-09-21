@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/p0-production-fixture.schema.json",
+  "title": "HiRoute single production listener smoke fixture",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "oracle_version", "case", "expected_client", "expected_observation"],
+  "properties": {
+    "schema_version": {"const": "hiroute.e2e.production-smoke/v1"},
+    "oracle_version": {"const": "p0-gateway-production-oracle-v1"},
+    "case": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "grant_access", "ingress", "providers"],
+      "properties": {
+        "id": {"const": "production_responses_smoke"},
+        "grant_access": {"const": "allowed"},
+        "ingress": {"type": "object", "additionalProperties": false, "required": ["protocol", "path", "authorization", "body"], "properties": {
+          "protocol": {"const": "responses"}, "path": {"const": "/v1/responses"}, "authorization": {"const": "valid"}, "body": {"type": "object", "minProperties": 3}
+        }},
+        "providers": {"type": "array", "minItems": 1, "maxItems": 1, "items": {
+          "type": "object", "additionalProperties": false, "required": ["id", "protocol", "expected_calls", "expected_request", "response"], "properties": {
+            "id": {"const": "oracle-native-provider"}, "protocol": {"const": "responses"}, "expected_calls": {"const": 1},
+            "expected_request": {"type": "object", "additionalProperties": false, "required": ["path", "body"], "properties": {"path": {"const": "/v1/responses"}, "body": {"type": "object", "minProperties": 3}}},
+            "response": {"type": "object", "additionalProperties": false, "required": ["status", "content_type", "body"], "properties": {"status": {"const": 200}, "content_type": {"const": "application/json"}, "body": {"type": "object", "minProperties": 2}}}
+          }
+        }}
+      }
+    },
+    "expected_client": {"type": "object", "additionalProperties": false, "required": ["body", "content_type", "status", "transport"], "properties": {"body": {"type": "object"}, "content_type": {"const": "application/json"}, "status": {"const": 200}, "transport": {"const": "http1"}}},
+    "expected_observation": {"type": "object", "additionalProperties": false, "required": ["lifecycle_terminal", "execution_terminal", "content_terminals", "required_execution_facts", "required_otel_signal", "freshness_binding"], "properties": {
+      "lifecycle_terminal": {"const": "request_finished"}, "execution_terminal": {"const": "request_finished"},
+      "content_terminals": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["direction", "phase"], "properties": {"direction": {"enum": ["request_input", "response_delivered"]}, "phase": {"const": "finish"}}}},
+      "required_execution_facts": {"type": "array", "minItems": 5, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+      "required_otel_signal": {"const": "span"},
+      "freshness_binding": {"const": "request_and_response_content"}
+    }}
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "hiroute-desktop-ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "dev": "vite",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "test:model-connections": "node --experimental-strip-types --test tests/model-connections-state.test.mjs",
+    "test:session-correlation": "node --experimental-strip-types --test tests/session-correlation.test.mjs",
+    "test:subscriptions": "node --experimental-strip-types --test tests/subscriptions-state.test.mjs"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "2.11.1",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "vite": "8.2.2",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3"
+  }
+}

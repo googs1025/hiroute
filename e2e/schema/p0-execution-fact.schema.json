@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/p0-execution-fact.schema.json",
+  "title": "Versioned execution fact envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "channel", "producer", "event_id", "stream_id", "sequence", "idempotency_key", "request_id", "context", "payload"],
+  "properties": {
+    "schema_version": {"const": "hiroute.observation.execution-fact-envelope/v1"},
+    "channel": {"const": "execution_fact"},
+    "producer": {"type": "object", "additionalProperties": false, "required": ["component", "revision", "instance_scope", "producer_id", "producer_epoch"], "properties": {"component": {"const": "gateway-execution"}, "revision": {"type": "string", "minLength": 1}, "instance_scope": {"const": "workspace"}, "producer_id": {"type": "string", "pattern": "^fact-producer-[0-9a-f]{64}$"}, "producer_epoch": {"type": "string", "pattern": "^fact-epoch-[0-9a-f]{64}$"}}},
+    "event_id": {"type": "string", "pattern": "^fact-event-[0-9a-f]{64}$"},
+    "stream_id": {"type": "string", "pattern": "^fact-stream-[0-9a-f]{64}$"},
+    "sequence": {"type": "integer", "minimum": 1},
+    "idempotency_key": {"type": "string", "pattern": "^fact-event-[0-9a-f]{64}$"},
+    "request_id": {"type": "string", "minLength": 1},
+    "context": {"type": "object", "additionalProperties": false, "required": ["workspace_id", "publication_epoch", "publication_revision", "agent_plan_revision"], "properties": {"workspace_id": {"const": "workspace:p0"}, "publication_epoch": {"type": "integer", "minimum": 1}, "publication_revision": {"type": "string", "minLength": 1}, "agent_plan_revision": {"type": "string", "minLength": 1}}},
+    "payload": {"type": "object", "additionalProperties": false, "required": ["outcome", "attempts", "accepted_provider_id", "commit_fence", "body_parse_calls", "credential_resolver_calls", "dns_resolution_calls", "provider_connect_calls"], "properties": {"outcome": {"enum": ["accepted", "admission_rejected"]}, "attempts": {"type": "array", "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["ordinal", "provider_id", "outcome"], "properties": {"ordinal": {"type": "integer", "minimum": 1}, "provider_id": {"type": "string", "minLength": 1}, "outcome": {"enum": ["accepted", "rejected"]}}}}, "accepted_provider_id": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]}, "commit_fence": {"enum": ["semantic_output", "response_body", "none"]}, "body_parse_calls": {"type": "integer", "minimum": 0}, "credential_resolver_calls": {"type": "integer", "minimum": 0}, "dns_resolution_calls": {"type": "integer", "minimum": 0}, "provider_connect_calls": {"type": "integer", "minimum": 0}}}
+  }
+}

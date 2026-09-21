@@ -1,0 +1,24 @@
+{
+  "schema_version": "hiroute.e2e.manifest/v1",
+  "oracle_version": "p0-gateway-oracle-v1",
+  "contract_digest": "sha256:93d2ebd56bcc333738550b173c09f2c0ee0dab57834b7e151beaee5a470872c3",
+  "artifacts": [
+    {"kind": "scenario", "path": "scenarios/p0-gateway.json", "schema": "schema/p0-gateway-scenario.schema.json", "sha256": "sha256:b57c3bf0633996c5185ab7121fe17356d63b48ac94a91914fdbbffb34d68a73b"},
+    {"kind": "corpus", "path": "corpus/p0-gateway-corpus.json", "schema": "schema/p0-gateway-corpus.schema.json", "sha256": "sha256:464358435c7db11a982f666031ed4b0e064521b7d2f4c4325e50681d049fa95c"},
+    {"kind": "golden", "path": "golden/p0-gateway-golden.json", "schema": "schema/p0-gateway-golden.schema.json", "sha256": "sha256:8c89c42a3482e8dfb27f3986a396d23c07860c205ee0ffcab9b65e93ee759356"},
+    {"kind": "semantic_ledger", "path": "golden/p0-semantic-ledger.json", "schema": "schema/p0-semantic-ledger.schema.json", "sha256": "sha256:1b82210070f00106cef5f529c3e5d24dff5c0cc3788a6b962ea0b9baa60ff5d3"},
+    {"kind": "profile", "path": "profiles/gateway-isolated.json", "schema": "schema/p0-gateway-profile.schema.json", "sha256": "sha256:03952331f62637dffe373ffbefe3fe020ba785f9f75266093312e1a245100147"},
+    {"kind": "scenario_schema", "path": "schema/p0-gateway-scenario.schema.json", "schema": null, "sha256": "sha256:d9b17a522b1e8e4f7cf241f64240625ab24e4bb61222b899cec72c2b61ae5db1"},
+    {"kind": "corpus_schema", "path": "schema/p0-gateway-corpus.schema.json", "schema": null, "sha256": "sha256:0dce3a3a1c4986958a6562e93d0f96836cdc2e5ede5e2eda8e848130c107c473"},
+    {"kind": "golden_schema", "path": "schema/p0-gateway-golden.schema.json", "schema": null, "sha256": "sha256:8fb3ba57ffe24308b3f18de118a21caee6bacf45a531906c0cf89d7b56c4d25d"},
+    {"kind": "ledger_schema", "path": "schema/p0-semantic-ledger.schema.json", "schema": null, "sha256": "sha256:90928d7ed8a714e6718fd993d7e573fb5fa349898f604d5c3596cdb1eeda01c5"},
+    {"kind": "result_schema", "path": "schema/p0-gateway-result.schema.json", "schema": null, "sha256": "sha256:45bff6713b4a0617d8298d3968a06e6ba1b59fac1f8ff872dbdc7cbe332872c0"},
+    {"kind": "profile_schema", "path": "schema/p0-gateway-profile.schema.json", "schema": null, "sha256": "sha256:7668cea3ff6d1c248371c252f820859d6ff85f5210c91e27f33b9860eb0a0e56"},
+    {"kind": "fixture_schema", "path": "schema/p0-gateway-fixture.schema.json", "schema": null, "sha256": "sha256:6f4065d045ffdb082a42e1b7bd6595f85b48a7893ed3f41ea67bde52546e2227"},
+    {"kind": "publication_schema", "path": "schema/p0-gateway-publication.schema.json", "schema": null, "sha256": "sha256:835307678e32c5582c25c9a7b26da9cec665849ccfdc4caec861aa3e11b424fb"},
+    {"kind": "execution_fact_schema", "path": "schema/p0-execution-fact.schema.json", "schema": null, "sha256": "sha256:df93dbadf026cdc39636780ebf10769c2c5852bc22f255a9fae8eba1b4badb64"},
+    {"kind": "conversation_content_schema", "path": "schema/p0-conversation-content.schema.json", "schema": null, "sha256": "sha256:cb7eaad4a223e0346a620b6b5c62ce92efce751a75898597d5af89665a37bedf"},
+    {"kind": "terminal_receipt_schema", "path": "schema/p0-observation-terminal.schema.json", "schema": null, "sha256": "sha256:7a4309b11474a0d06a76c14c09d247244777107a0a485ed4b1776cc721cbaffa"},
+    {"kind": "manifest_schema", "path": "schema/p0-gateway-manifest.schema.json", "schema": null, "sha256": "sha256:23130a5a6f2105a555d789b8d94e759ff19b115b63a02c9045913ac681979aa9"}
+  ]
+}

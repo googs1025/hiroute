@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-close-subscription-check"
+description = "Enables the close_subscription_check command without any pre-configured scope."
+commands.allow = ["close_subscription_check"]
+
+[[permission]]
+identifier = "deny-close-subscription-check"
+description = "Denies the close_subscription_check command without any pre-configured scope."
+commands.deny = ["close_subscription_check"]

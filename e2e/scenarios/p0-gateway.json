@@ -1,0 +1,45 @@
+{
+  "schema_version": "hiroute.e2e.production-scenario/v1",
+  "oracle_version": "p0-gateway-production-oracle-v1",
+  "name": "p0-gateway-production-listener-smoke",
+  "contract_manifest": "schema/p0-production-manifest.json",
+  "fixture": "fixtures/p0-oracle/production-smoke.json",
+  "coverage": [
+    {
+      "id": "normal_hirouted_listener_exact_evidence",
+      "evidence": [
+        "launch_production",
+        "readiness_exact",
+        "listener_client",
+        "native_provider",
+        "lifecycle_stream",
+        "execution_stream",
+        "content_stream",
+        "otel_stream",
+        "privacy_resource",
+        "aggregate_port"
+      ]
+    }
+  ],
+  "checkpoints": [
+    {"id": "listener_client", "evidence": ["launch_production", "readiness_exact", "listener_client"]},
+    {"id": "native_provider", "evidence": ["native_provider"]},
+    {"id": "semantic_observation", "evidence": ["lifecycle_stream", "execution_stream", "content_stream", "otel_stream", "aggregate_port"]},
+    {"id": "privacy_resource", "evidence": ["privacy_resource"]}
+  ],
+  "matrix_extension": {
+    "owner": "PROCESS-22009",
+    "contract": "one production-smoke case proves the runner; PROCESS-22009 owns protocol goldens, faults, resources, and the full matrix",
+    "protocol_pairs": [
+      "responses_to_responses",
+      "responses_to_chat_completions",
+      "responses_to_messages",
+      "chat_completions_to_responses",
+      "chat_completions_to_chat_completions",
+      "chat_completions_to_messages",
+      "messages_to_responses",
+      "messages_to_chat_completions",
+      "messages_to_messages"
+    ]
+  }
+}

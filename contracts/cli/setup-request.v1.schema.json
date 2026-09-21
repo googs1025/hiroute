@@ -1,0 +1,61 @@
+{
+  "$id": "hiroute://contracts/cli/setup-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "agent_ids": {
+      "items": {
+        "maxLength": 256,
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "codex_catalog": {
+      "enum": [
+        "automatic",
+        "enabled",
+        "disabled"
+      ]
+    },
+    "fallback_policy": {
+      "enum": [
+        "free_only",
+        "primary_fallback"
+      ]
+    },
+    "free_pool_mode": {
+      "enum": [
+        "automatic_all_available",
+        "manual"
+      ]
+    },
+    "native_subagent_routing": {
+      "enum": [
+        "automatic",
+        "enabled",
+        "disabled"
+      ]
+    },
+    "routing_mode": {
+      "enum": [
+        "smart_saving",
+        "free_first",
+        "custom"
+      ]
+    },
+    "routing_purpose": {
+      "maxLength": 512,
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema": {
+      "const": "hiroute.setup-request/v1"
+    }
+  },
+  "required": [
+    "schema"
+  ],
+  "type": "object"
+}

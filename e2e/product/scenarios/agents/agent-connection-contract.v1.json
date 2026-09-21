@@ -1,0 +1,38 @@
+{
+  "schema": "hiroute.product-e2e.agent-connection/v1",
+  "scenario_id": "process-25005-agent-connection",
+  "process": "PROCESS-25005",
+  "proofs": [
+    "all_published_selected_scope",
+    "built_in_codex_claude_emulator",
+    "dynamic_catalog_static_fallback",
+    "exact_profile_config_precedence",
+    "field_owned_restore",
+    "grant_catalog_overlay_exact",
+    "installed-standalone-headless-management-loop",
+    "optional_exact_marker_rewrite",
+    "unknown_version_report_only"
+  ],
+  "scenario_states": [
+    {
+      "scenario_id": "profile-grant-catalog-contract",
+      "state": "green",
+      "evidence_owner": "PROCESS-25005"
+    },
+    {
+      "scenario_id": "adapter-emulator-contract",
+      "state": "green",
+      "evidence_owner": "PROCESS-25005"
+    },
+    {
+      "scenario_id": "field-owned-restore-contract",
+      "state": "green",
+      "evidence_owner": "PROCESS-25005"
+    },
+    {
+      "scenario_id": "production-cli-agent-connection",
+      "state": "green",
+      "evidence_owner": "TASK-142003"
+    }
+  ]
+}

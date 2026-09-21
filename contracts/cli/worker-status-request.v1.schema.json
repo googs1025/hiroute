@@ -1,0 +1,97 @@
+{
+  "$id": "hiroute://contracts/cli/worker-status-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "oneOf": [
+    {
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "submission_key"
+            ]
+          },
+          {
+            "required": [
+              "submission_operation"
+            ]
+          }
+        ]
+      },
+      "required": [
+        "task_id"
+      ]
+    },
+    {
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "task_id"
+            ]
+          },
+          {
+            "required": [
+              "submission_key"
+            ]
+          },
+          {
+            "required": [
+              "submission_operation"
+            ]
+          }
+        ]
+      },
+      "required": [
+        "run_id"
+      ]
+    },
+    {
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "task_id"
+            ]
+          },
+          {
+            "required": [
+              "run_id"
+            ]
+          }
+        ]
+      },
+      "required": [
+        "submission_key",
+        "submission_operation"
+      ]
+    }
+  ],
+  "properties": {
+    "run_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_./:-]+$",
+      "type": "string"
+    },
+    "submission_key": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_./:-]+$",
+      "type": "string"
+    },
+    "submission_operation": {
+      "enum": [
+        "start",
+        "continue"
+      ]
+    },
+    "task_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_./:-]+$",
+      "type": "string"
+    }
+  },
+  "type": "object"
+}

@@ -1,0 +1,12 @@
+{
+  "scenario_id": "process-25005-agent-connection",
+  "profile_grant_catalog_contract": "green",
+  "adapter_emulator_contract": "green",
+  "field_owned_restore_contract": "green",
+  "production_cli_agent_connection": "green",
+  "production_evidence": "installed-standalone-headless-management-loop",
+  "composition_owner": "TASK-142003",
+  "codex_protocol": "responses",
+  "claude_protocol": "messages",
+  "unknown_version_behavior": "report_only"
+}

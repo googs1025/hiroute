@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-preview-price-change"
+description = "Enables the preview_price_change command without any pre-configured scope."
+commands.allow = ["preview_price_change"]
+
+[[permission]]
+identifier = "deny-preview-price-change"
+description = "Denies the preview_price_change command without any pre-configured scope."
+commands.deny = ["preview_price_change"]

@@ -1,0 +1,98 @@
+name: website
+
+on:
+  pull_request:
+    paths:
+      - 'apps/website/**'
+      - 'decision-extensions/**'
+      - 'scripts/collect-third-party-licenses.py'
+      - 'scripts/install-standalone.py'
+      - 'scripts/package-desktop.py'
+      - 'scripts/package-standalone.py'
+      - 'scripts/test-package-desktop.py'
+      - 'scripts/test-standalone-install.py'
+      - 'scripts/test-third-party-licenses.py'
+      - '.github/workflows/website.yml'
+      - '.github/workflows/release.yml'
+      - '.github/scripts/**'
+  push:
+    branches: [main]
+    paths:
+      - 'apps/website/**'
+      - 'decision-extensions/**'
+      - 'scripts/collect-third-party-licenses.py'
+      - 'scripts/install-standalone.py'
+      - 'scripts/package-desktop.py'
+      - 'scripts/package-standalone.py'
+      - 'scripts/test-package-desktop.py'
+      - 'scripts/test-standalone-install.py'
+      - 'scripts/test-third-party-licenses.py'
+      - '.github/workflows/website.yml'
+      - '.github/workflows/release.yml'
+      - '.github/scripts/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('website-pr-{0}', github.event.pull_request.number) || 'hiroute-ai-production' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/website/package-lock.json
+      - run: npm ci --ignore-scripts
+        working-directory: apps/website
+      - run: npm test
+        working-directory: apps/website
+      - run: npm run build
+        working-directory: apps/website
+      - name: Test distribution packaging contracts
+        run: |
+          python3 scripts/test-third-party-licenses.py
+          python3 scripts/test-package-desktop.py
+          python3 scripts/test-standalone-install.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hiroute-website-${{ github.sha }}
+          path: apps/website/dist
+          if-no-files-found: error
+          retention-days: 7
+
+  deploy:
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: website-production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: hiroute-website-${{ github.sha }}
+          path: apps/website/dist
+      - name: Install Aliyun CLI
+        run: .github/scripts/install-aliyun-cli.sh "$RUNNER_TEMP/bin"
+      - name: Upload static website to hiroute-ai
+        env:
+          ACCESS_KEYID: ${{ secrets.ACCESS_KEYID }}
+          ACCESS_KEYSECRET: ${{ secrets.ACCESS_KEYSECRET }}
+        run: |
+          export PATH="$RUNNER_TEMP/bin:$PATH"
+          .github/scripts/deploy-website-oss.sh apps/website/dist apps/website/data/releases.json

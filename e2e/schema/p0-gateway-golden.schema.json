@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hiroute.dev/e2e/p0-gateway-golden.schema.json",
+  "title": "HiRoute P0 exact evidence golden",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "oracle_version", "assertions"],
+  "properties": {
+    "schema_version": {"const": "hiroute.e2e.golden/v1"},
+    "oracle_version": {"const": "p0-gateway-oracle-v1"},
+    "assertions": {
+      "type": "array", "minItems": 7, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "case_id", "source", "expected"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "case_id": {"type": "string", "minLength": 1},
+          "source": {"enum": ["native_request", "canonical_ledger", "client_output", "execution_fact", "conversation_content", "otel", "resource"]},
+          "expected": {"type": "object", "minProperties": 1}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-check-model-connection"
+description = "Enables the check_model_connection command without any pre-configured scope."
+commands.allow = ["check_model_connection"]
+
+[[permission]]
+identifier = "deny-check-model-connection"
+description = "Denies the check_model_connection command without any pre-configured scope."
+commands.deny = ["check_model_connection"]

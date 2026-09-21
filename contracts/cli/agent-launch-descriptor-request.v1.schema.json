@@ -1,0 +1,17 @@
+{
+  "$id": "hiroute://contracts/cli/agent-launch-descriptor-request.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "connection_id": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^agent-connection/[A-Za-z0-9._/-]+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "connection_id"
+  ],
+  "type": "object"
+}
