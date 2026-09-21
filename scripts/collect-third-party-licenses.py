@@ -264,6 +264,26 @@ def json_sequence(value: str) -> list[dict[str, object]]:
     return result
 
 
+def extract_regular_tree(bundle: tarfile.TarFile, destination: Path) -> None:
+    """Extract a source archive without relying on version-specific tar filters."""
+    for member in bundle.getmembers():
+        relative = Path(member.name)
+        if relative.is_absolute() or ".." in relative.parts or not relative.parts:
+            raise ValueError("CPA source archive contains an unsafe path")
+        target = destination.joinpath(*relative.parts)
+        if member.isdir():
+            target.mkdir(parents=True, exist_ok=True)
+            continue
+        if not member.isfile():
+            raise ValueError("CPA source archive contains a non-regular entry")
+        source = bundle.extractfile(member)
+        if source is None:
+            raise ValueError("CPA source archive entry is unreadable")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with target.open("wb") as output:
+            shutil.copyfileobj(source, output)
+
+
 def extract_cpa(source_repo: Path, destination: Path) -> tuple[dict[str, object], Path]:
     pin_path = REPO / "vendor/cpa/source.json"
     pin = json.loads(pin_path.read_text())
@@ -274,7 +294,7 @@ def extract_cpa(source_repo: Path, destination: Path) -> tuple[dict[str, object]
         "git", "-C", str(source_repo), "archive", pin["commit"]
     ])
     with tarfile.open(fileobj=io.BytesIO(archive), mode="r:") as bundle:
-        bundle.extractall(destination, filter="data")
+        extract_regular_tree(bundle, destination)
     run("git", "apply", str(patch), cwd=destination)
     return pin, pin_path
 
