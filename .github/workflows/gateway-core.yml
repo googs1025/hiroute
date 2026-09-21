@@ -60,9 +60,18 @@ jobs:
           fetch-depth: 0
       - uses: ./.github/actions/ci-setup
       - name: CI adapter tests
-        run: python3 scripts/test-ci-run.py
+        run: python3 scripts/test-ci-run.py && python3 scripts/test-rust-file-size.py
       - name: Rust size boundary
-        run: python3 scripts/ci-run.py --name structure -- bash scripts/check-rust-file-size.sh
+        env:
+          STRUCTURE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          args=()
+          if [[ -n "$STRUCTURE_BASE" && ! "$STRUCTURE_BASE" =~ ^0+$ ]] && git cat-file -e "$STRUCTURE_BASE^{commit}" 2>/dev/null; then
+            args=(--base "$STRUCTURE_BASE")
+          elif git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+            args=(--base HEAD^)
+          fi
+          python3 scripts/ci-run.py --name structure -- bash scripts/check-rust-file-size.sh "${args[@]}"
       - name: Selected Rust checks (full short set on main)
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
