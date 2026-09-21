@@ -35,6 +35,14 @@ class BundleIdentityTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "patch checksum mismatch"):
                 builder.pinned_source()
 
+    def test_build_children_do_not_inherit_validation_lock_descriptors(self):
+        completed = package.subprocess.CompletedProcess(
+            ["fixture"], 0, stdout="ok\n", stderr=""
+        )
+        with patch.object(package.subprocess, "run", return_value=completed) as invoked:
+            self.assertEqual(package.run("fixture"), "ok")
+        self.assertNotIn("pass_fds", invoked.call_args.kwargs)
+
     def test_final_signed_bytes_verified_and_resigning_rejected(self):
         package.verify_contents(self.app, self.manifest)
         self.cpa.write_bytes(b"signed again")

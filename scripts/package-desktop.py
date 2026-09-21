@@ -25,7 +25,6 @@ TARGETS = {"arm64": "aarch64-apple-darwin", "x86_64": "x86_64-apple-darwin"}
 CPA_SOURCE = json.loads((REPO / "vendor/cpa/source.json").read_text())
 CPA_VERSION = CPA_SOURCE["version"]
 CPA_COMMIT = CPA_SOURCE["commit"]
-BUILD_LOCK_FDS = ()
 BUILD_LOG = None
 BUILD_TIMINGS = []
 
@@ -36,7 +35,7 @@ def run(*args, cwd=REPO, env=None, timeout=None):
     print(f"Running {Path(args[0]).name} {' '.join(args[1:3])}", file=sys.stderr, flush=True)
     started = time.monotonic()
     result = subprocess.run(args, cwd=cwd, env=env, text=True, timeout=timeout,
-                            pass_fds=BUILD_LOCK_FDS, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     BUILD_TIMINGS.append({"command": list(args[:3]), "seconds": round(time.monotonic() - started, 3),
                           "exit_code": result.returncode})
     if BUILD_LOG is not None:
@@ -363,7 +362,6 @@ def build(args):
 
 
 def main():
-    global BUILD_LOCK_FDS
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     create = commands.add_parser("build")
@@ -382,8 +380,7 @@ def main():
             # Start the cache server before children inherit the shared lock FDs.
             run("sccache", "--show-stats")
             local = module("desktop_package_local_rust", "local-rust.py")
-            with local.Store().locked(REPO) as handles:
-                BUILD_LOCK_FDS = tuple(handle.fileno() for handle in handles)
+            with local.Store().locked(REPO):
                 result = build(args)
                 (Path(result["app"]).parent / "result.json").write_text(json.dumps(result, indent=2) + "\n")
         elif args.command == "verify-dmg":
