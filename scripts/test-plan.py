@@ -38,10 +38,15 @@ SELECTION_TOOLING = {"scripts/test-plan.py", "scripts/test-test-plan.py"}
 INTEGRATION_SKILL = ".agents/skills/hiroute-integrate/SKILL.md"
 WEBSITE_TOOLING = {".github/workflows/website.yml", ".github/workflows/release.yml"}
 WEBSITE_PREFIXES = ("apps/website/", ".github/scripts/")
+HOSTED_BACKEND_EXECUTION = {
+    ".github/workflows/gateway-core.yml",
+    "scripts/ci-run.py",
+    "scripts/ci-shards.py",
+}
 VALIDATION_TOOLING = {"scripts/validation.py", "scripts/validation-host.py", "scripts/test-validation.py",
-                      ".github/workflows/gateway-core.yml",
                       "scripts/validation-report.py", "scripts/test-validation-report.py",
                       "scripts/ci-run.py", "scripts/test-ci-run.py",
+                      "scripts/ci-shards.py", "scripts/test-ci-shards.py",
                       "scripts/pilot-builds.py", "scripts/test-pilot-builds.py",
                       "scripts/desktop-pilot.py", "scripts/test-desktop-pilot.py",
                       "scripts/local-rust.py", "scripts/test-local-rust.py",
@@ -89,6 +94,13 @@ def select(paths, full=False):
             # Static site and OSS/release publication have their own Node/browser
             # workflow. They do not change Desktop or backend product behavior.
             continue
+        elif path in HOSTED_BACKEND_EXECUTION:
+            # These files decide what the hosted backend actually executes. Unit
+            # tests validate their mapping, while one full run proves the changed
+            # workflow and shard contract on its real entry path.
+            full = True
+            validation_tooling = True
+            reasons.append("hosted backend execution contract: " + path)
         elif path in VALIDATION_TOOLING:
             validation_tooling = True
         elif e2e_consumers(path):
@@ -179,7 +191,7 @@ def select(paths, full=False):
     if validation_tooling:
         commands.extend([["python3", "scripts/" + name] for name in
                          ("test-validation.py", "test-validation-report.py", "test-local-rust.py", "test-remote-rust.py", "test-validation-schedule.py",
-                          "test-ci-run.py", "test-desktop-pilot.py", "test-pilot-builds.py")])
+                          "test-ci-run.py", "test-ci-shards.py", "test-desktop-pilot.py", "test-pilot-builds.py")])
     if full or paths:
         commands.append(["python3", "scripts/test-contract-convergence.py"])
         commands.append(["python3", "scripts/check-contract-convergence.py"])
