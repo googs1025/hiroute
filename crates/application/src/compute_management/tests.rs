@@ -12,6 +12,7 @@ use hiroute_domain::{
 
 use super::*;
 
+mod codex_checked_account;
 mod connector_owned_availability;
 
 fn unknown<T>() -> ComputeCandidateFactValueV2<T> {
@@ -525,18 +526,6 @@ fn subscription_refresh_retains_exact_membership_and_excludes_lost_models_from_e
         )
         .is_err()
     );
-}
-
-#[test]
-fn protected_binding_debug_output_is_redacted() {
-    let binding = ComputeCredentialBindingV2::NativeProtected {
-        descriptor: ProtectedInputSourceDescriptorV1::ManualInput,
-        input_slot: "protected-slot-canary".to_owned(),
-    };
-    let rendered = format!("{binding:?}");
-
-    assert!(!rendered.contains("protected-slot-canary"));
-    assert!(rendered.contains("<redacted>"));
 }
 
 #[test]

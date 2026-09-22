@@ -3,6 +3,8 @@ use hiroute_domain::{
     GatewayNativeProviderStateEmissionV1, GatewayNativeReasoningRenderV1,
     GatewayNativeReasoningValueV1, GatewayReasoningControlKindV1, NativeReasoningCapabilityV1,
 };
+#[path = "candidate_execution_tests/native_protocol_profiles.rs"]
+mod native_protocol_profiles;
 
 fn user_fact<T>(value: T) -> hiroute_domain::ComputeManagementFactValueV2<T> {
     hiroute_domain::ComputeManagementFactValueV2 {

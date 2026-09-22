@@ -19,6 +19,7 @@ pub(super) enum ProtocolState {
     Responses {
         core: DecoderCore,
         tools: BTreeMap<u32, ResponsesToolIdentity>,
+        done_seen: bool,
     },
     Chat {
         core: DecoderCore,
@@ -61,6 +62,7 @@ impl ProtocolState {
             IngressProtocol::Responses => Self::Responses {
                 core: DecoderCore::new(owner, state_emission, tool_id_projection),
                 tools: BTreeMap::new(),
+                done_seen: false,
             },
             IngressProtocol::ChatCompletions => Self::Chat {
                 core: DecoderCore::new(owner, state_emission, tool_id_projection),
@@ -81,7 +83,21 @@ impl ProtocolState {
         output: &mut VecDeque<ModelStreamEventV1>,
     ) -> Result<(), ProtocolAdapterError> {
         match self {
-            Self::Responses { core, tools } => {
+            Self::Responses {
+                core,
+                tools,
+                done_seen,
+            } => {
+                if data == b"[DONE]" {
+                    if event_type.is_some() || !core.accumulator.terminal || *done_seen {
+                        return Err(ModelIrError::InvalidResponseLifecycle(
+                            "Responses [DONE] must follow one terminal event".into(),
+                        )
+                        .into());
+                    }
+                    *done_seen = true;
+                    return Ok(());
+                }
                 decode_responses_sse(core, tools, event_type, data, output)
             }
             Self::Chat {
@@ -580,7 +596,7 @@ fn decode_responses_sse(
                 response,
                 &mut staged_events,
             )?;
-            decode_responses_terminal(&mut staged, response, &mut staged_events)?;
+            responses_lifecycle::decode_terminal(&mut staged, response, &mut staged_events)?;
             staged.complete(&mut staged_events)?;
             *core = staged;
             output.extend(staged_events);
@@ -989,7 +1005,7 @@ fn decode_responses_nonstream(
             _ => responses_lifecycle::nonstream_item(core, native_index, item, output)?,
         }
     }
-    decode_responses_terminal(core, object, output)?;
+    responses_lifecycle::decode_terminal(core, object, output)?;
     match required_str(object, "status")? {
         "completed" | "incomplete" => core.complete(output),
         "failed" | "cancelled" => core.fail(
@@ -1003,60 +1019,6 @@ fn decode_responses_nonstream(
         ),
         status => Err(unsupported("Responses terminal status", status)),
     }
-}
-
-fn decode_responses_terminal(
-    core: &mut DecoderCore,
-    response: &Map<String, Value>,
-    output: &mut VecDeque<ModelStreamEventV1>,
-) -> Result<(), ProtocolAdapterError> {
-    validate_responses_envelope_metadata(response)?;
-    core.responses_metadata(response, output)?;
-    core.start_response(
-        required_str(response, "id")?.into(),
-        required_str(response, "model")?.into(),
-        output,
-    )?;
-    if let Some(usage) = response.get("usage")
-        && !usage.is_null()
-    {
-        core.usage(decode_responses_usage(usage)?, output)?;
-    }
-    let status = required_str(response, "status")?;
-    let incomplete_reason = response
-        .get("incomplete_details")
-        .filter(|details| !details.is_null())
-        .and_then(|details| details.get("reason"))
-        .and_then(Value::as_str);
-    let reason = match status {
-        "completed" if incomplete_reason.is_some() => {
-            return Err(ModelIrError::InvalidResponseLifecycle(
-                "completed Responses terminal carries incomplete details".into(),
-            )
-            .into());
-        }
-        "completed" => Some(
-            if core.accumulator.blocks.values().any(|block| {
-                matches!(
-                    block,
-                    crate::server::core_runtime::model_ir::MutableResponseBlock::ToolCall { .. }
-                )
-            }) {
-                FinishReason::ToolCall
-            } else {
-                FinishReason::Stop
-            },
-        ),
-        "incomplete" => incomplete_reason
-            .map(decode_finish_reason)
-            .or_else(|| core.has_refusal().then_some(FinishReason::Refusal)),
-        "failed" | "cancelled" => None,
-        other => return Err(unsupported("Responses terminal status", other)),
-    };
-    if let Some(reason) = reason {
-        core.finish_reason(reason, output)?;
-    }
-    Ok(())
 }
 
 fn decode_chat_nonstream(

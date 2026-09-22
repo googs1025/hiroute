@@ -76,6 +76,7 @@ mod plan_content;
 mod plan_content_snapshot;
 mod plan_versions;
 mod prices;
+mod protected_inputs;
 mod publication;
 mod release_install;
 mod routing;
@@ -348,6 +349,7 @@ impl ProductionControlRuntime {
             release_catalog: Some(release_catalog),
             protected_inputs: Mutex::new(BTreeMap::new()),
             manual_protected_inputs: Mutex::new(BTreeMap::new()),
+            agent_token_inputs: Mutex::new(BTreeMap::new()),
             model_connections: hiroute_integrations::NativeModelConnectionServiceV1::new(
                 hiroute_application::compute_management::TrustedComputeCandidateRegistry::new(),
                 overrides.model_transport.unwrap_or_else(|| {
@@ -602,39 +604,6 @@ impl ProductionControlRuntime {
             .register(registration)
             .map_err(|error| error.to_string())
     }
-
-    pub(crate) fn register_manual_protected_input(
-        &self,
-        candidate: hiroute_application_api::ComputeCandidateRefV2,
-        secret: hiroute_domain::ProtectedSecret,
-    ) -> Result<(), String> {
-        self.adapter
-            .model_connections
-            .reserve_candidate_ref(&candidate)
-            .map_err(|error| error.to_string())?;
-        let mut inputs = self
-            .adapter
-            .manual_protected_inputs
-            .lock()
-            .map_err(|_| "protected input registry is unavailable".to_owned())?;
-        if inputs.len() >= 256 || inputs.contains_key(&candidate.candidate_ref) {
-            return Err("protected input registration is invalid".to_owned());
-        }
-        inputs.insert(candidate.candidate_ref, secret);
-        Ok(())
-    }
-
-    pub(crate) fn release_manual_protected_input(&self, candidate_ref: &str) -> Result<(), String> {
-        if candidate_ref.trim().is_empty() {
-            return Err("protected input reference is invalid".to_owned());
-        }
-        self.adapter
-            .manual_protected_inputs
-            .lock()
-            .map_err(|_| "protected input registry is unavailable".to_owned())?
-            .remove(candidate_ref);
-        Ok(())
-    }
 }
 
 fn delegation_epoch() -> Result<String, String> {
@@ -665,6 +634,7 @@ struct LocalControlAdapter {
     release_catalog: Option<TrustedReleaseCatalog>,
     protected_inputs: Mutex<BTreeMap<String, DiscoveredCredentialRefV1>>,
     manual_protected_inputs: Mutex<BTreeMap<String, ProtectedSecret>>,
+    agent_token_inputs: Mutex<BTreeMap<String, ProtectedSecret>>,
     model_connections: hiroute_integrations::NativeModelConnectionServiceV1<
         hiroute_application::compute_management::TrustedComputeCandidateRegistry,
         Arc<dyn hiroute_integrations::ModelDirectoryTransportV1>,
@@ -981,7 +951,7 @@ impl AgentDiscoveryPort for LocalControlAdapter {
             )
             .map(|snapshot| snapshot.facts.candidates)
             .unwrap_or_default();
-        let codex_catalog = self.scanner.codex_catalog_summary().ok().map(|catalog| {
+        let codex_catalog = self.scanner.codex_catalog_summary().ok().and_then(|catalog| {
             let metadata_source = match catalog.metadata_source {
                 hiroute_integrations::CodexCatalogMetadataSourceV1::UserConfigured => {
                     AgentModelCatalogMetadataSourceV1::UserConfigured
@@ -991,6 +961,10 @@ impl AgentDiscoveryPort for LocalControlAdapter {
                 }
                 hiroute_integrations::CodexCatalogMetadataSourceV1::TargetBundled => {
                     AgentModelCatalogMetadataSourceV1::TargetBundled
+                }
+                // This is an output artifact, never a native metadata source.
+                hiroute_integrations::CodexCatalogMetadataSourceV1::HirouteGenerated => {
+                    return None;
                 }
             };
             let models = catalog
@@ -1054,11 +1028,11 @@ impl AgentDiscoveryPort for LocalControlAdapter {
                     }
                 })
                 .collect();
-            DiscoveredAgentModelCatalogV1 {
+            Some(DiscoveredAgentModelCatalogV1 {
                 metadata_source,
                 native_default_model: catalog.native_default_model,
                 models,
-            }
+            })
         });
         self.refresh_discovery()
             .map_err(|_| ControlReadError::Unavailable)?

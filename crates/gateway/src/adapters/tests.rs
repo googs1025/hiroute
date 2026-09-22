@@ -16,6 +16,9 @@ use crate::server::core_runtime::profiles::{
 };
 use crate::server::request_plan::IngressProtocol;
 
+#[path = "tests/native_responses.rs"]
+mod native_responses;
+
 fn exact_state_profile(
     ingress: IngressProtocol,
     upstream: IngressProtocol,
@@ -34,37 +37,6 @@ fn exact_state_profile(
     profile
 }
 
-#[test]
-fn responses_previous_response_id_has_an_explicit_http_boundary() {
-    for body in [
-        json!({"model":"alias","input":"hello"}),
-        json!({"model":"alias","input":"hello","previous_response_id":null}),
-    ] {
-        let request = decode_ingress_request(IngressProtocol::Responses, &body).unwrap();
-        assert!(request.provider_state.is_empty());
-    }
-    for value in [json!("response"), json!({"id":"response"})] {
-        let error = decode_ingress_request(
-            IngressProtocol::Responses,
-            &json!({"model":"alias","input":"hello","previous_response_id":value}),
-        )
-        .unwrap_err();
-        assert_eq!(error, ModelIrError::ResponsesPreviousResponseIdUnsupported);
-        assert_eq!(
-            ProtocolAdapterError::from(error).code(),
-            "RESPONSES_PREVIOUS_RESPONSE_ID_UNSUPPORTED"
-        );
-    }
-    for value in [json!(true), json!(1), json!([])] {
-        assert_eq!(
-            decode_ingress_request(
-                IngressProtocol::Responses,
-                &json!({"model":"alias","input":"hello","previous_response_id":value}),
-            ),
-            Err(ModelIrError::InvalidField("previous_response_id"))
-        );
-    }
-}
 use hiroute_gateway_core::runtime::body::BudgetTree;
 
 #[test]

@@ -539,21 +539,7 @@ pub(super) fn encode_accepted_event(
                 )
             };
             drop(bytes);
-            rendered
-                .map(|bytes| {
-                    ChargedBytes::from_exact_vec(&readiness.budget, MemoryRole::OutputQueue, bytes)
-                        .map(|bytes| AcceptedBodyFrame {
-                            output: Some(EncodedOutputUnit {
-                                bytes,
-                                provenance: SemanticProvenance::ProducesSemantic,
-                            }),
-                            end_stream,
-                            sse_sources: SseTransformSources::default(),
-                            queue_metadata: BodyMetadataOwner::default(),
-                        })
-                })
-                .transpose()
-                .map_err(safe_error)
+            queue_accepted_stream_output(readiness, rendered, end_stream)
         }
         PrecommitEvent::EndStream
             if readiness.decoder.is_none() && readiness.projector.is_none() =>
@@ -578,25 +564,7 @@ pub(super) fn encode_accepted_event(
                     .map_err(|_| Arc::from("accepted native stream ended without terminal"))?;
                 (rendered, true)
             };
-            Ok(Some(AcceptedBodyFrame {
-                output: rendered
-                    .map(|bytes| {
-                        ChargedBytes::from_exact_vec(
-                            &readiness.budget,
-                            MemoryRole::OutputQueue,
-                            bytes,
-                        )
-                        .map(|bytes| EncodedOutputUnit {
-                            bytes,
-                            provenance: SemanticProvenance::ProducesSemantic,
-                        })
-                    })
-                    .transpose()
-                    .map_err(safe_error)?,
-                end_stream: projected_terminal,
-                sse_sources: SseTransformSources::default(),
-                queue_metadata: BodyMetadataOwner::default(),
-            }))
+            queue_accepted_stream_output(readiness, rendered, projected_terminal)
         }
         PrecommitEvent::Body(_) | PrecommitEvent::EndStream => Err(Arc::from(
             "nonstream response had an unclassified transport tail",
@@ -604,6 +572,29 @@ pub(super) fn encode_accepted_event(
         PrecommitEvent::ResponseHead(_) => Ok(None),
         PrecommitEvent::SseEvent { .. } => Err(Arc::from("raw SSE bypassed decoder ownership")),
     }
+}
+
+fn queue_accepted_stream_output(
+    readiness: &mut ProductionReadiness,
+    rendered: Option<Vec<u8>>,
+    terminal: bool,
+) -> Result<Option<AcceptedBodyFrame>, Arc<str>> {
+    if let Some(bytes) = rendered.filter(|bytes| !bytes.is_empty()) {
+        push_queue_bytes(&mut readiness.prefix, &readiness.budget, bytes)?;
+        if terminal {
+            readiness.prefix_terminal_chunks = Some(readiness.prefix.len());
+        }
+        // The core drains one bounded prefix chunk before reading the next
+        // upstream event. An SSE event can exceed the accepted plan's 64 KiB
+        // transport frame even though it is within the SSE event limit.
+        return Ok(None);
+    }
+    Ok(terminal.then_some(AcceptedBodyFrame {
+        output: None,
+        end_stream: true,
+        sse_sources: SseTransformSources::default(),
+        queue_metadata: BodyMetadataOwner::default(),
+    }))
 }
 
 pub(super) fn take_accepted_prefix(
@@ -1183,6 +1174,10 @@ pub(super) fn failure_facts(failure: &AttemptFailure) -> ProviderClassificationF
         ..ProviderClassificationFacts::default()
     }
 }
+
+#[cfg(test)]
+#[path = "response_terminal_tests.rs"]
+mod terminal_tests;
 
 #[cfg(test)]
 mod tests {

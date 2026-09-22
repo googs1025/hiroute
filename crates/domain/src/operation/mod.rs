@@ -1,9 +1,8 @@
+use serde::{Deserialize, Serialize};
+use serde_json::{Value, json};
 use std::collections::BTreeSet;
 use std::fmt;
 use std::sync::Arc;
-
-use serde::{Deserialize, Serialize};
-use serde_json::{Value, json};
 use thiserror::Error;
 use zeroize::Zeroizing;
 
@@ -28,11 +27,11 @@ pub(crate) mod shared_input;
 pub use journal::OperationJournalUpdate;
 mod source_price;
 mod subscription_check;
-
 pub use agent_access_grant::{
-    AGENT_ACCESS_GRANT_EFFECT_SCHEMA_V1, AgentAccessGrantMaterial, AgentAccessGrantMutationKindV1,
-    AgentAccessGrantMutationV1, AgentAccessGrantRefV1, AgentAccessGrantScopeV1,
-    is_agent_access_grant_effect,
+    AGENT_ACCESS_GRANT_EFFECT_SCHEMA_V1, AgentAccessGrantMaterial,
+    AgentAccessGrantMaterialActionV1, AgentAccessGrantMutationKindV1, AgentAccessGrantMutationV1,
+    AgentAccessGrantRefV1, AgentAccessGrantScopeV1, is_agent_access_grant_effect,
+    valid_user_agent_token,
 };
 pub use agent_config_permission::AgentConfigPermissionIntentV1;
 pub use agent_connection::{
@@ -1723,6 +1722,7 @@ pub trait SecretStorePort {
         &self,
         _operation_id: &OperationId,
         _mutation: &AgentAccessGrantMutationV1,
+        _input: Option<&ProtectedSecret>,
     ) -> PortResult<OwnedEffectV1> {
         Err(crate::PortError::new(
             crate::PortErrorCode::PermissionDenied,

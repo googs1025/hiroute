@@ -9,6 +9,9 @@ use crate::agents::{
     CLAUDE_CODE_VERIFIED_VERSION_V1, MANAGED_LAUNCH_ENV_SANITIZED_V1,
 };
 
+#[path = "filesystem_tests/claude_routing.rs"]
+mod claude_routing;
+
 fn write_executable(path: &Path, version: &str) {
     fs::write(path, format!("#!/bin/sh\nprintf '%s\\n' '{version}'\n")).unwrap();
     #[cfg(unix)]
@@ -83,35 +86,6 @@ fn layout_with_claude_version(root: &Path, claude_version: &str) -> AgentFilesys
         process_environment: BTreeMap::new(),
         process_environment_presence: BTreeSet::new(),
     }
-}
-
-#[test]
-fn claude_settings_discovery_does_not_gate_save_on_version_probe() {
-    let directory = tempfile::tempdir().unwrap();
-    let layout = layout(directory.path());
-    fs::write(&layout.claude_executable, b"#!/bin/sh\nexit 9\n").unwrap();
-    write_secret_settings(&layout.claude_user_settings, json!({}));
-    let scanner = FilesystemAgentScannerV1::new(layout, registry());
-    let ordinary = scanner.scan();
-    assert!(ordinary.iter().any(|item| matches!(
-        &item.outcome,
-        AgentDiscoveryOutcomeV1::ReportOnly {
-            agent_id,
-            reason: AgentReportOnlyReasonV1::ExecutableProbeUnavailable,
-            ..
-        } if agent_id == "agent_claude_default"
-    )));
-    let settings = scanner.claude_settings_discovery();
-    assert!(matches!(
-        settings.outcome,
-        AgentDiscoveryOutcomeV1::Supported { .. }
-    ));
-    assert!(
-        settings
-            .managed_launch
-            .as_ref()
-            .is_some_and(|launch| launch.is_launchable())
-    );
 }
 
 #[test]

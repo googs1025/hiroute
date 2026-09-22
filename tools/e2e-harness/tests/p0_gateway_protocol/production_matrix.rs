@@ -4,6 +4,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex, mpsc};
 use std::time::{Duration, Instant};
 
+use hiroute_domain::{CanonicalDigest, GatewayCriticalFactV1, GatewayOperationalTargetV1};
 use hiroute_e2e::gateway_fixture::{TestTlsListener, sealed_native_candidate, write_dial_config};
 use hiroute_gateway::server::publication::{
     AliasPlanV1, GatewayPublicationSnapshotV3, GrantV1, token_sha256,
@@ -15,6 +16,10 @@ use super::process::{
     Hirouted, drain_provider_request, exact_hirouted_binary, process_test_lock,
     read_provider_request_head, read_response, reserve_address,
 };
+use super::support::native_stream;
+
+#[path = "production_matrix/native_protocol_paths.rs"]
+mod native_protocol_paths;
 
 #[test]
 fn protocol_real_hirouted_executes_every_native_protocol_pair_and_rejects_before_provider() {
@@ -48,14 +53,13 @@ struct HiroutedProtocolMatrix;
 
 impl HiroutedProtocolMatrix {
     fn run(fixed: bool) {
-        run_protocol_matrix(fixed);
+        run_protocol_matrix(fixed, protocol_pairs());
     }
 }
 
-fn run_protocol_matrix(fixed: bool) {
+fn run_protocol_matrix(fixed: bool, pairs: Vec<(IngressProtocol, IngressProtocol)>) {
     let _serial = process_test_lock();
     let directory = tempfile::tempdir().unwrap();
-    let pairs = protocol_pairs();
     let providers = pairs
         .iter()
         .enumerate()
@@ -180,11 +184,11 @@ fn run_protocol_matrix(fixed: bool) {
             String::from_utf8_lossy(&response.body)
         );
     }
-    for protocol in [
-        IngressProtocol::Responses,
-        IngressProtocol::ChatCompletions,
-        IngressProtocol::Messages,
-    ] {
+    for protocol in pairs
+        .iter()
+        .filter(|(ingress, upstream)| ingress == upstream)
+        .map(|(protocol, _)| *protocol)
+    {
         let path = protocol_path(protocol);
         let alias = pair_alias(protocol, protocol);
         let mut request = client_request(protocol, &alias);
@@ -298,6 +302,7 @@ fn snapshot(
             IngressProtocol::Messages,
         ]
         .into_iter()
+        .filter(|protocol| pairs.iter().any(|(ingress, _)| ingress == protocol))
         .map(|protocol| GrantV1 {
             grant_id: format!("protocol-grant-{}", protocol_name(protocol)),
             generation: 1,

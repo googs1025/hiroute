@@ -9,7 +9,7 @@ use std::path::{Path, PathBuf};
 
 use hiroute_domain::{
     AgentConfigDocumentV1, AgentKindV1, CLAUDE_CODE_MANAGED_LAUNCH_VERSION_V1, CanonicalDigest,
-    ConfigLayerV1, ProtectedSecret,
+    ConfigLayerV1, ProtectedSecret, SupportedAgentInstallationV1,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -29,6 +29,8 @@ use super::{
     AgentScanObservationV1, ConfigObservationV1, resolve_agent_observation,
 };
 
+#[path = "filesystem/claude_settings.rs"]
+mod claude_settings;
 #[path = "claude_observation.rs"]
 mod main_observation;
 #[path = "settings_discovery.rs"]
@@ -129,6 +131,10 @@ pub struct AgentFilesystemLayoutV1 {
 
 impl AgentFilesystemLayoutV1 {
     pub fn from_process(home: &Path, project: &Path) -> Self {
+        let claude_home = std::env::var_os("CLAUDE_CONFIG_DIR")
+            .filter(|value| !value.is_empty())
+            .map(PathBuf::from)
+            .unwrap_or_else(|| home.join(".claude"));
         let process_environment = [
             "ANTHROPIC_BASE_URL",
             "ANTHROPIC_MODEL",
@@ -159,7 +165,7 @@ impl AgentFilesystemLayoutV1 {
                 project.join(".claude/settings.local.json"),
                 project.join(".claude/settings.json"),
             ],
-            claude_user_settings: home.join(".claude/settings.json"),
+            claude_user_settings: claude_home.join("settings.json"),
             claude_managed_settings: managed_settings_paths(),
             process_environment,
             process_environment_presence,
@@ -286,6 +292,35 @@ impl FilesystemAgentScannerV1 {
             .lock()
             .map_err(|_| super::native_ingress_probe::cache_error())? = Some(evidence);
         Ok(())
+    }
+
+    #[cfg(unix)]
+    pub fn check_claude_collaboration(
+        &self,
+        cli: &std::path::Path,
+    ) -> Result<(), super::NativeIngressProbeError> {
+        let evidence = super::ClaudeNativeIngressProbe::run_collaboration(
+            &self.layout.claude_executable,
+            cli,
+        )?;
+        *self
+            .claude_ingress
+            .lock()
+            .map_err(|_| super::native_ingress_probe::cache_error())? = Some(evidence);
+        Ok(())
+    }
+
+    #[cfg(unix)]
+    pub fn attach_claude_collaboration_evidence(
+        &self,
+        executable: &std::path::Path,
+        installation: &mut SupportedAgentInstallationV1,
+    ) {
+        if let Ok(cache) = self.claude_ingress.lock()
+            && let Some(evidence) = cache.as_ref()
+        {
+            evidence.attach_collaboration(executable, installation);
+        }
     }
 
     pub fn scan(&self) -> Vec<FilesystemAgentDiscoveryV1> {
@@ -503,133 +538,6 @@ impl FilesystemAgentScannerV1 {
         self.layout.claude_user_settings.clone()
     }
 
-    /// Native-host fact used to prove Agent discovery and Worker selection resolve the same
-    /// explicitly selected Claude installation. This path is never serialized to a client.
-    pub fn claude_executable_target(&self) -> PathBuf {
-        self.layout.claude_executable.clone()
-    }
-
-    /// Returns the bounded semantic fields from Claude's registered *user* settings file.
-    /// Higher-precedence process/project/managed layers are deliberately not flattened here:
-    /// the settings planner checks those independently before it asks the native renderer to
-    /// change this one owned file.
-    pub fn claude_user_config_document(
-        &self,
-    ) -> Result<AgentConfigDocumentV1, AgentFilesystemScanError> {
-        let observations = self.claude_observations()?;
-        let user = observations
-            .iter()
-            .find(|observation| observation.layer == ConfigLayerV1::User)
-            .ok_or(AgentFilesystemScanError::InvalidConfig)?;
-        let env = &user.settings.env;
-        let mut fields = BTreeMap::new();
-        for (path, value) in [
-            ("env.ANTHROPIC_BASE_URL", env.base_url.as_deref()),
-            ("env.ANTHROPIC_MODEL", env.model.as_deref()),
-            (
-                "env.ANTHROPIC_DEFAULT_OPUS_MODEL",
-                env.default_opus_model.as_deref(),
-            ),
-            (
-                "env.ANTHROPIC_DEFAULT_SONNET_MODEL",
-                env.default_sonnet_model.as_deref(),
-            ),
-            (
-                "env.ANTHROPIC_DEFAULT_HAIKU_MODEL",
-                env.default_haiku_model.as_deref(),
-            ),
-            (
-                "env.ANTHROPIC_SMALL_FAST_MODEL",
-                env.small_fast_model.as_deref(),
-            ),
-        ] {
-            if let Some(value) = value {
-                fields.insert(path.to_owned(), json!(value));
-            }
-        }
-        if user.settings.api_key_helper_present {
-            fields.insert("apiKeyHelper".to_owned(), json!({"configured":true}));
-        }
-        if CLAUDE_AUTH_ENVIRONMENT_FIELDS
-            .iter()
-            .any(|name| env.present_environment_fields.contains(*name))
-        {
-            fields.insert(
-                "hiroute.auth_environment".to_owned(),
-                json!({"configured":true}),
-            );
-        }
-        Ok(AgentConfigDocumentV1 { fields })
-    }
-
-    /// Renders the registered semantic field change into the exact native Claude settings file.
-    /// The returned bytes may contain unrelated user secrets and therefore remain zeroizing and
-    /// must be staged only by the encrypted managed-artifact store.
-    pub fn render_claude_user_config_change(
-        &self,
-        change: &hiroute_domain::AgentConfigChangeV1,
-    ) -> Result<Zeroizing<Vec<u8>>, AgentFilesystemScanError> {
-        render_claude_user_change(&self.layout.claude_user_settings, change)
-    }
-
-    /// Checks the registered managed fields semantically while allowing Claude Code to rewrite
-    /// formatting or unrelated settings after activation.
-    pub fn claude_user_config_change_is_applied(
-        &self,
-        change: &hiroute_domain::AgentConfigChangeV1,
-    ) -> Result<bool, AgentFilesystemScanError> {
-        claude_user_change_is_applied(&self.layout.claude_user_settings, change)
-    }
-
-    /// Reconstructs the registered Claude installation only for a daemon-validated, currently
-    /// applied user-file change. Normal discovery continues to reject arbitrary unregistered
-    /// endpoints and models; this narrow path exists so an already-owned local Gateway
-    /// configuration can complete its formal restore without treating its local endpoint as an
-    /// upstream registry entry.
-    pub fn claude_installation_for_applied_user_change(
-        &self,
-        change: &hiroute_domain::AgentConfigChangeV1,
-    ) -> Result<hiroute_domain::SupportedAgentInstallationV1, AgentFilesystemScanError> {
-        if !self.claude_user_config_change_is_applied(change)? {
-            return Err(AgentFilesystemScanError::SourceChanged);
-        }
-        let ExecutableProbe::Installed(executable) =
-            executable_probe(&self.layout.claude_executable)
-        else {
-            return Err(AgentFilesystemScanError::SourceUnavailable);
-        };
-        let observations = self.claude_observations()?;
-        let observations =
-            main_observation::resolve_project_local_fields(&self.layout, &observations);
-        let (outcome, conflict) =
-            main_observation::main_claude_observation(&executable.version, &observations);
-        if conflict {
-            return Err(AgentFilesystemScanError::SourceChanged);
-        }
-        let AgentDiscoveryOutcomeV1::Supported { mut installation } = outcome else {
-            return Err(AgentFilesystemScanError::InvalidConfig);
-        };
-        super::observed_capabilities::attach_file_capabilities(
-            &mut installation,
-            &self.layout.claude_executable,
-            &self.layout.claude_user_settings,
-        );
-        Ok(*installation)
-    }
-
-    /// Identifies whether an opaque discovered credential came from the exact user settings file
-    /// that the persistent Claude adapter owns. Process, project, launch, and enterprise-managed
-    /// sources cannot be made safe by rewriting the user file and therefore stay launch-only.
-    pub fn is_claude_user_credential(&self, descriptor: &DiscoveredCredentialRefV1) -> bool {
-        validate_descriptor(descriptor).is_ok()
-            && descriptor.discovered_source_ref
-                == ClaudeSource::File(
-                    ConfigLayerV1::User,
-                    self.layout.claude_user_settings.clone(),
-                )
-                .source_ref()
-    }
-
     fn scan_claude(
         &self,
         executable: Option<ExecutableObservationV1>,
@@ -640,7 +548,10 @@ impl FilesystemAgentScannerV1 {
             .as_ref()
             .map(|value| value.version.clone())
             .unwrap_or_default();
-        let preserve_executable_outcome = executable_outcome.is_some();
+        // Settings writes bind the actual executable and target file, not the native
+        // endpoint/model registration used by ordinary account discovery. A user may
+        // switch an otherwise runnable Claude installation from an unknown provider.
+        let preserve_executable_outcome = executable_outcome.is_some() || for_settings;
         let configuration_failure_outcome = |reason: AgentReportOnlyReasonV1| {
             executable_outcome.clone().unwrap_or_else(|| {
                 report_only_agent(
