@@ -119,7 +119,6 @@ fn corpus_request(case: &CorpusCase) -> ModelRequestIRV1 {
             content: vec![ContentPart::ToolResult {
                 logical_id: "tool-1".into(),
                 tool_kind: ToolKindV1::Function,
-                namespace: None,
                 output: ToolOutput::Text("opaque output is excluded".into()),
                 status: ToolResultStatusV1::Unknown,
             }],
@@ -170,7 +169,6 @@ fn corpus_request(case: &CorpusCase) -> ModelRequestIRV1 {
         requested_reasoning: RequestedReasoningControl::absent(),
         requested_max_output_tokens: None,
         provider_state: Vec::new(),
-        tool_id_map: Vec::new(),
     }
 }
 

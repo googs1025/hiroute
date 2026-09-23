@@ -40,7 +40,6 @@ fn request(protocol: IngressProtocol, text: &str) -> ModelRequestIRV1 {
         requested_reasoning: RequestedReasoningControl::absent(),
         requested_max_output_tokens: None,
         provider_state: Vec::new(),
-        tool_id_map: Vec::new(),
     }
 }
 
@@ -389,7 +388,6 @@ fn planner_user_phrase_and_continuations_have_fixed_precedence() {
         content: vec![ContentPart::ToolResult {
             logical_id: "call-1".into(),
             tool_kind: ToolKindV1::Function,
-            namespace: None,
             output: ToolOutput::Text("opaque Tool output".into()),
             status: ToolResultStatusV1::Unknown,
         }],
